@@ -1,1 +1,2 @@
-rootProject.name = 'java-jsonpath'
+rootProject.name = "java-jsonpath"
+include("incubator")
