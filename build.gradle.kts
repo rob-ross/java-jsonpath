@@ -3,7 +3,6 @@ plugins {
     `java-library`
     `maven-publish`
     signing
-    //id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
     id("io.github.gradle-nexus.publish-plugin") version "2.0.0-rc-1"
 }
 
@@ -26,7 +25,10 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 
-    // Add other dependencies as needed
+    // SLF4J API
+    implementation("org.slf4j:slf4j-api:2.0.9")
+    // during development and testing, we need a concrete logger implementation
+    testImplementation("ch.qos.logback:logback-classic:1.5.13")
 }
 
 tasks.test {
