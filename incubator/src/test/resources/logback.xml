@@ -1,0 +1,18 @@
+<configuration>
+    <!-- Console appender configuration -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root logger level -->
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+    <!-- Set specific logger levels -->
+    <logger name="org.killeroonie" level="DEBUG" />
+    <!-- Set third-party libraries to a higher level to reduce noise -->
+    <logger name="com.fasterxml.jackson" level="INFO" />
+</configuration>
