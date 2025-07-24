@@ -5,11 +5,16 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unused")
 public class JsonParser {
+
+    private static final Logger logger = LoggerFactory.getLogger(JsonParser.class);
 
     String jsonString = """
     {
@@ -48,6 +53,7 @@ public class JsonParser {
      * Parse JSON string to a Map
      */
     public Map<String, Object> parseToMap(String json) throws JsonProcessingException {
+        //noinspection Convert2Diamond
         return objectMapper.readValue(json, new TypeReference<Map<String, Object>>() {});
     }
 
@@ -109,21 +115,24 @@ public class JsonParser {
 
     private void parseTest1() {
         try {
+            logger.debug("Starting JSON parsing test");
+
             // Parse to a generic JsonNode (useful for dynamic access)
             JsonNode jsonNode = parseToJsonNode(jsonString);
-            System.out.println("Name: " + jsonNode.get("name").asText());
-            System.out.println("City: " + jsonNode.get("address").get("city").asText());
+            logger.info("Name: {}", jsonNode.get("name").asText());
+            logger.info("City: {}", jsonNode.get("address").get("city").asText());
 
             // Parse to a specific Java class
             Person person = parseToObject(jsonString, Person.class);
-            System.out.println("Person object: " + person);
+            logger.info("Person object: {}", person);
 
             // Parse to a Map
             var dataMap = parseToMap(jsonString);
-            System.out.println("Map representation: " + dataMap);
+            logger.info("Map representation: {}", dataMap);
 
+            logger.debug("JSON parsing test completed successfully");
         } catch (JsonProcessingException e) {
-            System.err.println("Error parsing JSON: " + e.getMessage());
+            logger.error("Error parsing JSON", e);
         }
     }
 
