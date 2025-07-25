@@ -4,7 +4,7 @@ package org.killeroonie.json.display;
 
 /**
  * Flags for various pretty printing options for nested JSON objects.
- *     The default flags are designed for debugging small nested dicts, and as_json_format() is useful for initializing
+ *     The default flags are designed for debugging small nested dicts, and asJsonFormat() is useful for initializing
  *     flags for printing in a JSON-compatible format.
  * <p>
  *     The various "withXxx()" methods make a copy of this instance's flags and allow you to set a specific flag.
