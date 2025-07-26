@@ -4,9 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-// note to myself:
+// Note to myself:
 // Javadoc comments start with an implicit "This method..." and uses descriptive not imperative voice.
-// i.e., "This method calculates..., This method finds...", rather than Python's "Calculate the foo..., Find the foo..."
+// I.e., "This method calculates..., This method finds...", rather than Python's "Calculate the foo..., Find the foo..."
 // The @return tag answers the question "What is returned?" and is a Noun phrase.
 
 public interface JsonTypes {
