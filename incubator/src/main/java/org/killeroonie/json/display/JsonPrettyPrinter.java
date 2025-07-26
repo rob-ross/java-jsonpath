@@ -51,26 +51,9 @@ public class JsonPrettyPrinter {
             case JsonStructured<?> s when s.isEmpty() -> true;
             case JsonArray a when a.size() == 1 -> isEmptyOrSingleItem(a.getFirst());
             case JsonObject o when o.size() == 1 -> isEmptyOrSingleItem(o.members().values().iterator().next());
-            // This default handles cases like a JsonStructured with size > 1
+            // This default handles cases where JsonStructured size > 1
             default -> false;
         };
-
-//        if (value instanceof JsonPrimitive) {
-//            return true;
-//        }
-//        if (value instanceof JsonStructured<?> structured && structured.isEmpty()) {
-//            return true;
-//        }
-//        if (value instanceof JsonStructured<?> structured && structured.size() > 1) {
-//            return false;
-//        }
-//        if (value instanceof JsonArray(List<JsonValue> elements)  && elements.size() == 1) {
-//            return isEmptyOrSingleItem(elements.getFirst());
-//        }
-//        if (value instanceof JsonObject(Map<JsonString, JsonValue> members) && members.size() == 1) {
-//            return isEmptyOrSingleItem(members.values().iterator().next());
-//        }
-//        return false;
     }
 
     private String formatPrimitive(JsonPrimitive<?> primitive, FormatFlags format) {
@@ -561,6 +544,19 @@ public class JsonPrettyPrinter {
             appendToLastListElement(lines, "%s]".formatted(indentString));
         }
         return lines;
+    }
+
+
+    public String prettyPrintJson(final JsonValue value) {
+        return prettyPrintJson(value, FormatFlags.defaults(), new ArrayList<String>(), 0);
+    }
+
+    public String prettyPrintJson(final JsonValue value, final FormatFlags flags) {
+        return prettyPrintJson(value, flags, new ArrayList<String>(), 0);
+    }
+
+    public String prettyPrintJson(final JsonValue value, final FormatFlags flags, final List<String> lines) {
+        return prettyPrintJson(value, flags, lines, 0);
     }
 
     /**

@@ -173,7 +173,7 @@ public interface JsonTypes {
     final class JsonNull implements JsonPrimitive<JsonNull> {
         private static final JsonNull INSTANCE = new JsonNull();
         private JsonNull() {}
-        static JsonNull getInstance() {
+        public static JsonNull getInstance() {
             return INSTANCE;
         }
 

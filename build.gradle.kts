@@ -22,13 +22,19 @@ java {
 
 dependencies {
     // Test dependencies
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
+    // Logging
     // SLF4J API
     implementation("org.slf4j:slf4j-api:2.0.9")
     // during development and testing, we need a concrete logger implementation
     testImplementation("ch.qos.logback:logback-classic:1.5.13")
+
+    // Annotations
+    implementation("org.jetbrains:annotations:24.0.1")
 }
 
 tasks.test {

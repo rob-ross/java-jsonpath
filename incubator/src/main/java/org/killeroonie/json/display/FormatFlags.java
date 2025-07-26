@@ -1,6 +1,8 @@
 package org.killeroonie.json.display;
 
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Flags for various pretty printing options for nested JSON objects.
@@ -22,21 +24,43 @@ package org.killeroonie.json.display;
 @SuppressWarnings("unused")
 public record FormatFlags(boolean quoteStrings,
                           boolean singleQuotes,
+                          // useRepr:
+                          // in Python this cased strings to be displayed using repr().
                           boolean useRepr,
+                          // formatJson:
+                          // in Python this affected the string value of True/False and displayed as lowercase true/false.
+                          // since Java uses the same letter casing as JavaScript, this distinction is not needed.
+                          // however, we may want to use this flag to escape certain sequences for JSON.
                           boolean formatJson,
                           int indent,
                           boolean singleLine,
                           boolean omitCommas) {
 
-    public static FormatFlags defaults() {
-        return new FormatFlags(false,false, false, false,
-                        2,true,false );
+    @Contract(" -> new")
+    public static @NotNull FormatFlags defaults() {
+        return new FormatFlags(
+                false,
+                false,
+                false,
+                false,
+                2,
+                true,
+                false
+        );
     }
 
-    public static FormatFlags asJsonFormat() {
+    @Contract(" -> new")
+    public static @NotNull FormatFlags asJsonFormat() {
         // to properly serialize to JSON also requires proper escaping of certain characters in the JSON text
-        return new FormatFlags(true, false,  true, true,
-                2, false, false);
+        return new FormatFlags(
+                true,
+                false,
+                true,
+                true,
+                2,
+                false,
+                false
+        );
     }
 
     public FormatFlags withQuoteStrings(boolean quoteStrings) {
