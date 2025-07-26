@@ -188,6 +188,7 @@ public interface JsonTypes {
 
     /** Represents the JSON null value using a singleton pattern. */
     final class JsonNull implements JsonPrimitive<JsonNull> {
+        // Eager initialization is appropriate here and simpler than the holder idiom.
         private static final JsonNull INSTANCE = new JsonNull();
         private JsonNull() {}
         public static JsonNull getInstance() {
