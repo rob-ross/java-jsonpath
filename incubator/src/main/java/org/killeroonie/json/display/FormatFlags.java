@@ -15,9 +15,9 @@ import org.jetbrains.annotations.NotNull;
  * @param useRepr when true, format strings with str() instead of repr()
  * @param formatJson when true, use "null" for `null` and "true"/"false" for `true`/`false`
  * @param indent number of spaces to indent each level of nesting
- * @param singleLine when true, format output as a single line, when false format as multiple lines
+ * @param multiLine when true, format output as multiple lines; when false, format as a single line.
  * @param omitCommas when true, do not insert commas after List and Map item elements.
- *                   note: when printing with singleLine = true, if omitCommas is also true, output may be confusing
+ *                   note: when printing with multiLine = true, if omitCommas is also true, output may be confusing
  *                   since List and Map elements will have no obvious visual separation in the string,
  *                   and parsing will be more complicated
  */
@@ -33,7 +33,7 @@ public record FormatFlags(boolean quoteStrings,
                           // however, we may want to use this flag to escape certain sequences for JSON.
                           boolean formatJson,
                           int indent,
-                          boolean singleLine,
+                          boolean multiLine,
                           boolean omitCommas) {
 
     @Contract(" -> new")
@@ -44,7 +44,7 @@ public record FormatFlags(boolean quoteStrings,
                 false,
                 false,
                 2,
-                true,
+                false,
                 false
         );
     }
@@ -65,37 +65,37 @@ public record FormatFlags(boolean quoteStrings,
 
     public FormatFlags withQuoteStrings(boolean quoteStrings) {
         return new FormatFlags(quoteStrings, this.singleQuotes, this.useRepr, this.formatJson, this.indent,
-                this.singleLine, this.omitCommas);
+                this.multiLine, this.omitCommas);
     }
 
     public FormatFlags withSingleQuotes(boolean singleQuotes) {
         return new FormatFlags(this.quoteStrings, singleQuotes, this.useRepr, this.formatJson, this.indent,
-                this.singleLine, this.omitCommas);
+                this.multiLine, this.omitCommas);
     }
 
     public FormatFlags withUseRepr(boolean useRepr) {
         return new FormatFlags(this.quoteStrings, this.singleQuotes, useRepr, this.formatJson, this.indent,
-                this.singleLine, this.omitCommas);
+                this.multiLine, this.omitCommas);
     }
 
     public FormatFlags withFormatJson(boolean formatJson) {
         return new FormatFlags(this.quoteStrings, this.singleQuotes, this.useRepr, formatJson, this.indent,
-                this.singleLine, this.omitCommas);
+                this.multiLine, this.omitCommas);
     }
 
     public FormatFlags withIndent(int indent) {
         return new FormatFlags(this.quoteStrings, this.singleQuotes, this.useRepr, this.formatJson, indent,
-                this.singleLine, this.omitCommas);
+                this.multiLine, this.omitCommas);
     }
 
-    public FormatFlags withSingleLine(boolean singleLine) {
+    public FormatFlags withMultipleLines(boolean multiLine) {
         return new FormatFlags(this.quoteStrings, this.singleQuotes, this.useRepr, this.formatJson, this.indent,
-                singleLine, this.omitCommas);
+                multiLine, this.omitCommas);
     }
 
     public FormatFlags withOmitCommas(boolean omitCommas) {
         return new FormatFlags(this.quoteStrings, this.singleQuotes, this.useRepr, this.formatJson, this.indent,
-                this.singleLine, omitCommas);
+                this.multiLine, omitCommas);
     }
 }
 

@@ -202,9 +202,9 @@ public class PrimitivesTest {
     }
 
     @ParameterizedTest
-    @MethodSource("withSingleLineTestCases")
+    @MethodSource("withMultipleLinesTestCases")
     void test_withSingleLine(JsonPrimitive<?> primitive, String expected, String message) {
-        FormatFlags flags = FormatFlags.defaults().withSingleLine(false);
+        FormatFlags flags = FormatFlags.defaults().withMultipleLines(true);
         JsonPrettyPrinter printer = new JsonPrettyPrinter();
 
         String actual = printer.prettyPrintJson(primitive, flags);
@@ -212,9 +212,9 @@ public class PrimitivesTest {
         assertEquals(expected, actual, message);
     }
 
-    static Stream<Arguments> withSingleLineTestCases() {
+    static Stream<Arguments> withMultipleLinesTestCases() {
         Object[][] testData = {
-                {new JsonString("foo"), "foo", "String primitive should not be quoted by withSingleLine format"},
+                {new JsonString("foo"), "foo", "String primitive should not be quoted by withMultipleLines format"},
                 {JsonBoolean.TRUE, "true", "Boolean true should be formatted as true"},
                 {JsonBoolean.FALSE, "false", "Boolean false should be formatted as false"},
                 {JsonNull.getInstance(), "null", "Null should be formatted as null"},

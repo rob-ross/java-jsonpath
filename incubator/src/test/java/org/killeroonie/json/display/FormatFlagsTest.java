@@ -1,7 +1,6 @@
 package org.killeroonie.json.display;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +16,7 @@ public class FormatFlagsTest {
         assertTrue(flags.useRepr(), "useRepr should be true");
         assertTrue(flags.formatJson(), "formatJson should be true");
         assertEquals(2, flags.indent(), "indent should be 2");
-        assertFalse(flags.singleLine(),"singleLine should be false");
+        assertFalse(flags.multiLine(),"multiLine should be false");
         assertFalse(flags.omitCommas(), "omitCommas should be false");
     }
 
@@ -29,7 +28,7 @@ public class FormatFlagsTest {
         assertFalse(flags.useRepr(), "useRepr should be false");
         assertFalse(flags.formatJson(), "formatJson should be false");
         assertEquals(2, flags.indent(), "indent should be 2");
-        assertTrue(flags.singleLine(),"singleLine should be true");
+        assertFalse(flags.multiLine(),"multiLine should be false");
         assertFalse(flags.omitCommas(), "omitCommas should be false");
     }
 
@@ -41,7 +40,7 @@ public class FormatFlagsTest {
         assertFalse(flags.useRepr(), "useRepr should be false");
         assertFalse(flags.formatJson(), "formatJson should be false");
         assertEquals(2, flags.indent(), "indent should be 2");
-        assertTrue(flags.singleLine(),"singleLine should be true");
+        assertFalse(flags.multiLine(),"multiLine should be false");
         assertFalse(flags.omitCommas(), "omitCommas should be false");
 
     }
@@ -54,7 +53,7 @@ public class FormatFlagsTest {
         assertFalse(flags.useRepr(), "useRepr should be false");
         assertFalse(flags.formatJson(), "formatJson should be false");
         assertEquals(2, flags.indent(), "indent should be 2");
-        assertTrue(flags.singleLine(),"singleLine should be true");
+        assertFalse(flags.multiLine(),"multiLine should be false");
         assertFalse(flags.omitCommas(), "omitCommas should be false");
     }
 
@@ -66,7 +65,7 @@ public class FormatFlagsTest {
         assertTrue(flags.useRepr(), "useRepr should be true");
         assertFalse(flags.formatJson(), "formatJson should be false");
         assertEquals(2, flags.indent(), "indent should be 2");
-        assertTrue(flags.singleLine(),"singleLine should be true");
+        assertFalse(flags.multiLine(),"multiLine should be false");
         assertFalse(flags.omitCommas(), "omitCommas should be false");
     }
 
@@ -78,7 +77,7 @@ public class FormatFlagsTest {
         assertFalse(flags.useRepr(), "useRepr should be false");
         assertTrue(flags.formatJson(), "formatJson should be true");
         assertEquals(2, flags.indent(), "indent should be 2");
-        assertTrue(flags.singleLine(),"singleLine should be true");
+        assertFalse(flags.multiLine(),"multiLine should be false");
         assertFalse(flags.omitCommas(), "omitCommas should be false");
     }
 
@@ -90,19 +89,19 @@ public class FormatFlagsTest {
         assertFalse(flags.useRepr(), "useRepr should be false");
         assertFalse(flags.formatJson(), "formatJson should be false");
         assertEquals(4, flags.indent(), "indent should be 4");
-        assertTrue(flags.singleLine(),"singleLine should be true");
+        assertFalse(flags.multiLine(),"multiLine should be false");
         assertFalse(flags.omitCommas(), "omitCommas should be false");
     }
 
     @Test
-    void test_withSingleLine() {
-        FormatFlags flags = FormatFlags.defaults().withSingleLine(false);
+    void test_withMultipleLines() {
+        FormatFlags flags = FormatFlags.defaults().withMultipleLines(true);
         assertFalse(flags.quoteStrings(), "quoteStrings should be false");
         assertFalse(flags.singleQuotes(), "singleQuotes should be false");
         assertFalse(flags.useRepr(), "useRepr should be false");
         assertFalse(flags.formatJson(), "formatJson should be false");
         assertEquals(2, flags.indent(), "indent should be 2");
-        assertFalse(flags.singleLine(),"singleLine should be false");
+        assertTrue(flags.multiLine(),"multiLine should be true");
         assertFalse(flags.omitCommas(), "omitCommas should be false");
     }
 
@@ -114,7 +113,7 @@ public class FormatFlagsTest {
         assertFalse(flags.useRepr(), "useRepr should be false");
         assertFalse(flags.formatJson(), "formatJson should be false");
         assertEquals(2, flags.indent(), "indent should be 2");
-        assertTrue(flags.singleLine(),"singleLine should be true");
+        assertFalse(flags.multiLine(),"multiLine should be false");
         assertTrue(flags.omitCommas(), "omitCommas should be true");
     }
 }
