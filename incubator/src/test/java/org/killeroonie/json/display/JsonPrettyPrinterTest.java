@@ -28,9 +28,6 @@ class JsonPrettyPrinterTest {
         assertEquals("\"test\"", result);
     }
 
-
-
-
     @ParameterizedTest
     @MethodSource("provideJsonStructures")
     void testPrettyPrintJsonStructured(JsonStructured<?> jsonValue, FormatFlags format, String expected) {

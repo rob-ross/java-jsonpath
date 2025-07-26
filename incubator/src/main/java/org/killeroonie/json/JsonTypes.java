@@ -158,10 +158,27 @@ public interface JsonTypes {
         }
     }
 
-    record JsonBoolean(Boolean value) implements JsonPrimitive<Boolean> {
-        public JsonBoolean {
+    final class JsonBoolean implements JsonPrimitive<Boolean> {
+
+        public static final JsonBoolean TRUE  = new JsonBoolean(Boolean.TRUE);
+        public static final JsonBoolean FALSE = new JsonBoolean(Boolean.FALSE);
+
+        private final Boolean value;
+        private JsonBoolean(Boolean value) {
             Objects.requireNonNull(value, "value cannot be null");
+            this.value = value;
         }
+
+        public static JsonValue forBoolean(Boolean b) {
+            if (b == Boolean.TRUE) {
+                return TRUE;
+            }
+            return FALSE;
+        }
+
+        @Override
+        public Boolean value() { return value; }
+
         @Override
         @NotNull
         public  String toString() {

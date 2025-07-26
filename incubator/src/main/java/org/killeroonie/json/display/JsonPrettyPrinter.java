@@ -61,8 +61,8 @@ public class JsonPrettyPrinter {
         if (primitive == null){
             return "null";
         }
-        if (primitive instanceof JsonBoolean(Boolean value)) {
-            return value.toString();
+        if (primitive instanceof JsonBoolean b) {
+            return b.toString();
         }
         char quoteChar = format.singleQuotes() ? '\'': '"';
         /*
@@ -221,8 +221,8 @@ public class JsonPrettyPrinter {
                 lines.add(EMPTY_STRING);
                 String vf =  formatPrimitive(primitive, format);
                 String template = switch (structured) {
-                    case JsonObject o -> "%s%s".formatted(indentString, vf);
-                    case JsonArray  a -> "%s%s: %s".formatted(indentString, kf, vf);
+                    case JsonObject o -> "%s%s: %s".formatted(indentString, kf, vf);
+                    case JsonArray  a -> "%s%s".formatted(indentString, vf);
                 };
                 appendToLastListElement(lines, template);
             }
@@ -593,6 +593,22 @@ public class JsonPrettyPrinter {
         else {
             return String.join(NEW_LINE, lines);
         }
+    }
+
+    public static void main(String[] args) {
+        JsonPrettyPrinter pp = new JsonPrettyPrinter();
+
+        // Empty list
+        var list = new ArrayList<JsonValue>();
+        String expected = "[ ]";
+        String actual = pp.prettyPrintJson(new JsonArray(list));
+        System.out.printf("expected=%s, actual=%s%n", expected, actual);
+        /*
+        lines = [""]
+        _pp_list([], FormatFlags(), lines)
+        expected = ["[ ]"]
+        self.assertEqual(expected,lines )
+         */
     }
 
 }
