@@ -23,7 +23,7 @@ public class JsonPrettyPrinter {
     static final String NEW_LINE = "\n";
 
     private String spacer(FormatFlags format, int level) {
-        if (format.singleLine())
+        if (! format.multiLine())
             return SPACE;
         return SPACE.repeat(format.indent() * level );
     }
@@ -194,7 +194,7 @@ public class JsonPrettyPrinter {
             }
         }
         String comma = format.omitCommas() ? EMPTY_STRING : COMMA;
-        String sp    = format.singleLine() ? SPACE : EMPTY_STRING;
+        String sp    = format.multiLine()  ? EMPTY_STRING : SPACE;
         appendToLastListElement(lines, "%s%s".formatted(indentString, LD));  // start of the Map/List text: '{' or '['
         //same
         level++;
@@ -281,8 +281,9 @@ public class JsonPrettyPrinter {
         }
         else {
             level--;
-            indentString = format.singleLine() ? sp : spacer(format, level);
-            appendToLastListElement(lines, "%s%s".formatted(indentString, RD));
+            indentString = format.multiLine() ? spacer(format, level) : sp ;
+            //appendToLastListElement(lines, "%s%s".formatted(indentString, RD));
+            lines.add("%s%s".formatted(indentString, RD));
         }
         return lines;
     }
@@ -359,7 +360,7 @@ public class JsonPrettyPrinter {
         }
         // these lines the same
         String comma = format.omitCommas() ? EMPTY_STRING : COMMA;
-        String sp    = format.singleLine() ? SPACE : EMPTY_STRING;
+        String sp    = format.multiLine() ? SPACE : EMPTY_STRING;
         //differs by delimiter
         appendToLastListElement(lines, "%s{".formatted(indentString));  // start of the Map text: '{'
         //same
@@ -430,7 +431,7 @@ public class JsonPrettyPrinter {
         }
         else {
             level--;
-            indentString = format.singleLine() ? sp : spacer(format, level);
+            indentString = format.multiLine() ? sp : spacer(format, level);
             appendToLastListElement(lines, "%s}".formatted(indentString));
         }
         return lines;
@@ -496,7 +497,7 @@ public class JsonPrettyPrinter {
         }
         // these lines the same
         String comma = format.omitCommas() ? EMPTY_STRING : COMMA;
-        String sp    = format.singleLine() ? SPACE : EMPTY_STRING;
+        String sp    = format.multiLine() ? SPACE : EMPTY_STRING;
         //differs by delimiter
         appendToLastListElement(lines, "%s[".formatted(indentString));  // start of the List text: '['
         // same
@@ -540,8 +541,9 @@ public class JsonPrettyPrinter {
         }
         else {
             level--;
-            indentString = format.singleLine() ? sp : spacer(format, level);
-            appendToLastListElement(lines, "%s]".formatted(indentString));
+            indentString = format.multiLine() ? sp : spacer(format, level);
+            //appendToLastListElement(lines, "%s]".formatted(indentString));
+            lines.add("%s]".formatted(indentString));
         }
         return lines;
     }
@@ -565,7 +567,7 @@ public class JsonPrettyPrinter {
      * Typically, an empty list is passed to this method. Each generated line of formatted output is appended
      * to the `lines` List argument.
      * When this method returns, the `lines` argument will contain each line in the formatted str, or a single new
-     * element if format.singleLine is true. These lines are then joined() and returned.
+     * element if format.multiLine is true. These lines are then joined() and returned.
      * @param value
      * @param format
      * @param lines
@@ -587,11 +589,10 @@ public class JsonPrettyPrinter {
             case JsonStructured<?> structured -> formatStructured(structured, format, lines, indentLevel, instanceIDs);
         }
 
-        if (format.singleLine()) {
-            return String.join(EMPTY_STRING, lines);
-        }
-        else {
+        if (format.multiLine()) {
             return String.join(NEW_LINE, lines);
+        } else {
+            return String.join(EMPTY_STRING, lines);
         }
     }
 
