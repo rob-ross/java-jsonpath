@@ -147,10 +147,10 @@ public class JsonPrettyPrinter {
         //noinspection StringEquality
         if ( lines.getLast() != EMPTY_STRING ) {
             // the current line already has text, so indent is relative to the end of that text
-            indentString = SPACE.repeat(format.indent() - 1 );
+            indentString = SPACE;
         }
         else if (lines.size() == 1 || level == 0) {
-            indentString = EMPTY_STRING;
+            indentString = EMPTY_STRING;  // The top level or very first line doesn't get indented
         }
         else {
             indentString = spacer(format, level);
@@ -167,7 +167,7 @@ public class JsonPrettyPrinter {
             instanceIDs.put(id, structured);
         }
         if (structured.isEmpty()) {
-            appendToLastListElement(lines, "%s%s %s".formatted( LD, indentString, RD ));
+            appendToLastListElement(lines, "%s%s %s".formatted( indentString, LD , RD ));
             return lines;
         }
         if (structured.size() == 1) {
@@ -196,7 +196,6 @@ public class JsonPrettyPrinter {
         String comma = format.omitCommas() ? EMPTY_STRING : COMMA;
         String sp    = format.multiLine()  ? EMPTY_STRING : SPACE;
         appendToLastListElement(lines, "%s%s".formatted(indentString, LD));  // start of the Map/List text: '{' or '['
-        //same
         level++;
         indentString = spacer(format, level);
 
@@ -217,8 +216,8 @@ public class JsonPrettyPrinter {
                 value = members.get(key);
                 kf =  formatPrimitive(key, format);
             }
+            lines.add(EMPTY_STRING);
             if ( value instanceof JsonPrimitive<?> primitive) {
-                lines.add(EMPTY_STRING);
                 String vf =  formatPrimitive(primitive, format);
                 String template = switch (structured) {
                     case JsonObject o -> "%s%s: %s".formatted(indentString, kf, vf);
@@ -227,17 +226,10 @@ public class JsonPrettyPrinter {
                 appendToLastListElement(lines, template);
             }
             else if (structured instanceof JsonArray) {
-                if (! firstItem) {
-                    // If `structured` is a List, and we are starting a new List or Map as the first element
-                    // of the `structured` List, then the open brackets/braces can go on the same line.
-                    // We don't add a new line if `value` is the first List element.
-                    lines.add(EMPTY_STRING);
-                }
                 // process the child value recursively
                 formatStructured((JsonStructured<?>) value, format, lines, level, instanceIDs);
             }
             else if (structured instanceof JsonObject) {
-                lines.add(EMPTY_STRING);
                 appendToLastListElement(lines, "%s%s:".formatted(indentString, kf));
                 // Here, `value` is not JsonPrimitive due to the check above. Therefore, it's a JsonStructured
                 JsonStructured<?> nestedStructured = (JsonStructured<?>) value;
@@ -282,7 +274,6 @@ public class JsonPrettyPrinter {
         else {
             level--;
             indentString = format.multiLine() ? spacer(format, level) : sp ;
-            //appendToLastListElement(lines, "%s%s".formatted(indentString, RD));
             lines.add("%s%s".formatted(indentString, RD));
         }
         return lines;
