@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.killeroonie.json.JsonTypes.*;
+import org.killeroonie.json.display.Helper.TestCase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,52 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PPListTest {
 
-
-
-    /**
-     * Helper method that converts the elements in the argument array into a list of JsonValue wrapper objects.
-     */
-    static JsonArray convertToJsonArray(Object[] array) {
-        List<JsonValue> result = new ArrayList<>();
-        for (Object o : array) {
-            switch (o) {
-                case JsonValue jv -> result.add(jv);
-                case String s -> result.add(new JsonString(s));
-                case Byte b -> result.add(new JsonNumber(b));
-                case Short s -> result.add(new JsonNumber(s));
-                case Integer i -> result.add(new JsonNumber(i));
-                case Long l -> result.add(new JsonNumber(l));
-                case Float f -> result.add(new JsonNumber(f));
-                case Double d -> result.add(new JsonNumber(d));
-                case Boolean b -> result.add(JsonBoolean.forBoolean(b));
-                case null -> result.add(JsonNull.getInstance());
-                case Object[] arr -> result.add(convertToJsonArray(arr));
-
-                // todo - deal with Maps
-                default -> throw new IllegalArgumentException("Unsupported value " + o);
-            }
-        }
-        return new JsonArray(result);
-    }
-
-    /**
-     * Encapsulates data for the parameterized tests in this file.
-     * @param fixture simple Java Object[] which makes inline initialization simple.
-     * @param flags the FormatFlag settings used in a particular test.
-     * @param expected the String we expect to be returned from the JSON pretty printer.
-     * @param message the message to be displayed for a failed test.
-     * @param jsonArray the actual argument passed to the prettyPrintJson method.
-     * This is created by the TestCase constructor by converting all Java primitives or Lists and Maps to their JsonValues.
-     */
-    record TestCase(Object[] fixture, FormatFlags flags, String expected, String message, JsonArray jsonArray) {
-        /**
-         * Automatically converts fixture to a {@link JsonArray}. This makes it easier to write inline test case data
-         * in the source file with less boilerplate.
-         */
-        TestCase(Object[] fixture, FormatFlags flags, String expected, String message) {
-            this(fixture, flags, expected, message, convertToJsonArray(fixture));
-        }
-    }
 
     @Test
     void test_emptyList() {
@@ -86,8 +41,8 @@ public class PPListTest {
     @MethodSource("primitiveMultiElementListTestCases")
     void testPrimitiveMultiElementList(TestCase testCase) {
         JsonPrettyPrinter pp = new JsonPrettyPrinter();
-        String actual = pp.prettyPrintJson(testCase.jsonArray, testCase.flags);
-        assertEquals(testCase.expected, actual, testCase.message);
+        String actual = pp.prettyPrintJson(testCase.structured(), testCase.flags());
+        assertEquals(testCase.expected(), actual, testCase.message());
         System.out.println("actual: " + actual);
     }
 
@@ -112,8 +67,8 @@ public class PPListTest {
     @MethodSource("nestedSingleElementPrimitiveLists")
     void testNestedSingleElementPrimitiveLists(TestCase testCase) {
         JsonPrettyPrinter pp = new JsonPrettyPrinter();
-        String actual = pp.prettyPrintJson(testCase.jsonArray, testCase.flags);
-        assertEquals(testCase.expected, actual, testCase.message);
+        String actual = pp.prettyPrintJson(testCase.structured(), testCase.flags());
+        assertEquals(testCase.expected(), actual, testCase.message());
     }
 
     static Stream<Arguments> nestedSingleElementPrimitiveLists() {
@@ -146,8 +101,8 @@ public class PPListTest {
     @MethodSource("nestedPrimitiveElementListsTestCases")
     void testNestedPrimitiveElementLists(TestCase testCase) {
         JsonPrettyPrinter pp = new JsonPrettyPrinter();
-        String actual = pp.prettyPrintJson(testCase.jsonArray, testCase.flags);
-        assertEquals(testCase.expected, actual, testCase.message);
+        String actual = pp.prettyPrintJson(testCase.structured(), testCase.flags());
+        assertEquals(testCase.expected(), actual, testCase.message());
         System.out.println("actual: " + actual);
     }
 
@@ -171,8 +126,8 @@ public class PPListTest {
     @MethodSource("nestedPrimitiveElementMultiLineListsTestCases")
     void testNestedPrimitiveElementMultiLineLists(TestCase testCase) {
         JsonPrettyPrinter pp = new JsonPrettyPrinter();
-        String actual = pp.prettyPrintJson(testCase.jsonArray, testCase.flags);
-        assertEquals(testCase.expected, actual, testCase.message);
+        String actual = pp.prettyPrintJson(testCase.structured(), testCase.flags());
+        assertEquals(testCase.expected(), actual, testCase.message());
         //System.out.println("actual: " + actual);
     }
 

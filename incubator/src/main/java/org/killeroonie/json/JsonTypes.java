@@ -169,7 +169,7 @@ public interface JsonTypes {
             this.value = value;
         }
 
-        public static JsonValue forBoolean(Boolean b) {
+        public static JsonPrimitive<Boolean> forBoolean(Boolean b) {
             if (b == Boolean.TRUE) {
                 return TRUE;
             }
