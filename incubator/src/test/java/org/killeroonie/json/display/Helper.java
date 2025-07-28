@@ -2,10 +2,7 @@ package org.killeroonie.json.display;
 
 import org.killeroonie.json.JsonTypes.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Helper methods for JsonPrettyPrinter unit tests.
@@ -28,7 +25,7 @@ public class Helper {
     }
     @SuppressWarnings("unchecked")
     public static JsonObject toJsonObject(Map<String, Object> map) {
-        Map<JsonString, JsonValue> jmap = new HashMap<>();
+        Map<JsonString, JsonValue> jmap = new LinkedHashMap<>();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             JsonString key = new JsonString(entry.getKey());
             if (entry.getValue() == null) {
@@ -70,6 +67,20 @@ public class Helper {
             }
         }
         return new JsonArray(result);
+    }
+
+    /**
+     * Converts an array of {key, value} array pairs into a {@link LinkedHashMap}.
+     * This simplifies Map comparison as LinkedHashMap's iterator preserves insertion order.
+     * @param array an array of two-element arrays where array[n][0] is a key and array[n][1] is the key's value
+     * @return a new LinkedHashMap initialized with the contents of {@code array}.
+     */
+    static Map<String, Object> mapForArray(Object[][] array){
+        var map = new LinkedHashMap<String, Object>();
+        for (Object[] entry : array) {
+            map.put(entry[0].toString(), entry[1]);
+        }
+        return map;
     }
 
     /**

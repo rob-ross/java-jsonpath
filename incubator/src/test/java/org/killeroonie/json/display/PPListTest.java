@@ -43,7 +43,6 @@ public class PPListTest {
         JsonPrettyPrinter pp = new JsonPrettyPrinter();
         String actual = pp.prettyPrintJson(testCase.structured(), testCase.flags());
         assertEquals(testCase.expected(), actual, testCase.message());
-        System.out.println("actual: " + actual);
     }
 
     static Stream<Arguments> primitiveMultiElementListTestCases() {
@@ -103,7 +102,6 @@ public class PPListTest {
         JsonPrettyPrinter pp = new JsonPrettyPrinter();
         String actual = pp.prettyPrintJson(testCase.structured(), testCase.flags());
         assertEquals(testCase.expected(), actual, testCase.message());
-        System.out.println("actual: " + actual);
     }
 
     static Stream<Arguments> nestedPrimitiveElementListsTestCases() {
@@ -128,7 +126,6 @@ public class PPListTest {
         JsonPrettyPrinter pp = new JsonPrettyPrinter();
         String actual = pp.prettyPrintJson(testCase.structured(), testCase.flags());
         assertEquals(testCase.expected(), actual, testCase.message());
-        //System.out.println("actual: " + actual);
     }
 
     static Stream<Arguments> nestedPrimitiveElementMultiLineListsTestCases() {
