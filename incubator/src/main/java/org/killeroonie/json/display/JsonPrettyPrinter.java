@@ -1,5 +1,6 @@
 package org.killeroonie.json.display;
 
+import com.fasterxml.jackson.databind.node.ValueNode;
 import org.jetbrains.annotations.NotNull;
 import org.killeroonie.json.JsonTypes.*;
 import org.slf4j.Logger;
@@ -60,31 +61,44 @@ public class JsonPrettyPrinter {
         };
     }
 
-    private String formatPrimitive(JsonPrimitive<?> primitive, FormatFlags format) {
-
-        if (primitive == null){
-            return "null";
-        }
-        if (primitive instanceof JsonBoolean b) {
-            return b.toString();
-        }
+    private String formatString(String string,  FormatFlags format) {
         char quoteChar = format.singleQuotes() ? '\'': '"';
-        /*
-        In Python, objects have two string representation methods, str() and repr(). Java doesn't have this distinction.
-        In Python, repr will put single quotes around the string; unless there are embedded single quotes,
-        then it uses double quotes. It also escapes any literal backslash characters.  format.useRepr() may be unneeded
-        in this Java implementation. For now, we'll ignore the flag.
-        if (format.useRepr()){
-            ...
-        }
-
-        */
-        if (primitive instanceof JsonString string && format.quoteStrings()) {
+        if (format.quoteStrings()) {
             return String.format("%c%s%c",quoteChar, string,  quoteChar  );
         }
         else {
-            return primitive.toString();
+            return string;
         }
+    }
+
+    private String formatScalar(Object o,  FormatFlags format) {
+        if (o == null) { return "null"; }
+        if (o instanceof String) {
+            return formatString((String) o, format);
+        }
+        switch (o) {
+            case ValueNode vn -> { return formatValueNode(vn, format); }
+            case JsonPrimitive<?> pv -> { return formatJsonPrimitive(pv, format); }
+            default ->  { return o.toString(); }
+        }
+    }
+
+    private String formatValueNode(ValueNode node, FormatFlags format) {
+        Objects.requireNonNull(node, "node is null");
+        if (! node.isValueNode()) { throw new IllegalArgumentException("node is not a value node"); }
+        if (node.isTextual()) { return formatString(node.textValue(), format); }
+        return node.asText();
+    }
+
+    private String formatJsonPrimitive(JsonPrimitive<?> primitive, FormatFlags format) {
+        if (primitive == null || primitive.value() == null) {
+            return "null";
+        }
+        Object o = primitive.value();
+        if (o instanceof String s) {
+            return formatString(s, format);
+        }
+        return o.toString();
     }
     
     private int lastListIndex(final List<?> list) {
@@ -99,6 +113,7 @@ public class JsonPrettyPrinter {
         String line = list.getLast() + stringToAppend;
         list.set(lastListIndex(list), line);
     }
+
 
     @SuppressWarnings("UnusedReturnValue")
     List<String> formatStructured(final @NotNull JsonStructured<?> structured,
@@ -174,11 +189,11 @@ public class JsonPrettyPrinter {
             }
 
             if (value instanceof JsonPrimitive<?> primitive) {
-                String vf =  formatPrimitive(primitive, format);
+                String vf =  formatScalar(primitive, format);
                 switch (structured) {
                     case JsonArray  _ -> appendToLastListElement(lines, "%s[ %s ]".formatted(indentString, vf ));
                     case JsonObject _ -> {
-                        String kf = formatPrimitive(key, format);
+                        String kf = formatScalar(key, format);
                         appendToLastListElement(lines, "%s{ %s: %s }".formatted( indentString, kf, vf ));
                     }
                 }
@@ -206,11 +221,11 @@ public class JsonPrettyPrinter {
             if (structured instanceof JsonObject(Map<JsonString, JsonValue> members)) {
                 key = (JsonString) v;
                 value = members.get(key);
-                kf =  formatPrimitive(key, format);
+                kf =  formatScalar(key, format);
             }
             lines.add(EMPTY_STRING);
             if ( value instanceof JsonPrimitive<?> primitive) {
-                String vf =  formatPrimitive(primitive, format);
+                String vf =  formatScalar(primitive, format);
                 String template = switch (structured) {
                     case JsonObject _ -> "%s%s: %s".formatted(indentString, kf, vf);
                     case JsonArray  _ -> "%s%s".formatted(indentString, vf);
@@ -307,7 +322,7 @@ public class JsonPrettyPrinter {
         //instanceIDs: keeps track of instance ids to detect circular references
         Map<Integer, JsonValue> instanceIDs = new HashMap<>();
         switch (value) {
-            case JsonPrimitive<?>  primitive  -> lines.set(lines.size() - 1, formatPrimitive(primitive, format));
+            case JsonPrimitive<?>  primitive  -> lines.set(lines.size() - 1, formatScalar(primitive, format));
             case JsonStructured<?> structured -> formatStructured(structured, format, lines, indentLevel, instanceIDs);
         }
 
