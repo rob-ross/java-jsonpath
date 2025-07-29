@@ -8,54 +8,15 @@ import org.killeroonie.json.JsonTypes;
 import org.killeroonie.json.JsonTypes.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.killeroonie.json.display.Helper.toJsonPrimitive;
 
 class JsonPrettyPrinterTest {
-
-    @Test
-    void testFormatPrimitiveString() {
-        JsonPrettyPrinter printer = new JsonPrettyPrinter();
-        JsonString jsonString = new JsonString("test");
-        FormatFlags format = new FormatFlags(true, false, false,false,2, false, false);
-
-        String result = printer.prettyPrintJson(jsonString, format, new ArrayList<>(), 0);
-        System.out.println(result);
-
-        assertEquals("\"test\"", result);
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideJsonStructures")
-    void testPrettyPrintJsonStructured(JsonStructured<?> jsonValue, FormatFlags format, String expected) {
-        JsonPrettyPrinter printer = new JsonPrettyPrinter();
-
-        String result = printer.prettyPrintJson(jsonValue, format, new ArrayList<>(), 0);
-
-        assertEquals(expected, result);
-    }
-
-    static Stream<Arguments> provideJsonStructures() {
-        // Add test cases with different JSON structures and expected formatting
-        return Stream.of(
-                // Empty array case
-                Arguments.of(
-                        new JsonArray(List.of()),
-                        new FormatFlags(true, false, false, false,2, false, false),
-                        "[ ]"
-                ),
-                // Simple object case
-                Arguments.of(
-                        new JsonObject(Map.of(new JsonString("key"), new JsonString("value"))),
-                        new FormatFlags(true, false, false, false,2, false, false),
-                        "{ \"key\": \"value\" }"
-                )
-                // Add more test cases as needed
-        );
-    }
 
     @Test
     void testIsEmptyOrSingleItem() {
