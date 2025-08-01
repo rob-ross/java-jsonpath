@@ -32,8 +32,6 @@ dependencies {
     // Annotations
     implementation("org.jetbrains:annotations:24.0.1")
 
-    // Incubator- specific
-    // --------------------
     // Jackson dependencies
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
     // Optional: JSON Schema validation
