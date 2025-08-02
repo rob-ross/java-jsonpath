@@ -17,13 +17,11 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.killeroonie.jsonpath.JSONPointer.UNDEFINED;
 
+@SuppressWarnings("unused")
 public class TestJSONPointer {
 
     @Test
     void test_match_to_pointer() {
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("some", Map.of("thing", "else"));
-    }
     /*
     void test_match_to_pointer() {
     data = {"some": {"thing": "else"}}
@@ -34,6 +32,7 @@ public class TestJSONPointer {
     assert pointer.resolve(data) == match.obj
     assert pointer.resolve({"some": {"thing": "foo"}}) == "foo"
      */
+    }
 
     void test_pointer_repr() {
         /*
@@ -90,9 +89,9 @@ public class TestJSONPointer {
 
 
     void test_keys_selector() {
-            Map<String, Object> data = new HashMap<>();
+/*          Map<String, Object> data = new HashMap<>();
             data.put("some", Map.of("thing", "else"));
-/*            matches = list(jsonpath.finditer("$.some.~", data))
+            matches = list(jsonpath.finditer("$.some.~", data))
             assert len(matches) == 1
             match = matches[0]
             pointer = match.pointer();
@@ -391,8 +390,8 @@ public class TestJSONPointer {
     void test_non_standard_property_pointer() {
         Map<String, Map<String, Object>> data = new HashMap<>();
         data.put("foo", Map.of("bar", List.of(1, 2, 3), "#baz", "hello" ) ) ;
-        assertEquals("hello", new JSONPointer("/foo/#baz").resolve(data));
         assertEquals("bar", new JSONPointer("/foo/#bar").resolve(data));
+        assertEquals("hello", new JSONPointer("/foo/#baz").resolve(data));
     }
 
     @Test

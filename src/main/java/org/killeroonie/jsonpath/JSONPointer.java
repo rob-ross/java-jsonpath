@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
  * This class is immutable. Operations that modify a pointer, such as {@code join()},
  * return a new {@code JSONPointer} instance.
  */
+@SuppressWarnings("unused")
 public class JSONPointer {
 
     /**
@@ -30,6 +31,7 @@ public class JSONPointer {
     };
 
     public static final String HYPHEN = "-";
+    public static final String HASH = "#";
     // The JSON spec allows positive and negative array indices.
     // Java Lists only allow the range 0 - Integer.MAX_VALUE.
     // These ranges are smaller than the JSON Spec allows.
@@ -41,6 +43,9 @@ public class JSONPointer {
     public static final long JSON_MIN_INT_INDEX = -(1L << 53) + 1;
     public static final int MAX_INT_INDEX = Integer.MAX_VALUE;
     public static final int MIN_INT_INDEX = Integer.MIN_VALUE;
+
+    public static final String KEYS_SELECTOR = "~";
+
 
 
     private static final Pattern UNICODE_ESCAPE_PATTERN = Pattern.compile("\\\\u([0-9a-fA-F]{4})");
@@ -76,6 +81,7 @@ public class JSONPointer {
      * @param unicodeEscape  If {@code true}, UTF-16 escape sequences (e.g., \u20ac) within each part will be decoded.
      * @return A new {@code JSONPointer} built from the processed parts.
      */
+    @SuppressWarnings("UnnecessaryUnicodeEscape")
     public static JSONPointer fromParts(Iterable<?> parts, boolean uriDecode, boolean unicodeEscape) {
         List<Object> processedParts = new ArrayList<>();
         for (Object part : parts) {
@@ -102,7 +108,7 @@ public class JSONPointer {
     }
 
     /**
-     * Builds a JSONPointer from an iterable of path parts using default decoding options.
+     * Builds a JSONPointer from an {@link Iterable} of path parts using default decoding options.
      * <p>
      * By default, Unicode escape sequences are decoded, but URI-style percent-encoding is not.
      * This matches the default behavior in the Python implementation.
@@ -125,10 +131,10 @@ public class JSONPointer {
             p = URLDecoder.decode(p, StandardCharsets.UTF_8);
         }
         if (unicodeEscape) {
-            p = unicodeEscape(p); // <<< THE FIX IS HERE
+            p = unicodeEscape(p);
         }
 
-        p = p.trim();
+        p = p.stripLeading();
         if (p.isEmpty()) {
             return Collections.emptyList();
         }
@@ -161,7 +167,7 @@ public class JSONPointer {
             return s;
         }
 
-        // The Python version also un-escapes slashes
+        // The Python version also unescapes slashes
         String unescapedSlashes = s.replace("\\/", "/");
 
         Matcher matcher = UNICODE_ESCAPE_PATTERN.matcher(unescapedSlashes);
@@ -247,13 +253,7 @@ public class JSONPointer {
      * @throws JSONPointerResolutionException if the pointer cannot be resolved.
      */
     public Object resolve(Object data) throws JSONPointerResolutionException {
-        Object result = resolve(data, UNDEFINED);
-        if (result == UNDEFINED) {
-            // The original exception is more descriptive.
-            // We re-run it to throw the detailed exception.
-            return doResolve(JsonLoader.load(data));
-        }
-        return result;
+        return resolveImpl(JsonLoader.load(data));
     }
 
     /**
@@ -265,13 +265,13 @@ public class JSONPointer {
      */
     public Object resolve(Object data, Object defaultValue) {
         try {
-            return doResolve(JsonLoader.load(data));
+            return resolveImpl(JsonLoader.load(data));
         } catch (JSONPointerResolutionException e) {
             return defaultValue;
         }
     }
 
-    private Object doResolve(Object data) {
+    private Object resolveImpl(Object data) {
         Object current = data;
         for (Object part : parts) {
             current = getItem(current, part);
@@ -292,7 +292,7 @@ public class JSONPointer {
         if (parts.isEmpty()) {
             return new Pair<>(null, resolve(data));
         }
-        Object parent = JsonLoader.load(data);;
+        Object parent = JsonLoader.load(data);
         for (int i = 0; i < parts.size() - 1; i++) {
             parent = getItem(parent, parts.get(i));
         }
@@ -403,56 +403,94 @@ public class JSONPointer {
         }
     }
 
-    private Object getItem(Object obj, Object key) {
-        if (obj instanceof List) {
-            return getFromList((List<?>) obj, key);
+    private Object getItem(Object obj, Object keyOrIndex) {
+        if ( !(keyOrIndex instanceof String || keyOrIndex instanceof Integer) ) {
+            throw new JSONPointerTypeException("Argument to getItem() must be String or Integer, got '%s'".formatted(keyOrIndex));
         }
+
+        // Handle hash references on the key/index
+        if (keyOrIndex instanceof String s && s.startsWith(HASH)) {
+            String hashRemoved = s.substring(1);
+            if (obj instanceof Map<?,?> m) {
+                if (m.containsKey(s))
+                {
+                    // special case where the map key contains a "#" prefix.
+                    return getFromMap(m, s);
+                }
+                if(m.containsKey(hashRemoved)){
+                    return hashRemoved;
+                } else {
+                    throw new JSONPointerKeyException("'%s' does not exist at: %s".formatted(hashRemoved, obj));
+                }
+            } else if (obj instanceof List<?> l) {
+                Object maybeInteger = toIndex(hashRemoved);
+                if (maybeInteger instanceof String) {
+                    throw new JSONPointerTypeException("List indices must be integers, got '%s'".formatted(keyOrIndex));
+                }
+                // toIndex() returns either a String or Integer. We know it's not a String here, so it must be Integer
+                int index = (int) maybeInteger;
+                if ( index >= l.size() ) {
+                    throw new JSONPointerIndexException(String.format("Index %d out of range for List of size %d", index, l.size()));
+                } else {
+                    return index;
+                }
+            }
+            return toIndex(s.substring(1));
+        }
+
+        if (HYPHEN.equals(keyOrIndex)) {
+            // "-" is a valid index when appending to a JSON array
+            // with JSON Patch, but not when resolving a JSON Pointer.
+            throw new JSONPointerIndexException("index out of range: '-'");
+        }
+
+        if (obj instanceof List) {
+            int index;
+            if (keyOrIndex instanceof String s) {
+                Object maybeInteger = toIndex(s);
+                if (maybeInteger instanceof String) {
+                    throw new JSONPointerTypeException("List indices must be integers, got '%s'".formatted(keyOrIndex));
+                }
+                index = (int) maybeInteger;
+            } else {
+                index = (int) keyOrIndex;
+            }
+            return getFromList((List<?>) obj, index);
+        }
+
         if (obj instanceof Map) {
-            return getFromMap((Map<?, ?>) obj, key);
+            return getFromMap((Map<?, ?>) obj, keyOrIndex);
         }
         if (obj instanceof JsonNode && ((JsonNode) obj).isObject()) {
-            return getFromJsonNodeObject((JsonNode) obj, key);
+            return getFromJsonNodeObject((JsonNode) obj, keyOrIndex);
         }
         if (obj instanceof JsonNode && ((JsonNode) obj).isArray()) {
-            return getFromJsonNodeArray((JsonNode) obj, key);
+            return getFromJsonNodeArray((JsonNode) obj, keyOrIndex);
         }
         throw new JSONPointerTypeException(String.format(
-                "can't resolve key '%s' on object of type %s", key, obj.getClass().getSimpleName()
+                "can't resolve key '%s' on object of type %s", keyOrIndex, obj.getClass().getSimpleName()
         ));
     }
 
-    private Object getFromList(List<?> list, Object index) {
-        Object maybeInteger = index;
-        if (index instanceof String s) {
-            maybeInteger = toIndex(s);
+    private Object getFromList(List<?> list, int index) {
+        int listIndex = index;
+        //normalize negative index value
+        if (listIndex < 0) {
+            listIndex = list.size() + listIndex;
         }
-        switch (maybeInteger) {
-            case Integer i -> {
-                 int listIndex = i;
-                //normalize negative index value
-                if (listIndex < 0) {
-                    listIndex = list.size() + listIndex;
-                }
-                if (listIndex < 0 || listIndex >= list.size()) {
-                    throw new JSONPointerIndexException(String.format("Index %s out of range for List of size %d", index, list.size()));
-                }
-                return list.get(listIndex);
-            }
-            case String  s -> {
-                if (HYPHEN.equals(s)) {
-                    // "-" is a valid index when appending to a JSON array
-                    // with JSON Patch, but not when resolving a JSON Pointer.
-                    throw new JSONPointerIndexException("index out of range: '-'");
-                }
-                throw new JSONPointerTypeException("List indices must be integers, got '%s'".formatted(index));
-            }
-            default ->
-                    throw new JSONPointerTypeException(String.format("List index must be convertible to an integer, got '%s'", index));
+        if (listIndex < 0 || listIndex >= list.size()) {
+            throw new JSONPointerIndexException(String.format("Index %s out of range for List of size %d", index, list.size()));
         }
-
+        return list.get(listIndex);
     }
 
     private Object getFromMap(Map<?, ?> map, Object key) {
+        if ( key instanceof String s && s.startsWith(KEYS_SELECTOR) ) {
+            String k = s.substring(1);
+            if ( map.containsKey( k )) {
+                return map.get(k);
+            }
+        }
         if (map.containsKey(key)) {
             return map.get(key);
         }
