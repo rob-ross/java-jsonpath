@@ -29,11 +29,161 @@ public class JSONPointer {
         }
     };
 
-    private static final long MAX_INT_INDEX = (1L << 53) - 1;
-    private static final long MIN_INT_INDEX = -(1L << 53) + 1;
+    public static final String HYPHEN = "-";
+    // The JSON spec allows positive and negative array indices.
+    // Java Lists only allow the range 0 - Integer.MAX_VALUE.
+    // These ranges are smaller than the JSON Spec allows.
+    // We can support List indexes from Integer.MIN_VALUE - Integer.MAX_VALUE
+    // to allow for negative indexing. This is just an alternate way of specifying
+    // an index relative to the end of the list, as in Python and JavaScript.
+    // We normalize this index before we try to get items, so only non-negative indices are used.
+    public static final long JSON_MAX_INT_INDEX = (1L << 53) - 1;
+    public static final long JSON_MIN_INT_INDEX = -(1L << 53) + 1;
+    public static final int MAX_INT_INDEX = Integer.MAX_VALUE;
+    public static final int MIN_INT_INDEX = Integer.MIN_VALUE;
+
+
+    private static final Pattern UNICODE_ESCAPE_PATTERN = Pattern.compile("\\\\u([0-9a-fA-F]{4})");
+
 
     private final String pointerString;
     private final List<Object> parts;
+
+
+    /**
+     * Creates a JSONPointer from a JSONPathMatch instance.
+     * <p>
+     * The parts from a match are considered to be in their final, canonical form,
+     * so no further decoding or parsing is performed.
+     *
+     * @param match The match object containing the path information.
+     * @return A new JSONPointer instance pointing to the match's location.
+     */
+    public static JSONPointer fromMatch(JSONPathMatch match) {
+        // The private constructor takes a list of already-parsed parts and
+        // handles encoding the string representation. This is the most direct
+        // and efficient translation of the Python version's intent.
+        return new JSONPointer(match.getParts());
+    }
+    /**
+     * Builds a JSONPointer from an iterable of path parts, with options for decoding.
+     * <p>
+     * This method processes each part by optionally applying URI and Unicode decoding
+     * before constructing the final pointer.
+     *
+     * @param parts          The keys and indices that make up a JSONPointer.
+     * @param uriDecode      If {@code true}, each part will be unescaped using URL decoding rules.
+     * @param unicodeEscape  If {@code true}, UTF-16 escape sequences (e.g., \u20ac) within each part will be decoded.
+     * @return A new {@code JSONPointer} built from the processed parts.
+     */
+    public static JSONPointer fromParts(Iterable<?> parts, boolean uriDecode, boolean unicodeEscape) {
+        List<Object> processedParts = new ArrayList<>();
+        for (Object part : parts) {
+            String sPart = String.valueOf(part);
+
+            if (uriDecode) {
+                sPart = URLDecoder.decode(sPart, StandardCharsets.UTF_8);
+            }
+            if (unicodeEscape) {
+                sPart = unicodeEscape(sPart);
+            }
+
+            // Todo - re-examine the need to keep parts separate as Strings and Integers
+            // Unlike the Python version which keeps all parts as strings, we convert
+            // numeric-looking parts back to Integers. This ensures internal consistency
+            // with pointers parsed from a string and works correctly with the Java
+            // resolve() logic, which expects integer indices for lists.
+            //processedParts.add(toPart(sPart));
+            processedParts.add(sPart);
+        }
+
+        // The private constructor takes a list of already-parsed parts.
+        return new JSONPointer(processedParts);
+    }
+
+    /**
+     * Builds a JSONPointer from an iterable of path parts using default decoding options.
+     * <p>
+     * By default, Unicode escape sequences are decoded, but URI-style percent-encoding is not.
+     * This matches the default behavior in the Python implementation.
+     *
+     * @param parts The keys and indices that make up a JSONPointer.
+     * @return A new {@code JSONPointer} built from the parts.
+     */
+    public static JSONPointer fromParts(Iterable<?> parts) {
+        // In Python, the defaults are unicode_escape=True, uri_decode=False
+        return fromParts(parts, false, true);
+    }
+
+    private static List<Object> parse(String pointer, boolean uriDecode, boolean unicodeEscape) {
+        if (pointer == null) {
+            return Collections.emptyList();
+        }
+
+        String p = pointer;
+        if (uriDecode) {
+            p = URLDecoder.decode(p, StandardCharsets.UTF_8);
+        }
+        if (unicodeEscape) {
+            p = unicodeEscape(p); // <<< THE FIX IS HERE
+        }
+
+        p = p.trim();
+        if (p.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        if (!p.startsWith("/")) {
+            throw new JSONPointerException("pointer must start with a slash or be the empty string");
+        }
+
+        List<Object> parts = new ArrayList<>();
+        // Split and skip the initial empty string from the leading "/"
+        for (String part : p.substring(1).split("/", -1)) {
+            String unescaped = part.replace("~1", "/").replace("~0", "~");
+            parts.add(toIndex(unescaped));
+        }
+        return parts;
+    }
+
+    private static String encode(Iterable<Object> parts) {
+        StringBuilder sb = new StringBuilder();
+        for (Object part : parts) {
+            sb.append("/");
+            sb.append(String.valueOf(part).replace("~", "~0").replace("/", "~1"));
+        }
+        return sb.toString();
+    }
+
+
+    private static String unicodeEscape(String s) {
+        if (s == null || !s.contains("\\u")) {
+            return s;
+        }
+
+        // The Python version also un-escapes slashes
+        String unescapedSlashes = s.replace("\\/", "/");
+
+        Matcher matcher = UNICODE_ESCAPE_PATTERN.matcher(unescapedSlashes);
+        StringBuilder sb = new StringBuilder();
+        while (matcher.find()) {
+            // Parse the hex code and append the corresponding character
+            int charCode = Integer.parseInt(matcher.group(1), 16);
+            matcher.appendReplacement(sb, Character.toString((char) charCode));
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
+    }
+
+
+    /**
+     * A simple generic Pair class.
+     *
+     * @param <L> Type of the parent element.
+     * @param <R> Type of the obj element.
+     */
+    public record Pair<L, R>(L parent, R obj) {}
+
 
     /**
      * Creates a JSONPointer from a string representation.
@@ -72,6 +222,20 @@ public class JSONPointer {
 
     public List<Object> getParts() {
         return parts;
+    }
+
+    /**
+     * Checks if this pointer points to a child of another pointer.
+     *
+     * @param other The potential parent pointer.
+     * @return {@code true} if this pointer's path starts with all the parts of the
+     *         {@code other} pointer and is longer.
+     */
+    public boolean isRelativeTo(JSONPointer other) {
+        if (other == null || other.getParts().size() >= this.getParts().size()) {
+            return false;
+        }
+        return this.getParts().subList(0, other.getParts().size()).equals(other.getParts());
     }
 
     /**
@@ -116,82 +280,6 @@ public class JSONPointer {
     }
 
     /**
-     * Creates a JSONPointer from a JSONPathMatch instance.
-     * <p>
-     * The parts from a match are considered to be in their final, canonical form,
-     * so no further decoding or parsing is performed.
-     *
-     * @param match The match object containing the path information.
-     * @return A new JSONPointer instance pointing to the match's location.
-     */
-    public static JSONPointer fromMatch(JSONPathMatch match) {
-        // The private constructor takes a list of already-parsed parts and
-        // handles encoding the string representation. This is the most direct
-        // and efficient translation of the Python version's intent.
-        return new JSONPointer(match.getParts());
-    }
-    /**
-     * Builds a JSONPointer from an iterable of path parts, with options for decoding.
-     * <p>
-     * This method processes each part by optionally applying URI and Unicode decoding
-     * before constructing the final pointer.
-     *
-     * @param parts          The keys and indices that make up a JSONPointer.
-     * @param uriDecode      If {@code true}, each part will be unescaped using URL decoding rules.
-     * @param unicodeEscape  If {@code true}, UTF-16 escape sequences (e.g., \u20ac) within each part will be decoded.
-     * @return A new {@code JSONPointer} built from the processed parts.
-     */
-    public static JSONPointer fromParts(Iterable<?> parts, boolean uriDecode, boolean unicodeEscape) {
-        List<Object> processedParts = new ArrayList<>();
-        for (Object part : parts) {
-            String sPart = String.valueOf(part);
-
-            if (uriDecode) {
-                sPart = URLDecoder.decode(sPart, StandardCharsets.UTF_8);
-            }
-            if (unicodeEscape) {
-                sPart = unicodeEscape(sPart);
-            }
-
-            // Unlike the Python version which keeps all parts as strings, we convert
-            // numeric-looking parts back to Integers. This ensures internal consistency
-            // with pointers parsed from a string and works correctly with the Java
-            // resolve() logic, which expects integer indices for lists.
-            processedParts.add(toPart(sPart));
-        }
-
-        // The private constructor takes a list of already-parsed parts.
-        return new JSONPointer(processedParts);
-    }
-
-    /**
-     * Builds a JSONPointer from an iterable of path parts using default decoding options.
-     * <p>
-     * By default, Unicode escape sequences are decoded, but URI-style percent-encoding is not.
-     * This matches the default behavior in the Python implementation.
-     *
-     * @param parts The keys and indices that make up a JSONPointer.
-     * @return A new {@code JSONPointer} built from the parts.
-     */
-    public static JSONPointer fromParts(Iterable<?> parts) {
-        // In Python, the defaults are unicode_escape=True, uri_decode=False
-        return fromParts(parts, false, true);
-    }
-
-    /**
-     * Checks if this pointer points to a child of another pointer.
-     *
-     * @param other The potential parent pointer.
-     * @return {@code true} if this pointer's path starts with all the parts of the
-     *         {@code other} pointer and is longer.
-     */
-    public boolean isRelativeTo(JSONPointer other) {
-        if (other == null || other.getParts().size() >= this.getParts().size()) {
-            return false;
-        }
-        return this.getParts().subList(0, other.getParts().size()).equals(other.getParts());
-    }
-    /**
      * Resolves this pointer against data, returning the object and its immediate parent.
      *
      * @param data The target JSON "document" or equivalent Java objects.
@@ -204,15 +292,13 @@ public class JSONPointer {
         if (parts.isEmpty()) {
             return new Pair<>(null, resolve(data));
         }
-
-        Object loadedData = JsonLoader.load(data);
-        Object parent = loadedData;
+        Object parent = JsonLoader.load(data);;
         for (int i = 0; i < parts.size() - 1; i++) {
             parent = getItem(parent, parts.get(i));
         }
 
         try {
-            Object child = getItem(parent, parts.get(parts.size() - 1));
+            Object child = getItem(parent, parts.getLast());
             return new Pair<>(parent, child);
         } catch (JSONPointerIndexException | JSONPointerKeyException e) {
             return new Pair<>(parent, UNDEFINED);
@@ -243,26 +329,47 @@ public class JSONPointer {
     }
 
     /**
-     * Joins this pointer with another path segment. This is the equivalent of the
-     * {@code /} operator in the Python version.
-     *
-     * @param other A string representing another pointer segment. If it starts with
-     *              "/", it replaces this pointer entirely.
-     * @return A new {@code JSONPointer} representing the combined path.
+     * Join this pointer with {@code other}.
+
+     * @param other a JSON Pointer string, possibly without a leading slash. If {@code other} does have a leading slash,
+     *              the previous pointer is ignored and a new JSONPath is returned from {@code other}.
+     * @return this pointer joined with {@code other}, or {@code other} if it begins with a leading slash.
      */
-    public JSONPointer join(String other) {
-        if (other == null) {
+    JSONPointer joinImpl(String other) {
+        String escaped = unicodeEscape(other).trim();
+        if (escaped.startsWith("/")) {
+            return new JSONPointer(escaped, false, false);
+        }
+        var parts = new ArrayList<>(this.parts);
+        String[] otherParts = escaped.split("/");
+        for (String s :  otherParts) {
+            parts.add(s.replace("~1", "/").replace("~0", "~"));
+        }
+        return new JSONPointer(encode(parts), parts, false, false);
+    }
+
+
+    /**
+     * Join this pointer with {@code parts}
+     *
+     * Each part is expected to be a JSON Pointer string, possibly without a
+     * leading slash. If a part does have a leading slash, the previous
+     * pointer is ignored, and a new {@code JSONPointer} is created, and processing of
+     * remaining parts continues.
+     *
+     * @param parts One or more strings representing pointer segments. If any segment starts with
+     *              "/", it replaces this pointer entirely, and subsequent segments are ignored.
+     * @return a new {@code JSONPointer} representing the combined path.
+     */
+    public JSONPointer join(String... parts) {
+        if (parts == null || parts.length == 0) {
             return this;
         }
-
-        String otherTrimmed = other.trim();
-        if (otherTrimmed.startsWith("/")) {
-            return new JSONPointer(otherTrimmed);
+        JSONPointer pointer = this;
+        for (var part : parts){
+            pointer = pointer.joinImpl(part);
         }
-
-        List<Object> newParts = new ArrayList<>(this.parts);
-        newParts.addAll(parse(otherTrimmed, true,false)); // Relative parts are not URI encoded
-        return new JSONPointer(newParts);
+        return pointer;
     }
 
     /**
@@ -275,48 +382,23 @@ public class JSONPointer {
         return rel.to(this);
     }
 
-    private static List<Object> parse(String pointer, boolean uriDecode, boolean unicodeEscape) {
-        if (pointer == null) {
-            return Collections.emptyList();
-        }
 
-        String p = pointer;
-        if (uriDecode) {
-            p = URLDecoder.decode(p, StandardCharsets.UTF_8);
-        }
-        if (unicodeEscape) {
-            p = unicodeEscape(p); // <<< THE FIX IS HERE
-        }
-
-        p = p.trim();
-        if (p.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        if (!p.startsWith("/")) {
-            throw new JSONPointerException("pointer must start with a slash or be the empty string");
-        }
-
-        List<Object> parts = new ArrayList<>();
-        // Split and skip the initial empty string from the leading "/"
-        for (String part : p.substring(1).split("/", -1)) {
-            String unescaped = part.replace("~1", "/").replace("~0", "~");
-            parts.add(toPart(unescaped));
-        }
-        return parts;
-    }
-    private static Object toPart(String s) {
-        // Reject non-zero ints that start with a zero.
+    /**
+     * Reject non-zero ints that start with a zero.
+     * @param s String that may be an int, with or without a leading zero.
+     * @return the int value of the String if convertable to an int. If not convertible to int, returns the argument.
+     */
+    private static Object toIndex(String s) {
         if (s.length() > 1 && s.startsWith("0")) {
             return s;
         }
         try {
             long index = Long.parseLong(s);
             if (index < MIN_INT_INDEX || index > MAX_INT_INDEX) {
-                throw new JSONPointerIndexException("index out of range");
+                throw new JSONPointerIndexException("Index out of range: " + index);
             }
-            return (int) index;
-        } catch (NumberFormatException e) {
+            return (int)index;
+        } catch (NumberFormatException e){
             return s;
         }
     }
@@ -339,22 +421,42 @@ public class JSONPointer {
         ));
     }
 
-    private Object getFromList(List<?> list, Object key) {
-        if (!(key instanceof Integer)) {
-            throw new JSONPointerTypeException(String.format("list index must be an integer, not '%s'", key));
+    private Object getFromList(List<?> list, Object index) {
+        Object maybeInteger = index;
+        if (index instanceof String s) {
+            maybeInteger = toIndex(s);
         }
-        int index = (Integer) key;
-        if (index < 0 || index >= list.size()) {
-            throw new JSONPointerIndexException(String.format("index out of range: %d", index));
+        switch (maybeInteger) {
+            case Integer i -> {
+                 int listIndex = i;
+                //normalize negative index value
+                if (listIndex < 0) {
+                    listIndex = list.size() + listIndex;
+                }
+                if (listIndex < 0 || listIndex >= list.size()) {
+                    throw new JSONPointerIndexException(String.format("Index %s out of range for List of size %d", index, list.size()));
+                }
+                return list.get(listIndex);
+            }
+            case String  s -> {
+                if (HYPHEN.equals(s)) {
+                    // "-" is a valid index when appending to a JSON array
+                    // with JSON Patch, but not when resolving a JSON Pointer.
+                    throw new JSONPointerIndexException("index out of range: '-'");
+                }
+                throw new JSONPointerTypeException("List indices must be integers, got '%s'".formatted(index));
+            }
+            default ->
+                    throw new JSONPointerTypeException(String.format("List index must be convertible to an integer, got '%s'", index));
         }
-        return list.get(index);
+
     }
 
     private Object getFromMap(Map<?, ?> map, Object key) {
         if (map.containsKey(key)) {
             return map.get(key);
         }
-        // Python version tries int as string key
+        // Python version tries int as a string key
         if (key instanceof Integer && map.containsKey(String.valueOf(key))) {
             return map.get(String.valueOf(key));
         }
@@ -381,37 +483,6 @@ public class JSONPointer {
         throw new JSONPointerKeyException(String.format("key not found: '%s'", key));
     }
 
-
-    private static String encode(Iterable<Object> parts) {
-        StringBuilder sb = new StringBuilder();
-        for (Object part : parts) {
-            sb.append("/");
-            sb.append(String.valueOf(part).replace("~", "~0").replace("/", "~1"));
-        }
-        return sb.toString();
-    }
-
-    private static final Pattern UNICODE_ESCAPE_PATTERN = Pattern.compile("\\\\u([0-9a-fA-F]{4})");
-
-    private static String unicodeEscape(String s) {
-        if (s == null || !s.contains("\\u")) {
-            return s;
-        }
-
-        // The Python version also un-escapes slashes
-        String unescapedSlashes = s.replace("\\/", "/");
-
-        Matcher matcher = UNICODE_ESCAPE_PATTERN.matcher(unescapedSlashes);
-        StringBuilder sb = new StringBuilder();
-        while (matcher.find()) {
-            // Parse the hex code and append the corresponding character
-            int charCode = Integer.parseInt(matcher.group(1), 16);
-            matcher.appendReplacement(sb, Character.toString((char) charCode));
-        }
-        matcher.appendTail(sb);
-        return sb.toString();
-    }
-
     @Override
     public String toString() {
         return pointerString;
@@ -428,14 +499,5 @@ public class JSONPointer {
     @Override
     public int hashCode() {
         return Objects.hash(parts);
-    }
-
-    /**
-     * A simple generic Pair class.
-     *
-     * @param <L> Type of the left element.
-     * @param <R> Type of the right element.
-     */
-        public record Pair<L, R>(L left, R right) {
     }
 }
