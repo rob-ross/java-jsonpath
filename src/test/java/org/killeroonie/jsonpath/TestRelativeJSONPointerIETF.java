@@ -44,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public class TestRelativeJSONPointerIETF {
-    record Case(String pointer, String rel, Object want) {};
+    record Case(String pointer, String rel, Object want) {}
     static final Map<String, Object> DOCUMENT = new LinkedHashMap<>();
     static {
         DOCUMENT.put("foo", List.of("bar", "baz", "biz"));
