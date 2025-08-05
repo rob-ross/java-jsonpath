@@ -73,14 +73,10 @@ public class TestRelativeJSONPointerIETF {
     void test_relative_pointer_ietf_examples(Case testCase) {
         JSONPointer pointer = new JSONPointer(testCase.pointer);
         RelativeJSONPointer rel = new RelativeJSONPointer(testCase.rel);
-        System.out.println("rel = " + rel + ", rel origin=" + rel.getOrigin() + ", pointer=" + rel.getPointer() + ", index offset=" + rel.getIndexOffset());
         JSONPointer rel_pointer = rel.to(pointer);
-        System.out.println("rel_pointer = " + rel_pointer);
 
         assertEquals(testCase.want, rel_pointer.resolve(DOCUMENT), testCase.toString() );
-
         assertEquals(rel_pointer, pointer.to( testCase.rel), testCase.toString());
-
         assertEquals(testCase.rel, rel.toString(), testCase.toString());
     }
 }
