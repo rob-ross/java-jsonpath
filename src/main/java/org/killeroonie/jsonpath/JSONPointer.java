@@ -8,7 +8,6 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Identifies a single, specific value in JSON-like data, as per RFC 6901.
@@ -29,26 +28,6 @@ public class JSONPointer {
             return "<UNDEFINED>";
         }
     };
-
-    public static final String HYPHEN = "-";
-    public static final String HASH = "#";
-    // The JSON spec allows positive and negative array indices.
-    // Java Lists only allow the range 0 - Integer.MAX_VALUE.
-    // These ranges are smaller than the JSON Spec allows.
-    // We can support List indexes from Integer.MIN_VALUE - Integer.MAX_VALUE
-    // to allow for negative indexing. This is just an alternate way of specifying
-    // an index relative to the end of the list, as in Python and JavaScript.
-    // We normalize this index before we try to get items, so only non-negative indices are used.
-    public static final long JSON_MAX_INT_INDEX = (1L << 53) - 1;
-    public static final long JSON_MIN_INT_INDEX = -(1L << 53) + 1;
-    public static final int MAX_INT_INDEX = Integer.MAX_VALUE;
-    public static final int MIN_INT_INDEX = Integer.MIN_VALUE;
-
-    public static final String KEYS_SELECTOR = "~";
-
-
-
-    private static final Pattern UNICODE_ESCAPE_PATTERN = Pattern.compile("\\\\u([0-9a-fA-F]{4})");
 
 
     private final String pointerString;
@@ -170,7 +149,7 @@ public class JSONPointer {
         // The Python version also unescapes slashes
         String unescapedSlashes = s.replace("\\/", "/");
 
-        Matcher matcher = UNICODE_ESCAPE_PATTERN.matcher(unescapedSlashes);
+        Matcher matcher = JsonPathUtils.UNICODE_ESCAPE_PATTERN.matcher(unescapedSlashes);
         StringBuilder sb = new StringBuilder();
         while (matcher.find()) {
             // Parse the hex code and append the corresponding character
@@ -408,7 +387,7 @@ public class JSONPointer {
         }
         try {
             long index = Long.parseLong(s);
-            if (index < MIN_INT_INDEX || index > MAX_INT_INDEX) {
+            if (index < JsonPathUtils.MIN_INT_INDEX || index > JsonPathUtils.MAX_INT_INDEX) {
                 throw new JSONPointerIndexException("Index out of range: " + index);
             }
             return (int)index;
@@ -423,7 +402,7 @@ public class JSONPointer {
         }
 
         // Handle hash references on the key/index
-        if (keyOrIndex instanceof String s && s.startsWith(HASH)) {
+        if (keyOrIndex instanceof String s && s.startsWith(JsonPathUtils.HASH)) {
             String hashRemoved = s.substring(1);
             if (obj instanceof Map<?,?> m) {
                 if (m.containsKey(s))
@@ -452,7 +431,7 @@ public class JSONPointer {
             return toIndex(s.substring(1));
         }
 
-        if (HYPHEN.equals(keyOrIndex)) {
+        if (JsonPathUtils.HYPHEN.equals(keyOrIndex)) {
             // "-" is a valid index when appending to a JSON array
             // with JSON Patch, but not when resolving a JSON Pointer.
             throw new JSONPointerIndexException("index out of range: '-'");
@@ -499,7 +478,7 @@ public class JSONPointer {
     }
 
     private Object getFromMap(Map<?, ?> map, Object key) {
-        if ( key instanceof String s && s.startsWith(KEYS_SELECTOR) ) {
+        if ( key instanceof String s && s.startsWith(JsonPathUtils.KEYS_SELECTOR) ) {
             String k = s.substring(1);
             if ( map.containsKey( k )) {
                 return map.get(k);

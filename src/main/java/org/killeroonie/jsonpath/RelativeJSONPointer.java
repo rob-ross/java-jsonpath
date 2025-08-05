@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.killeroonie.jsonpath.JSONPointer.HASH;
+import static org.killeroonie.jsonpath.JsonPathUtils.HASH;
 
 /**
  * A Relative JSON Pointer, as per the IETF draft.

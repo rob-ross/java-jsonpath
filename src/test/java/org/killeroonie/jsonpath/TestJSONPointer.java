@@ -55,8 +55,8 @@ public class TestJSONPointer {
 
     @Test
     void test_pointer_index_out_of_range() {
-        long max_plus_one = JSONPointer.JSON_MAX_INT_INDEX + 1;
-        long min_minus_one = JSONPointer.JSON_MIN_INT_INDEX - 1;
+        long max_plus_one = JsonPathUtils.JSON_MAX_INT_INDEX + 1;
+        long min_minus_one = JsonPathUtils.JSON_MIN_INT_INDEX - 1;
         assertThrows(JSONPointerException.class, ()-> new JSONPointer("/some/thing/%d".formatted(max_plus_one)));
         assertThrows(JSONPointerException.class, ()-> new JSONPointer("/some/thing/%d".formatted(min_minus_one)));
     }
@@ -224,24 +224,24 @@ public class TestJSONPointer {
     void test_convenience_resolve() {
         Map<String, Map<String, Object>> data = new HashMap<>();
         data.put("some", Map.of("thing", List.of(1, 2, 3)));
-        assertEquals(1, JsonPath.resolve("/some/thing/0", data));
-        assertThrows(JSONPointerResolutionException.class,  () -> JsonPath.resolve("/some/thing/99", data));
+        assertEquals(1, JsonPathUtils.resolve("/some/thing/0", data));
+        assertThrows(JSONPointerResolutionException.class,  () -> JsonPathUtils.resolve("/some/thing/99", data));
     }
 
     @Test
     void test_convenience_resolve_default() {
         Map<String, Map<String, Object>> data = new HashMap<>();
         data.put("some", Map.of("thing", List.of(1, 2, 3)));
-        assertEquals(0, JsonPath.resolve("/some/thing/99", data, 0));
+        assertEquals(0, JsonPathUtils.resolve("/some/thing/99", data, 0));
     }
 
     @Test
     void test_convenience_resolve_from_parts() {
         Map<String, Map<String, Object>> data = new HashMap<>();
         data.put("some", Map.of("thing", List.of(1, 2, 3)));
-        assertEquals(1, JsonPath.resolve(List.of("some", "thing", "0"), data ));
+        assertEquals(1, JsonPathUtils.resolve(List.of("some", "thing", "0"), data ));
         assertThrows(JSONPointerResolutionException.class,
-                () -> JsonPath.resolve(List.of("some", "thing", "99"), data)
+                () -> JsonPathUtils.resolve(List.of("some", "thing", "99"), data)
         );
     }
 
@@ -249,7 +249,7 @@ public class TestJSONPointer {
     void test_convenience_resolve_default_from_parts() {
         Map<String, Map<String, Object>> data = new HashMap<>();
         data.put("some", Map.of("thing", List.of(1, 2, 3)));
-        assertEquals(0, JsonPath.resolve(List.of("some", "thing", "99"), data, 0));
+        assertEquals(0, JsonPathUtils.resolve(List.of("some", "thing", "99"), data, 0));
     }
 
     @Test

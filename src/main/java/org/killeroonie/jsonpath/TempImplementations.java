@@ -46,15 +46,35 @@ def load_data(data: object) -> Any:
     return data
  */
 
-abstract class Lexer {
-    abstract Token tokenize();
+
+class Parser {
+    public Parser(JSONPathEnvironment env) {}
+    Token tokenize() { return null; };
 }
 
-abstract class JSONPathMatch {
-    public String getParts() {
-        return "";
+class JSONPathMatch {
+    public final FilterContextVars filterContext;
+    public final Object obj;
+    public final JSONPathMatch parent;
+    public final String path;
+    public final List<Object> parts;
+    public final Object root;
+
+    public JSONPathMatch(FilterContextVars filterContext, Object obj, JSONPathMatch parent,
+                         String path, List<Object> parts, Object root) {
+        this.filterContext = filterContext;
+        this.obj = obj;
+        this.parent = parent;
+        this.path = path;
+        this.parts = parts;
+        this.root = root;
     }
+
+    public String getParts() { return ""; }
 }
+
+class FilterContextVars {}
+
 
 class Regex {
     public static Pattern compile(String pattern) {

@@ -7,13 +7,31 @@ import org.killeroonie.jsonpath.exception.JSONPointerResolutionException;
 import org.killeroonie.jsonpath.exception.JSONPointerTypeException;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import static org.killeroonie.jsonpath.JSONPointer.UNDEFINED;
 
 /**
- * Convenience and utility methods for the jsonpath library.
+ * Constants, and convenience and utility methods for the jsonpath library.
  */
-public class JsonPath {
+public class JsonPathUtils {
+
+    // The JSON spec allows positive and negative array indices.
+    // Java Lists only allow the range 0 - Integer.MAX_VALUE.
+    // These ranges are smaller than the JSON Spec allows.
+    // We can support List indexes from Integer.MIN_VALUE - Integer.MAX_VALUE
+    // to allow for negative indexing. This is just an alternate way of specifying
+    // an index relative to the end of the list, as in Python and JavaScript.
+    // We normalize this index before we try to get items, so only non-negative indices are actually used.
+    public static final long JSON_MAX_INT_INDEX = (1L << 53) - 1;
+    public static final long JSON_MIN_INT_INDEX = -(1L << 53) + 1;
+    public static final int MAX_INT_INDEX = Integer.MAX_VALUE;
+    public static final int MIN_INT_INDEX = Integer.MIN_VALUE;
+    public static final String HYPHEN = "-";
+    public static final String HASH = "#";
+
+    public static final String KEYS_SELECTOR = "~";
+    static final Pattern UNICODE_ESCAPE_PATTERN = Pattern.compile("\\\\u([0-9a-fA-F]{4})");
 
     /**
      * Resolve JSON Pointer {@code pointer} against {@code data}.
@@ -35,7 +53,7 @@ public class JsonPath {
             boolean uriDecode) {
 
         Objects.requireNonNull(pointer, "pointer must not be null");
-        return JsonPath.resolveImpl(pointer, data, defaultValue, unicodeEscape, uriDecode);
+        return JsonPathUtils.resolveImpl(pointer, data, defaultValue, unicodeEscape, uriDecode);
     }
 
     // ###########################################################################
@@ -54,31 +72,31 @@ public class JsonPath {
             boolean uriDecode) {
 
         Objects.requireNonNull(parts, "parts must not be null");
-        return JsonPath.resolveImpl(parts, data, defaultValue, unicodeEscape, uriDecode);
+        return JsonPathUtils.resolveImpl(parts, data, defaultValue, unicodeEscape, uriDecode);
     }
 
     public static Object resolve( String pointer, Object data ) {
-        return JsonPath.resolve(pointer, data, UNDEFINED, true, false);
+        return JsonPathUtils.resolve(pointer, data, UNDEFINED, true, false);
     }
 
     public static Object resolve( String pointer, Object data, Object defaultValue) {
-        return JsonPath.resolve(pointer, data, defaultValue, true, false);
+        return JsonPathUtils.resolve(pointer, data, defaultValue, true, false);
     }
 
     public static Object resolve( String pointer, Object data, boolean unicodeEscape, boolean uriDecode) {
-        return JsonPath.resolve(pointer, data, UNDEFINED, true, false);
+        return JsonPathUtils.resolve(pointer, data, UNDEFINED, true, false);
     }
 
     public static Object resolve( Iterable<?> parts, Object data ) {
-        return JsonPath.resolve(parts, data, UNDEFINED, true, false);
+        return JsonPathUtils.resolve(parts, data, UNDEFINED, true, false);
     }
 
     public static Object resolve( Iterable<?> parts, Object data, Object defaultValue) {
-        return JsonPath.resolve(parts, data, defaultValue, true, false);
+        return JsonPathUtils.resolve(parts, data, defaultValue, true, false);
     }
 
     public static Object resolve( Iterable<?> parts, Object data, boolean unicodeEscape, boolean uriDecode) {
-        return JsonPath.resolve(parts, data, UNDEFINED, true, false);
+        return JsonPathUtils.resolve(parts, data, UNDEFINED, true, false);
     }
 
     /**
