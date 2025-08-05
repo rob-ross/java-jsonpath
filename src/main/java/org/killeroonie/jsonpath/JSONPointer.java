@@ -102,7 +102,7 @@ public class JSONPointer {
             //processedParts.add(toPart(sPart));
             processedParts.add(sPart);
         }
-
+        String pointer = encode(processedParts);
         // The private constructor takes a list of already-parsed parts.
         return new JSONPointer(processedParts);
     }
@@ -149,7 +149,7 @@ public class JSONPointer {
             String unescaped = part.replace("~1", "/").replace("~0", "~");
             parts.add(toIndex(unescaped));
         }
-        return parts;
+        return List.copyOf(parts);
     }
 
     private static String encode(Iterable<Object> parts) {
@@ -379,12 +379,26 @@ public class JSONPointer {
      * @return A new {@code JSONPointer} instance.
      */
     public JSONPointer to(RelativeJSONPointer rel) {
-        return rel.to(this);
+//        return rel.to(this);
+        return toImpl( rel, true, false);
     }
 
+    public JSONPointer to(String rel) {
+        return toImpl( rel, false, false);
+    }
+
+    private JSONPointer toImpl(Object relPointerOrString, boolean unicodeEscape,  boolean uriDecode) {
+        RelativeJSONPointer relative_pointer;
+        switch (relPointerOrString) {
+            case RelativeJSONPointer rp -> relative_pointer = rp;
+            case String s -> relative_pointer = new RelativeJSONPointer(s, unicodeEscape, uriDecode);
+            default -> throw new IllegalArgumentException("Expected relative pointer or String, got " + relPointerOrString);
+        }
+        return relative_pointer.to(this);
+    }
 
     /**
-     * Reject non-zero ints that start with a zero.
+     * Rejects non-zero ints that start with a zero.
      * @param s String that may be an int, with or without a leading zero.
      * @return the int value of the String if convertable to an int. If not convertible to int, returns the argument.
      */
