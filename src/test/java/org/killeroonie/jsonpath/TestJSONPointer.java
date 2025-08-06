@@ -334,7 +334,6 @@ public class TestJSONPointer {
         parent = parent.parent();
         assertEquals("", parent.toString() );
         assertEquals(Map.of("some", Map.of("thing",List.of(1, 2, 3))), parent.resolve(data));
-
     }
 
 
@@ -367,11 +366,12 @@ public class TestJSONPointer {
         assertEquals("/foo/bar/baz/0", pointer.join("bar/baz", "0").toString());
         assertEquals("/bar", pointer.join("/bar").toString());
         assertEquals("/bar/0", pointer.join("/bar", "0").toString());
-
-        //Java's static typing won't even allow an int to be passed to join(), so this test is obviated.
-//        with pytest.raises(TypeError):
-//            pointer.join(0)  # type: ignore
-
+        /*
+        Java's static typing won't even allow an int to be passed to join(),
+        so this Python test is obviated:
+            with pytest.raises(TypeError):
+              pointer.join(0)  # type: ignore
+          */
     }
 
 
@@ -402,6 +402,20 @@ public class TestJSONPointer {
         assertThrows(JSONPointerIndexException.class, () -> new JSONPointer("/foo/bar/#9").resolve(data) );
     }
 
+    @Test
+    void test_non_standard_index_pointer_with_leading_zero() {
+        Map<String, Map<String, Object>> data = new HashMap<>();
+        data.put("foo", Map.of("bar", List.of(1, 2, 3), "#baz", "hello" ) ) ;
+        assertThrows( JSONPointerTypeException.class, () -> new JSONPointer("/foo/bar/#01").resolve(data) );
+        assertThrows( JSONPointerTypeException.class, () -> new JSONPointer("/foo/bar/#09").resolve(data) );
+    }
+
+    @Test
+    void test_non_standard_index_pointer_to_non_array_object() {
+        Map<String, Map<String, Object>> data = new HashMap<>();
+        data.put("foo", Map.of("bar", true, "#baz", "hello" ) ) ;
+        assertThrows( JSONPointerTypeException.class, () -> new JSONPointer("/foo/bar/#1").resolve(data) );
+    }
 
     @Test
     void test_trailing_slash() {
@@ -410,5 +424,4 @@ public class TestJSONPointer {
         assertEquals(List.of(1,2,3), new JSONPointer("/foo/").resolve(data));
         assertEquals(List.of(4,5,6), new JSONPointer("/foo/ ").resolve(data));
     }
-
 }
