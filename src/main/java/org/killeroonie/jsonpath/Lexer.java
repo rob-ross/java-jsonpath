@@ -424,6 +424,14 @@ public class Lexer {
         this.whitespacePolicy = policy;
     }
 
+    /**
+     * Returns the current whitespace policy for this Lexer. {@code WhitespacePolicy.LENIENT} (the default) causes the
+     * Lexer to consume all whitespace and emit no SPACE tokens. {@code WhitespacePolicy.STRICT} will emit all
+     * whitespace characters as a SPACE tokens. A run of contiguous whitespace characters only produces a single SPACE token.
+     * Note that a STRICT policy enforces whitespace rules in the RFC9535 spec, and thus JSON path strings that may parse
+     * correctly in LENIENT mode may fail with a syntax error when using STRICT mode.
+     * @return the current {@code WhitespacePolicy} for this Lexer.
+     */
     public WhitespacePolicy getWhitespacePolicy() {
         return this.whitespacePolicy;
     }
@@ -558,8 +566,8 @@ public class Lexer {
     }
 
     public static void main(String[] args) {
-        showRegexpTokenStats();
-
+        //showRegexpTokenStats();
+        showLexemeTokenStats();
     }
 
 }

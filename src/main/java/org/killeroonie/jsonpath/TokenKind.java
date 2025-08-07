@@ -3,95 +3,169 @@ package org.killeroonie.jsonpath;
 import java.util.*;
 import java.util.regex.Pattern;
 
+enum TokenCategory {
+    LITERAL,
+    KEYWORD,
+    COMPARISON_OPERATOR,
+    LOGICAL_OPERATOR,
+    DELIMITER,
+    IDENTIFIER,
+    // special
+    NO_OP,
+    UNKNOWN,
+    EOF,
+    ;
+}
+
+// todo - Refactoring time! Go back to the enum constants being simple with no instance state.
+// move all the instance variables into the LexerRule subclasses,
+// for RegexRules, add a first-set.
+/*
+    Steps for refactoring:
+
+    1. if isRegExp is false, we will create a default LexemeRule for it that includes
+        a. the lexeme, which is the second constructor argument (Contants.XXX)
+        b. emitKind, which is the third argument if present, and the TokenKind.this if not
+
+    2. if isRegExp is true, we will create a default RegexRule that includes
+        a. the regex pattern string, which is the second constructor argument (Constants.XXX)
+        b. emitKind, which is the third argument if present, and the TokenKind.this if not
+        c. a new optional parameter argument, "first-set", the set of single characters that  must be present in the string
+        for a match to occur. Note that matching a first-set character doesn't guarantee the rest of the string will match.
+        It's just a quick check when possible to avoid a regexp match if we already know it will fail. This is an
+        optional argument so null is allowed.
+
+ */
+
 /**
  * JSONPath tokens.
  * <p>
  * This enum is a translation of the string constants from the Python
- * <code>token.py</code> module, with associated regex patterns from
- * <code>lex.py</code>.
+ * <code>token.py</code> module.
  */
 public enum TokenKind {
-    // Constructor args:
-    // boolean isRegExp, String defaultPatternString, TokenKind emitKind
 
-    // Utility tokens
-    EOF,
-    ILLEGAL,
-    SKIP(true, "[ \\n\\t\\r\\.]+"),
-    SPACE(true, Constants.SPACES),
-    // JSONPath expression tokens
-    COLON(false, ":"),
-    COMMA(false, ","),
-    DDOT(false, ".."),
-    DOT(false, "."),
-    DOT_INDEX, // unused in python-jsonpath
-    PROPERTY,
-    DOT_PROPERTY(true, "\\.(?<GPROP>[\\u0080-\\uFFFFa-zA-Z_][\\u0080-\\uFFFFa-zA-Z0-9_-]*)", PROPERTY),
-    FILTER(false, "?"),
-    RBRACKET(false, "]"),
-    BARE_PROPERTY(true, "[\\u0080-\\uFFFFa-zA-Z_][\\u0080-\\uFFFFa-zA-Z0-9_-]*"),
-    LIST_SLICE(true, "(?<GLSLICESTART>\\-?\\d*)\\s*:\\s*(?<GLSLICESTOP>\\-?\\d*)\\s*(?::\\s*(?<GLSLICESTEP>\\-?\\d*))?"),
-    LIST_START(false, "["),
-    ROOT(false, "$"),
+    SKIP(true, Constants.SPACES),
+    SPACE(true, Constants.SPACES), // NEW. REPLACES SKIP,
+
+    // single char tokens
+    LIST_START(false, Constants.LEFT_BRACKET),
+    LBRACKET(false, Constants.LEFT_BRACKET, LIST_START), // NEW. REPLACES LIST_START
+    RBRACKET(false, Constants.RIGHT_BRACKET),
+    LPAREN(false, Constants.LEFT_PAREN),
+    RPAREN(false, Constants.RIGHT_PAREN),
+    // we're not emitting tokens for individual quotes around strings
+    COMMA(false, Constants.COMMA),
+    DOT(false, Constants.DOT),
+    ROOT(false, Constants.DOLLAR), // my Python impl uses DOLLAR as TokenKind here.
+    FILTER(false, Constants.QUESTION), // my Python impl uses QMARK as TokenKind here.
+    WILD(false, Constants.STAR), // my Python impl uses STAR as TokenKind here.
+    SELF(false, Constants.AT),
+    COLON(false, Constants.COLON),
+    NOT(false, Constants.LOGICAL_NOT_OP),
+    GT(false, Constants.GREATER_THAN),
+    LT(false, Constants.LESS_THAN),
+
+    // multi-char tokens
+    DDOT(false, Constants.DOUBLE_DOT),
+    EQ(false, Constants.EQUAL),
+    NE(false, Constants.NOT_EQUAL),
+    GE(false, Constants.GREATER_THAN_OR_EQUAL),
+    LE(false, Constants.LESS_THAN_OR_EQUAL),
+    AND(false, Constants.LOGICAL_AND_OP),
+    OR(false, Constants.LOGICAL_OR_OP),
+
+    // literal types
+    INT(true, Constants.INT),
+    FLOAT(true, Constants.FLOAT),
+    // todo refactor so a single slice token is emitted and parsed later
+    LIST_SLICE(true, Constants.LIST_SLICE),
     SLICE_START,
     SLICE_STEP,
     SLICE_STOP,
-    WILD(false, "*"),
+    // string literals
+    DOUBLE_QUOTE_STRING(true, Constants.DOUBLE_QUOTE_STRING),
+    SINGLE_QUOTE_STRING(true, Constants.SINGLE_QUOTE_STRING),
+    // identifiers - todo these can be combined into a single Lexer Token and handled in the Parser for specificity
+    IDENTIFIER, // NEW
+    // these are member-name-shorthand identifiers
+    PROPERTY,
+    DOT_PROPERTY(true, Constants.DOT_PROPERTY, PROPERTY),
+    BARE_PROPERTY(true, Constants.BARE_PROPERTY),
+
+    FUNCTION(true, Constants.FUNCTION), // we can use IDENTIFIER for this
+
+    /*
+    ------------------
+     JSON keywords
+    ------------------
+     But only treated as keywords in certain contexts such as logical comparisons.
+     They are allowed as member values,
+       e.g., { "key1" : "true"}, where the member value is the string "true" and not the JSON value true,
+       which is distinct from { "key1": true } (no quotes around true here).
+     and they are allowed as member names, e.g., { "null": "foo"}.
+     Although these examples might be confusing design choices for an object/map and should be avoided,
+     they are syntactically allowed by the spec.
+    */
+    TRUE(false, Constants.KEYWORD_TRUE),
+    FALSE(false, Constants.KEYWORD_FALSE),
+    // NULL: Note - JSON null is treated the same as any other JSON value, i.e., it is not taken to mean
+    // "undefined" or "missing".
+    NULL(false, Constants.KEYWORD_NULL),
+
+    // regex literals
+    RE_PATTERN(true, Constants.RE_PATTERN), // a regular expression literal
+    RE_FLAGS, // a regular expression flags literal
 
     // Filter expression tokens
-    AND(false, "&&"),
+    // special token used to access context inside a filer.
+    // this looks like it belongs in the same category as ROOT and SELF which are DELIMITERS.
+    FILTER_CONTEXT(false, Constants.UNDERSCORE),
+
+
+    // Special
+    // Utility tokens,
+    EOF,
+    ILLEGAL,
+    NO_OP,   // NEW
+    UNKNOWN, // NEW
+
+    // unused in python-jsonpath
     BLANK,
-    FILTER_CONTEXT(false, "_"),
-    FUNCTION(true, "(?<GFUNC>[a-z][a-z_0-9]+)\\(\\s*"),
-    EMPTY,
-    EQ(false, "=="),
-
-    FALSE(false, "false"),
-    TRUE(false, "true"),
-    NULL(false, "null"),
-
-
-    FLOAT(true, "-?\\d+\\.\\d*(?:[eE][+-]?\\d+)?"),
-    GE(false, ">="),
-    GT(false, ">"),
-    INT(true, "-?\\d+(?<GEXP>[eE][+\\-]?\\d+)?\\b"),
-    LE(false, "<="),
-    LPAREN(false, "("),
-    LT(false, "<"),
-    NE(false, "!="),
-    NOT(false, "!"),
-    OP,
-    OR(false, "||"),
-    RE_FLAGS,
-    RE_PATTERN(true, "/(?<GRE>.+?)/(?<GREFLAGS>[aims]*)"),
-    RPAREN(false, ")"),
-    SELF(false, "@"),
     STRING,
-    DOUBLE_QUOTE_STRING(true, "\"(?<GDQUOTE>(?:(?!(?<!\\\\)\").)*)\""),
-    SINGLE_QUOTE_STRING(true, "'(?<GSQUOTE>(?:(?!(?<!\\\\)').)*)'"),
+    OP,
+    EMPTY,
+    DOT_INDEX,
 
 
     // Extension tokens
-    UNION(false, "|"),
-    INTERSECTION(false, "&"),
-    AND_EXT(false, "and", AND),
-    OR_EXT( false, "or",  OR),
-    NOT_EXT(false, "not", NOT),
-    FALSE_EXT(false, "False", FALSE),
-    TRUE_EXT(false, "True", TRUE),
-    NULL_EXT(false, "Null", NULL),
-    PSEUDO_ROOT(false, "^"),
+    PSEUDO_ROOT(false, Constants.CARRET),
 
-    KEY(false, "#"),
-    KEY_SELECTOR(false, "~"), //Python: TOKEN_KEYS
-    CONTAINS(false, "contains"),
-    IN(false, "in"),
-    LG(false, "<>", NE),
-    NIL(true, "[Nn]il\\b"),
-    NONE(true, "[Nn]one\\b"),
-    RE(false, "=~"),
-    UNDEFINED(false, "undefined"),
-    MISSING(false, "missing"),
+    // new keywords, most are operators except UNDEFINED and MISSING
+    AND_EXT(false, Constants.KEYWORD_AND, AND),
+    OR_EXT( false, Constants.KEYWORD_OR,  OR),
+    NOT_EXT(false, Constants.KEYWORD_NOT, NOT),
+    IN(false, Constants.KEYWORD_IN),
+    CONTAINS(false, Constants.KEYWORD_CONTAINS),
+    UNDEFINED(false, Constants.KEYWORD_UNDEFINED),
+    MISSING(false, Constants.KEYWORD_MISSING),
+
+    // New operators
+    KEY(false, Constants.HASH),
+    KEY_SELECTOR(false, Constants.TILDE), //Python: TOKEN_KEYS,
+    LG(false, Constants.DIAMOND, NE),
+    RE(false, Constants.EQUAL_TILDE),
+    UNION(false, Constants.PIPE),
+    INTERSECTION(false, Constants.AMPERSAND),
+
+
+    // Not used in the Java version, but available for customization.
+    NIL,
+    NONE,
+    FALSE_EXT,
+    TRUE_EXT,
+    NULL_EXT,
+
     ;
 
 
