@@ -35,6 +35,8 @@ enum TokenCategory {
         It's just a quick check when possible to avoid a regexp match if we already know it will fail. This is an
         optional argument so null is allowed.
 
+    3. Refactor TokenKind to take a set of TokenCategory members. Some TokenKinds will fit into multiple categories
+
  */
 
 /**
@@ -45,55 +47,55 @@ enum TokenCategory {
  */
 public enum TokenKind {
 
-    SKIP(true, Constants.SPACES),
-    SPACE(true, Constants.SPACES), // NEW. REPLACES SKIP,
+    SKIP,
+    SPACE(true, Constants.SPACES_RE), // NEW. REPLACES SKIP,
 
     // single char tokens
-    LIST_START(false, Constants.LEFT_BRACKET),
-    LBRACKET(false, Constants.LEFT_BRACKET, LIST_START), // NEW. REPLACES LIST_START
-    RBRACKET(false, Constants.RIGHT_BRACKET),
-    LPAREN(false, Constants.LEFT_PAREN),
-    RPAREN(false, Constants.RIGHT_PAREN),
+    LIST_START,
+    LBRACKET, // NEW. REPLACES LIST_START
+    RBRACKET,
+    LPAREN,
+    RPAREN,
     // we're not emitting tokens for individual quotes around strings
-    COMMA(false, Constants.COMMA),
-    DOT(false, Constants.DOT),
-    ROOT(false, Constants.DOLLAR), // my Python impl uses DOLLAR as TokenKind here.
-    FILTER(false, Constants.QUESTION), // my Python impl uses QMARK as TokenKind here.
-    WILD(false, Constants.STAR), // my Python impl uses STAR as TokenKind here.
-    SELF(false, Constants.AT),
-    COLON(false, Constants.COLON),
-    NOT(false, Constants.LOGICAL_NOT_OP),
-    GT(false, Constants.GREATER_THAN),
-    LT(false, Constants.LESS_THAN),
+    COMMA,
+    DOT,
+    ROOT, // my Python impl uses DOLLAR as TokenKind here.
+    FILTER, // my Python impl uses QMARK as TokenKind here.
+    WILD, // my Python impl uses STAR as TokenKind here.
+    SELF,
+    COLON,
+    NOT,
+    GT,
+    LT,
 
     // multi-char tokens
-    DDOT(false, Constants.DOUBLE_DOT),
-    EQ(false, Constants.EQUAL),
-    NE(false, Constants.NOT_EQUAL),
-    GE(false, Constants.GREATER_THAN_OR_EQUAL),
-    LE(false, Constants.LESS_THAN_OR_EQUAL),
-    AND(false, Constants.LOGICAL_AND_OP),
-    OR(false, Constants.LOGICAL_OR_OP),
+    DDOT,
+    EQ,
+    NE,
+    GE,
+    LE,
+    AND,
+    OR,
 
     // literal types
-    INT(true, Constants.INT),
-    FLOAT(true, Constants.FLOAT),
+    INT,
+    FLOAT,
     // todo refactor so a single slice token is emitted and parsed later
-    LIST_SLICE(true, Constants.LIST_SLICE),
+    LIST_SLICE,
     SLICE_START,
     SLICE_STEP,
     SLICE_STOP,
     // string literals
-    DOUBLE_QUOTE_STRING(true, Constants.DOUBLE_QUOTE_STRING),
-    SINGLE_QUOTE_STRING(true, Constants.SINGLE_QUOTE_STRING),
+    DOUBLE_QUOTE_STRING,
+    SINGLE_QUOTE_STRING,
     // identifiers - todo these can be combined into a single Lexer Token and handled in the Parser for specificity
     IDENTIFIER, // NEW
     // these are member-name-shorthand identifiers
     PROPERTY,
-    DOT_PROPERTY(true, Constants.DOT_PROPERTY, PROPERTY),
-    BARE_PROPERTY(true, Constants.BARE_PROPERTY),
+    DOT_PROPERTY,
+    BARE_PROPERTY,
 
-    FUNCTION(true, Constants.FUNCTION), // we can use IDENTIFIER for this
+    FUNCTION, // we can use IDENTIFIER for this
 
     /*
     ------------------
@@ -107,20 +109,20 @@ public enum TokenKind {
      Although these examples might be confusing design choices for an object/map and should be avoided,
      they are syntactically allowed by the spec.
     */
-    TRUE(false, Constants.KEYWORD_TRUE),
-    FALSE(false, Constants.KEYWORD_FALSE),
+    TRUE,
+    FALSE,
     // NULL: Note - JSON null is treated the same as any other JSON value, i.e., it is not taken to mean
     // "undefined" or "missing".
-    NULL(false, Constants.KEYWORD_NULL),
+    NULL,
 
     // regex literals
-    RE_PATTERN(true, Constants.RE_PATTERN), // a regular expression literal
+    RE_PATTERN, // a regular expression literal
     RE_FLAGS, // a regular expression flags literal
 
     // Filter expression tokens
     // special token used to access context inside a filer.
     // this looks like it belongs in the same category as ROOT and SELF which are DELIMITERS.
-    FILTER_CONTEXT(false, Constants.UNDERSCORE),
+    FILTER_CONTEXT,
 
 
     // Special
@@ -139,24 +141,24 @@ public enum TokenKind {
 
 
     // Extension tokens
-    PSEUDO_ROOT(false, Constants.CARRET),
+    PSEUDO_ROOT,
 
     // new keywords, most are operators except UNDEFINED and MISSING
-    AND_EXT(false, Constants.KEYWORD_AND, AND),
-    OR_EXT( false, Constants.KEYWORD_OR,  OR),
-    NOT_EXT(false, Constants.KEYWORD_NOT, NOT),
-    IN(false, Constants.KEYWORD_IN),
-    CONTAINS(false, Constants.KEYWORD_CONTAINS),
-    UNDEFINED(false, Constants.KEYWORD_UNDEFINED),
-    MISSING(false, Constants.KEYWORD_MISSING),
+    AND_EXT,
+    OR_EXT,
+    NOT_EXT,
+    IN,
+    CONTAINS,
+    UNDEFINED,
+    MISSING,
 
     // New operators
-    KEY(false, Constants.HASH),
-    KEY_SELECTOR(false, Constants.TILDE), //Python: TOKEN_KEYS,
-    LG(false, Constants.DIAMOND, NE),
-    RE(false, Constants.EQUAL_TILDE),
-    UNION(false, Constants.PIPE),
-    INTERSECTION(false, Constants.AMPERSAND),
+    KEY,
+    KEY_SELECTOR, //Python: TOKEN_KEYS,
+    LG,
+    RE,
+    UNION,
+    INTERSECTION,
 
 
     // Not used in the Java version, but available for customization.

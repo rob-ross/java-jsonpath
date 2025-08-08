@@ -112,7 +112,7 @@ public class Lexer {
         final String function_pattern = "(?<GFUNC>[a-z][a-z_0-9]+)\\(\\s*";
 
         EnumMap<TokenKind, LexerRule> rules = new EnumMap<>(TokenKind.class);
-        rules.put(TokenKind.BARE_PROPERTY,
+        /*rules.put(TokenKind.BARE_PROPERTY,
                 new RegexRule(key_pattern, TokenKind.BARE_PROPERTY)
         );
         rules.put(TokenKind.NOT_EXT,
@@ -142,7 +142,7 @@ public class Lexer {
         );
         rules.put(TokenKind.FUNCTION,
                 new RegexRule(function_pattern, TokenKind.FUNCTION)
-        );
+        );*/
 
         return rules;
     }
@@ -403,10 +403,10 @@ public class Lexer {
      * @param pattern the regexp pattern to match.
      * @param emitKind the TokenKind to emit when the pattern is matched
      */
-    record RegexRule(Pattern pattern, TokenKind emitKind) implements LexerRule {
+    record RegexRule(Pattern pattern, TokenKind emitKind, Set<Character> firstSet) implements LexerRule {
 
-        public RegexRule(String patternString, TokenKind emitKind) {
-            this(Pattern.compile(patternString, Pattern.DOTALL), emitKind);
+        public RegexRule(Pattern pattern, TokenKind emitKind){
+            this(pattern, emitKind, null);
         }
     }
     /**

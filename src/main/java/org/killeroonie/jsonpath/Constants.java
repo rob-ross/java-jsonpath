@@ -3,8 +3,7 @@ package org.killeroonie.jsonpath;
 public class Constants {
 
     public static final String BLANK_CHAR = " \\t\\n\\x0B\\f\\r";
-    public static final String SPACES = "(?:[%s]+)".formatted(BLANK_CHAR);
-
+    public static final String SPACES_RE = "(?:[%s]+)".formatted(BLANK_CHAR);
 
     // Basic characters
     public static final String SOLIDUS         = chr(0x2F);  // forward slash '/'
@@ -76,16 +75,22 @@ public class Constants {
 
 
     // Default regex patterns
-    public static final String DOT_PROPERTY = "\\.(?<GPROP>[\\u0080-\\uFFFFa-zA-Z_][\\u0080-\\uFFFFa-zA-Z0-9_-]*)";
-    public static final String BARE_PROPERTY = "[\\\\u0080-\\\\uFFFFa-zA-Z_][\\\\u0080-\\\\uFFFFa-zA-Z0-9_-]*";
-    public static final String LIST_SLICE = "(?<GLSLICESTART>\\-?\\d*)\\s*:\\s*(?<GLSLICESTOP>\\-?\\d*)\\s*(?::\\s*(?<GLSLICESTEP>\\-?\\d*))?";
-    public static final String FUNCTION = "(?<GFUNC>[a-z][a-z_0-9]+)\\(\\s*";
-    public static final String FLOAT = "-?\\d+\\.\\d*(?:[eE][+-]?\\d+)?";
-    public static final String INT = "-?\\d+(?<GEXP>[eE][+\\-]?\\d+)?\\b";
-    public static final String RE_PATTERN = "/(?<GRE>.+?)/(?<GREFLAGS>[aims]*)";
-    public static final String DOUBLE_QUOTE_STRING = "\"(?<GDQUOTE>(?:(?!(?<!\\\\)\").)*)\"";
-    public static final String SINGLE_QUOTE_STRING = "'(?<GSQUOTE>(?:(?!(?<!\\\\)').)*)'";
+    public static final String DOT_PROPERTY_RE = "\\.(?<GPROP>[\\u0080-\\uFFFFa-zA-Z_][\\u0080-\\uFFFFa-zA-Z0-9_-]*)";
+    public static final String BARE_PROPERTY_RE = "[\\\\u0080-\\\\uFFFFa-zA-Z_][\\\\u0080-\\\\uFFFFa-zA-Z0-9_-]*";
+    public static final String LIST_SLICE_RE = "(?<GLSLICESTART>\\-?\\d*)\\s*:\\s*(?<GLSLICESTOP>\\-?\\d*)\\s*(?::\\s*(?<GLSLICESTEP>\\-?\\d*))?";
+    public static final String FUNCTION_RE = "(?<GFUNC>[a-z][a-z_0-9]+)\\(\\s*";
+    public static final String FLOAT_RE = "-?\\d+\\.\\d*(?:[eE][+-]?\\d+)?";
+    public static final String INT_RE = "-?\\d+(?<GEXP>[eE][+\\-]?\\d+)?\\b";
+    public static final String REGEX_PATTERN_RE = "/(?<GRE>.+?)/(?<GREFLAGS>[aims]*)";
+    public static final String DOUBLE_QUOTE_STRING_RE = "\"(?<GDQUOTE>(?:(?!(?<!\\\\)\").)*)\"";
+    public static final String SINGLE_QUOTE_STRING_RE = "'(?<GSQUOTE>(?:(?!(?<!\\\\)').)*)'";
 
+    // Regexp first sets.
+    public static final String SPACE_FIRST_SET = BLANK_CHAR;
+    public static final String STRING_LITERAL_FIRST_SET = "%s%s".formatted(SINGLE_QUOTE, DOUBLE_QUOTE);
+    public static final String DIGITS          = "0123456789";
+    public static final String NUMBER_FIRST_SET = DIGITS + MINUS;
+    public static final String SLICE_FIRST_SET = NUMBER_FIRST_SET + COLON;
 
 
     /**
