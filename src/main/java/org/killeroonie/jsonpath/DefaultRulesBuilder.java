@@ -7,9 +7,19 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import org.killeroonie.jsonpath.Lexer.LexerRule;
 
-public class DefaultRules {
+public class DefaultRulesBuilder {
 
-    private static EnumMap<TokenKind, LexerRule> buildDefaultRulesMap() {
+    private final EnumMap<TokenKind, LexerRule> rules;
+
+    public DefaultRulesBuilder() {
+        rules = buildDefaultRulesMap();
+    }
+
+    public EnumMap<TokenKind, LexerRule> getRules() {
+        return rules;
+    }
+
+    private  EnumMap<TokenKind, LexerRule> buildDefaultRulesMap() {
         // first create builders for each TokenKind in the default rules.
         final EnumMap<TokenKind, LexerRuleBuilder> builders = new EnumMap<>(TokenKind.class);
         builders.put(TokenKind.SKIP, new LexerRuleBuilder(true, Constants.SPACES_RE));
@@ -41,6 +51,9 @@ public class DefaultRules {
         builders.put(TokenKind.DOUBLE_QUOTE_STRING, new LexerRuleBuilder(true, Constants.DOUBLE_QUOTE_STRING_RE));
         builders.put(TokenKind.SINGLE_QUOTE_STRING, new LexerRuleBuilder(true, Constants.SINGLE_QUOTE_STRING_RE));
         builders.put(TokenKind.DOT_PROPERTY, new LexerRuleBuilder(true, Constants.DOT_PROPERTY_RE, TokenKind.PROPERTY));
+
+        builders.put(TokenKind.IDENTIFIER, new LexerRuleBuilder(true, Constants.IDENTIFIER_RE));
+
         builders.put(TokenKind.BARE_PROPERTY, new LexerRuleBuilder(true, Constants.BARE_PROPERTY_RE));
         builders.put(TokenKind.FUNCTION, new LexerRuleBuilder(true, Constants.FUNCTION_RE));
         builders.put(TokenKind.TRUE, new LexerRuleBuilder(false, Constants.KEYWORD_TRUE));
@@ -81,7 +94,7 @@ public class DefaultRules {
             }
         }
 
-        // finally we build all the rules
+        // finally, we build all the rules
         final EnumMap<TokenKind, LexerRule> rules = new EnumMap<>(TokenKind.class);
         for (var entry: builders.entrySet()) {
             rules.put(entry.getKey(), entry.getValue().build());
@@ -105,8 +118,7 @@ public class DefaultRules {
         for (char c : chars.toCharArray()) {
             charSet.add(c);
         }
-        builder.withFirstSet(charSet);
-        return builder;
+        return builder.withFirstSet(charSet);
     }
 
     /**
@@ -116,7 +128,6 @@ public class DefaultRules {
     public static class LexerRuleBuilder {
 
         private final boolean isRegExp;
-        private final String regexString;
         private final Pattern regexPattern;
         private Set<Character> firstSet = new HashSet<>();
         private final String lexeme;
@@ -126,12 +137,10 @@ public class DefaultRules {
         public LexerRuleBuilder(boolean isRegExp, String lexemeOrRegexp) {
             this.isRegExp = isRegExp;
             if (isRegExp) {
-                regexString = lexemeOrRegexp;
                 lexeme = null;
-                regexPattern = Pattern.compile(regexString);
+                regexPattern = Pattern.compile(lexemeOrRegexp);
             }
             else {
-                regexString = null;
                 lexeme = lexemeOrRegexp;
                 regexPattern = null;
             }
@@ -174,5 +183,5 @@ public class DefaultRules {
                 return new Lexer.LexemeRule(lexeme, emitKind);
             }
         }
-    }
+    } //  end class LexerRuleBuilder
 }

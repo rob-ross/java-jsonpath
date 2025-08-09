@@ -76,7 +76,7 @@ public class Constants {
 
     // Default regex patterns
     public static final String DOT_PROPERTY_RE = "\\.(?<GPROP>[\\u0080-\\uFFFFa-zA-Z_][\\u0080-\\uFFFFa-zA-Z0-9_-]*)";
-    public static final String BARE_PROPERTY_RE = "[\\\\u0080-\\\\uFFFFa-zA-Z_][\\\\u0080-\\\\uFFFFa-zA-Z0-9_-]*";
+    public static final String BARE_PROPERTY_RE = "[\\u0080-\\uFFFFa-zA-Z_][\\u0080-\\uFFFFa-zA-Z0-9_-]*";
     public static final String LIST_SLICE_RE = "(?<GLSLICESTART>\\-?\\d*)\\s*:\\s*(?<GLSLICESTOP>\\-?\\d*)\\s*(?::\\s*(?<GLSLICESTEP>\\-?\\d*))?";
     public static final String FUNCTION_RE = "(?<GFUNC>[a-z][a-z_0-9]+)\\(\\s*";
     public static final String FLOAT_RE = "-?\\d+\\.\\d*(?:[eE][+-]?\\d+)?";
@@ -85,8 +85,11 @@ public class Constants {
     public static final String DOUBLE_QUOTE_STRING_RE = "\"(?<GDQUOTE>(?:(?!(?<!\\\\)\").)*)\"";
     public static final String SINGLE_QUOTE_STRING_RE = "'(?<GSQUOTE>(?:(?!(?<!\\\\)').)*)'";
 
+    // NEW. Used to match function names, keywords, member-name-shorthand
+    public static final String IDENTIFIER_RE = "[\\u0080-\\uFFFFa-zA-Z_][\\u0080-\\uFFFFa-zA-Z0-9_-]*";
+
     // Regexp first sets.
-    public static final String SPACE_FIRST_SET = BLANK_CHAR;
+    public static final String SPACE_FIRST_SET = " \t\n\u000B\n\f\r";;
     public static final String STRING_LITERAL_FIRST_SET = "%s%s".formatted(SINGLE_QUOTE, DOUBLE_QUOTE);
     public static final String DIGITS          = "0123456789";
     public static final String NUMBER_FIRST_SET = DIGITS + MINUS;

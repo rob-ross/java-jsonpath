@@ -9,12 +9,13 @@ public record Token(TokenKind kind, String value, int index, String path) {
 
     @Override
     public @NotNull String toString() {
-        return "Token{" +
-                "kind=" + kind +
-                ", value='" + value + '\'' +
-                ", index=" + index +
-                ", path='" + path + '\'' +
-                '}';
+        String msg;
+        if ( kind.isIdentifier() || kind.isKeyword() ) {
+            msg = kind + ":" + value;
+        } else {
+            msg = kind + "";
+        }
+        return msg;
     }
 
     public static int countOccurrences(String str, String substr, int startIndex, int endIndex) {
