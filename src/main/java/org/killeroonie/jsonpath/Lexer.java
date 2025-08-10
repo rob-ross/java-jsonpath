@@ -254,10 +254,10 @@ public class Lexer {
             return;
         }
 
-
-
-
-
+        // python-jsonpath creates explicit tokens for functions and name selectors
+        // (TOKEN_FUNCTION and TOKEN_BARE_PROPERTY
+        // but here we just combine both into an IDENTIFIER
+        scannerState.advanceToken(emitKind(TokenKind.IDENTIFIER), text);
     }
 
     public Iterator<Token> tokenizeOld(String jsonPathText) {
@@ -640,7 +640,7 @@ public class Lexer {
         JSONPathEnvironment env = new JSONPathEnvironment();
         Lexer lexer = new Lexer(env);
         //lexer.setWhitespacePolicy(WhitespacePolicy.STRICT);
-        String jsonpath = "$[]^# >= <> and && ";
+        String jsonpath = "$[]^# >= <> and && foofar bar()";
         var tokens = lexer.tokenize(jsonpath);
         System.out.println(tokens);
     }
