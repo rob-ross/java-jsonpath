@@ -1,102 +1,188 @@
 package org.killeroonie.jsonpath;
 
+import java.util.*;
+import java.util.regex.Pattern;
+
+enum TokenCategory {
+    LITERAL,
+    KEYWORD,
+    COMPARISON_OPERATOR,
+    LOGICAL_OPERATOR,
+    DELIMITER,
+    IDENTIFIER,
+    // special
+    NO_OP,
+    UNKNOWN,
+    EOF,
+    ;
+}
+
+/**
+ * Todo - yet another refactoring!
+ * It turns out, we are painting ourselves into a corner by having TokenCategory as a member of TokenKind.
+ * This prevents this specific customization example:
+ *       AND_EXT(   EnumSet.of(TokenCategory.LOGICAL_OPERATOR, TokenCategory.KEYWORD) ),
+ *  AND_EXT is intended to be the equivalent token to AND:'&&', as AND_EXT:'and'. That's why we categorize it as both
+ *  a logical operator and a keyword. But if someone wanted to customize this token kind, say to use '&' , it would no
+ *  longer be an actual keyword. But it would still be added to the keywords set because of its TokenCategory.
+ *  In addition, AND_EXT:& would also be added to the oneCharLexemeSet.
+ *  Although it would still be processed correctly as a one-char lexeme, it might cause confusion or subtle bugs further
+ *  on down the line.  So we need to specify the TokenCategories in the LexerRule (`Lexer.lexerRules`) for the TokenKind.
+ */
+
 /**
  * JSONPath tokens.
  * <p>
  * This enum is a translation of the string constants from the Python
- * <code>token.py</code> module, with associated regex patterns from
- * <code>lex.py</code>.
+ * <code>token.py</code> module.
  */
 public enum TokenKind {
-    // Utility tokens
-    EOF,
-    ILLEGAL("."),
-    SKIP("[ \\n\\t\\r\\.]+"),
 
-    // JSONPath expression tokens
-    COLON,
-    COMMA(","),
-    DDOT("\\.\\."),
-    DOT,
-    DOT_INDEX,
-    DOT_PROPERTY("\\.(?P<G_PROP>[\\u0080-\\uFFFFa-zA-Z_][\\u0080-\\uFFFFa-zA-Z0-9_-]*)"),
-    FILTER("\\?"),
-    FAKE_ROOT("^"),
-    KEY("#"),
-    KEY_SELECTOR("~"), //Python: TOKEN_KEYS
-    RBRACKET("]"),
-    BARE_PROPERTY("[\\u0080-\\uFFFFa-zA-Z_][\\u0080-\\uFFFFa-zA-Z0-9_-]*"),
-    LIST_SLICE("(?P<G_LSLICE_START>\\-?\\d*)\\s*:\\s*(?P<G_LSLICE_STOP>\\-?\\d*)\\s*(?::\\s*(?P<G_LSLICE_STEP>\\-?\\d*))?"),
-    LIST_START("\\["),
-    PROPERTY,
-    ROOT("$"),
-    SLICE_START,
-    SLICE_STEP,
-    SLICE_STOP,
-    WILD("\\*"),
+    SKIP(  EnumSet.of(TokenCategory.DELIMITER) ),
+    SPACE( EnumSet.of(TokenCategory.DELIMITER) ), // NEW. REPLACES SKIP,
+
+    // single char tokens
+    LIST_START( EnumSet.of(TokenCategory.DELIMITER) ),
+    LBRACKET( EnumSet.of(TokenCategory.DELIMITER) ), // NEW. REPLACES LIST_START
+    RBRACKET( EnumSet.of(TokenCategory.DELIMITER) ),
+    LPAREN( EnumSet.of(TokenCategory.DELIMITER) ),
+    RPAREN( EnumSet.of(TokenCategory.DELIMITER) ),
+    // we're not emitting tokens for individual quotes around strings
+    COMMA( EnumSet.of(TokenCategory.DELIMITER) ),
+    DOT( EnumSet.of(TokenCategory.DELIMITER) ),
+    ROOT( EnumSet.of(TokenCategory.DELIMITER) ), // my Python impl uses DOLLAR as TokenKind here.
+    FILTER( EnumSet.of(TokenCategory.DELIMITER) ), // my Python impl uses QMARK as TokenKind here.
+    WILD( EnumSet.of(TokenCategory.DELIMITER) ), // my Python impl uses STAR as TokenKind here.
+    SELF( EnumSet.of(TokenCategory.DELIMITER) ),
+    COLON( EnumSet.of(TokenCategory.DELIMITER) ),
+    NOT( EnumSet.of(TokenCategory.LOGICAL_OPERATOR) ),
+    GT( EnumSet.of(TokenCategory.COMPARISON_OPERATOR) ),
+    LT( EnumSet.of(TokenCategory.COMPARISON_OPERATOR) ),
+
+    // multi-char tokens
+    DDOT( EnumSet.of(TokenCategory.DELIMITER) ),
+    EQ( EnumSet.of(TokenCategory.COMPARISON_OPERATOR) ),
+    NE( EnumSet.of(TokenCategory.COMPARISON_OPERATOR) ),
+    GE( EnumSet.of(TokenCategory.COMPARISON_OPERATOR) ),
+    LE( EnumSet.of(TokenCategory.COMPARISON_OPERATOR) ),
+    AND( EnumSet.of(TokenCategory.LOGICAL_OPERATOR) ),
+    OR( EnumSet.of(TokenCategory.LOGICAL_OPERATOR) ),
+
+    // literal types
+    INT( EnumSet.of(TokenCategory.LITERAL) ),
+    FLOAT( EnumSet.of(TokenCategory.LITERAL) ),
+    // todo refactor so a single slice token is emitted and parsed later
+    LIST_SLICE( EnumSet.of(TokenCategory.LITERAL) ),
+    SLICE_START( EnumSet.of(TokenCategory.LITERAL) ),
+    SLICE_STEP( EnumSet.of(TokenCategory.LITERAL) ),
+    SLICE_STOP( EnumSet.of(TokenCategory.LITERAL) ),
+    // string literals
+    DOUBLE_QUOTE_STRING( EnumSet.of(TokenCategory.LITERAL) ),
+    SINGLE_QUOTE_STRING( EnumSet.of(TokenCategory.LITERAL) ),
+    // identifiers - todo these can be combined into a single Lexer Token and handled in the Parser for specificity
+    IDENTIFIER( EnumSet.of(TokenCategory.IDENTIFIER) ), // NEW
+    // these are member-name-shorthand identifiers
+    PROPERTY( EnumSet.of(TokenCategory.IDENTIFIER) ),
+    DOT_PROPERTY( EnumSet.of(TokenCategory.IDENTIFIER) ),
+    BARE_PROPERTY( EnumSet.of(TokenCategory.IDENTIFIER) ),
+
+    FUNCTION( EnumSet.of(TokenCategory.IDENTIFIER) ), // we can use IDENTIFIER for this
+
+    /*
+    ------------------
+     JSON keywords
+    ------------------
+     But only treated as keywords in certain contexts such as logical comparisons.
+     They are allowed as member values,
+       e.g., { "key1" : "true"}, where the member value is the string "true" and not the JSON value true,
+       which is distinct from { "key1": true } (no quotes around true here).
+     and they are allowed as member names, e.g., { "null": "foo"}.
+     Although these examples might be confusing design choices for an object/map and should be avoided,
+     they are syntactically allowed by the spec.
+    */
+    TRUE(  EnumSet.of(TokenCategory.KEYWORD, TokenCategory.IDENTIFIER) ),
+    FALSE( EnumSet.of(TokenCategory.KEYWORD, TokenCategory.IDENTIFIER) ),
+    // NULL: Note - JSON null is treated the same as any other JSON value, i.e., it is not taken to mean
+    // "undefined" or "missing".
+    NULL(  EnumSet.of(TokenCategory.KEYWORD, TokenCategory.IDENTIFIER) ),
+
+    // regex literals
+    RE_PATTERN( EnumSet.of(TokenCategory.LITERAL) ), // a regular expression literal
+    RE_FLAGS(   EnumSet.of(TokenCategory.LITERAL) ), // a regular expression flags literal
 
     // Filter expression tokens
-    AND("&&|(?:and\\b)"),
+    // special token used to access context inside a filer.
+    FILTER_CONTEXT( EnumSet.of(TokenCategory.DELIMITER) ),
+
+
+    // Special
+    // Utility tokens,
+    EOF(     EnumSet.of(TokenCategory.EOF) ),
+    ILLEGAL( EnumSet.of(TokenCategory.NO_OP) ),
+    NO_OP(   EnumSet.of(TokenCategory.NO_OP) ),   // NEW
+    UNKNOWN( EnumSet.of(TokenCategory.UNKNOWN) ), // NEW
+
+    // unused in python-jsonpath
     BLANK,
-    CONTAINS("contains\\b"),
-    FILTER_CONTEXT("_"),
-    FUNCTION("(?P<G_FUNC>[a-z][a-z_0-9]+)\\(\\s*"),
-    EMPTY,
-    EQ("=="),
-    FALSE("[Ff]alse\\b"),
-    FLOAT("-?\\d+\\.\\d*(?:[eE][+-]?\\d+)?"),
-    GE(">="),
-    GT(">"),
-    IN("in\\b"),
-    INT("-?\\d+(?P<G_EXP>[eE][+\\-]?\\d+)?\\b"),
-    LE("<="),
-    LG("<>"),
-    LPAREN("\\("),
-    LT("<"),
-    NE("!="),
-    NIL("[Nn]il\\b"),
-    NONE("[Nn]one\\b"),
-    NOT("(?:not\\b)|!"),
-    NULL("[Nn]ull\\b"),
-    OP,
-    OR("\\|\\||(?:or\\b)"),
-    RE("=~"),
-    RE_FLAGS,
-    RE_PATTERN("/(?P<G_RE>.+?)/(?P<G_RE_FLAGS>[aims]*)"),
-    RPAREN("\\)"),
-    SELF("@"),
     STRING,
-    DOUBLE_QUOTE_STRING("\"(?P<G_DQUOTE>(?:(?!(?<!\\\\)\").)*)\""),
-    SINGLE_QUOTE_STRING("'(?P<G_SQUOTE>(?:(?!(?<!\\\\)').)*)'"),
-    TRUE("[Tt]rue\\b"),
-    UNDEFINED("undefined\\b"),
-    MISSING("missing\\b"),
+    OP,
+    EMPTY,
+    DOT_INDEX,
 
-    // Extension tokens
-    UNION("|"),
-    INTERSECTION("&");
+    /*
+    ************************************************************************
+    *
+    *  Extension tokens - not part of the official RFC9535 spec.
+    *
+    * **********************************************************************
+    */
 
-    /**
-     * The regex pattern associated with this token kind, if any.
-     * This is used by the lexer to match tokens in a JSONPath string.
-     */
-    public final String pattern;
+    PSEUDO_ROOT( EnumSet.of(TokenCategory.DELIMITER) ),
 
-    /**
-     * A token kind that is not represented by a regex pattern.
-     * These are often emitted by the lexer based on context, rather
-     * than direct pattern matching.
-     */
+    // new keywords, most are operators except UNDEFINED and MISSING
+    AND_EXT(   EnumSet.of(TokenCategory.LOGICAL_OPERATOR, TokenCategory.KEYWORD) ),
+    OR_EXT(    EnumSet.of(TokenCategory.LOGICAL_OPERATOR, TokenCategory.KEYWORD) ),
+    NOT_EXT(   EnumSet.of(TokenCategory.LOGICAL_OPERATOR, TokenCategory.KEYWORD) ),
+    IN(        EnumSet.of(TokenCategory.COMPARISON_OPERATOR, TokenCategory.KEYWORD) ),
+    CONTAINS(  EnumSet.of(TokenCategory.COMPARISON_OPERATOR, TokenCategory.KEYWORD) ),
+    UNDEFINED( EnumSet.of(TokenCategory.KEYWORD, TokenCategory.IDENTIFIER) ),
+    MISSING(   EnumSet.of(TokenCategory.KEYWORD, TokenCategory.IDENTIFIER) ),
+
+    // New operators
+    KEY( EnumSet.of(TokenCategory.DELIMITER) ),
+    KEY_SELECTOR( EnumSet.of(TokenCategory.DELIMITER) ), //Python: TOKEN_KEYS,
+    LG(  EnumSet.of(TokenCategory.COMPARISON_OPERATOR) ),
+    RE(  EnumSet.of(TokenCategory.COMPARISON_OPERATOR) ),
+    UNION( EnumSet.of(TokenCategory.DELIMITER) ),
+    INTERSECTION( EnumSet.of(TokenCategory.DELIMITER) ),
+
+
+    // Not used in the Java version, but available for customization.
+    NIL( EnumSet.of(TokenCategory.KEYWORD, TokenCategory.IDENTIFIER) ),
+    NONE( EnumSet.of(TokenCategory.KEYWORD, TokenCategory.IDENTIFIER) ),
+    FALSE_EXT( EnumSet.of(TokenCategory.KEYWORD, TokenCategory.IDENTIFIER) ),
+    TRUE_EXT( EnumSet.of(TokenCategory.KEYWORD, TokenCategory.IDENTIFIER) ),
+    NULL_EXT( EnumSet.of(TokenCategory.KEYWORD, TokenCategory.IDENTIFIER) ),
+    ;
+
+    private final EnumSet<TokenCategory> categories;
+
     TokenKind() {
-        this(null);
+        this( EnumSet.of(TokenCategory.UNKNOWN) );
+    }
+    TokenKind(EnumSet<TokenCategory> categories) {
+        this.categories = categories;
     }
 
-    /**
-     * A token kind that is represented by a regex pattern.
-     *
-     * @param pattern The Java-compatible regex pattern.
-     */
-    TokenKind(String pattern) {
-        this.pattern = pattern;
+    public EnumSet<TokenCategory> getCategories() {
+        return categories;
+    }
+
+    public boolean isIdentifier() {
+        return categories.contains(TokenCategory.IDENTIFIER);
+    }
+
+    public boolean isKeyword() {
+        return categories.contains(TokenCategory.KEYWORD);
     }
 }

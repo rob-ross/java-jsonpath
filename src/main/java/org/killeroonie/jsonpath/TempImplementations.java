@@ -123,3 +123,20 @@ class Regex {
         return allMatches;
     }
 }
+
+class LexerChild extends Lexer {
+
+    /**
+     * Constructor for Lexer.
+     *
+     * @param env The JSONPathEnvironment configuration
+     */
+    public LexerChild(JSONPathEnvironment env) {
+        super(env);
+    }
+
+    @Override
+    protected void processIdentifier(String group) {
+        super.processIdentifier(group);
+    }
+}

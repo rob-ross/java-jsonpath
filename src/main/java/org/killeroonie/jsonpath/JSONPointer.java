@@ -427,8 +427,11 @@ public class JSONPointer {
                 } else {
                     return index;
                 }
+            } else {
+                // Obj is not a Map nor a List, so obj is not subscriptable.
+                throw new JSONPointerTypeException("'%s': '%s' object is not subscriptable".formatted(keyOrIndex, obj.getClass().getSimpleName()));
             }
-            return toIndex(s.substring(1));
+//            return toIndex(s.substring(1));
         }
 
         if (JsonPathUtils.HYPHEN.equals(keyOrIndex)) {

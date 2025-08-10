@@ -4,7 +4,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-
+import java.util.EnumMap;
+import java.util.Optional;
 
 
 /**
@@ -74,13 +75,8 @@ public class JSONPathEnvironment {
 
     // These should be unescaped strings. `re.escape` will be called
     // on them automatically when compiling lexer rules.
-    public String fakeRootToken = "^";
-    public String filterContextToken = "_";
     public String intersectionToken = "&";
-    public String keyToken = "#";
-    public String keysSelectorToken = "~";
     public String rootToken = "$";
-    public String selfToken = "@";
     public String unionToken = "|";
 
     private final boolean cacheFilters;
@@ -96,6 +92,8 @@ public class JSONPathEnvironment {
     private final Lexer lexer;
     private final Parser parser;
 
+    private final EnumMap<TokenKind, Lexer.LexerRule> customRules;
+
     public JSONPathEnvironment() {
         this(true, true, true);
     }
@@ -110,10 +108,13 @@ public class JSONPathEnvironment {
         this.cacheFilters = cacheFilters;
         this.unicodeEscape = unicodeEscape;
         this.wellTyped = wellTyped;
+
+        customRules = buildCustomRules();
         // The lexer bound to this environment.
         lexer = factoryMethod( lexer_class, this);
         // The parser bound to this environment.
         parser = factoryMethod( parser_class, this);
+
 
         // A list of function extensions available to filters.
 
@@ -121,6 +122,49 @@ public class JSONPathEnvironment {
         self.function_extensions: Dict[str, Callable[..., Any]] = {}
         self.setup_function_extensions()
          */
+    }
+
+    /**
+     * The default {@code JSONPathEnvironment} implementation provides no custom rules.
+     * Subclasses can override {@code buildCustomRules()} to specify custom matching and {@code TokenKind} emitting rules.
+     * When {@code buildRules} is called from this class' constructor, any custom rules specified here for a TokenKind
+     * will be used instead of the default values as defined in TokenKind. <p>
+     * Custom rules defined here override any custom rules defined in the Lexer to which this instance is attached.
+     * Note this implementation should be interpreted as an example of how subclasses could implement this method. The
+     * actual `custom rules` used here are exactly the same as the default rules for each TokenKind, so no new behavior
+     * is implemented.
+     *
+     * @return the Map of {@link TokenKind} to custom {@link Lexer.LexerRule}s that will be used by Lexer class.
+     */
+    public EnumMap<TokenKind, Lexer.LexerRule> buildCustomRules() {
+        // These should be unescaped strings. `re.escape` will be called
+        // on them automatically when compiling lexer rules.
+        final String pseudoRootToken = "^";
+        final String filterContextToken = "_";
+        final String intersectionToken = "&";
+        final String keyToken = "#";
+        final String keysSelectorToken = "~";
+        final String unionToken = "|";
+        EnumMap<TokenKind, Lexer.LexerRule> rules = new EnumMap<>(TokenKind.class);
+        rules.put(TokenKind.PSEUDO_ROOT,
+                new Lexer.LexemeRule(pseudoRootToken, TokenKind.PSEUDO_ROOT)
+        );
+        rules.put(TokenKind.FILTER_CONTEXT,
+                new Lexer.LexemeRule(filterContextToken, TokenKind.FILTER_CONTEXT)
+        );
+        rules.put(TokenKind.INTERSECTION,
+                new Lexer.LexemeRule(intersectionToken, TokenKind.INTERSECTION)
+        );
+        rules.put(TokenKind.KEY,
+                new Lexer.LexemeRule(keyToken, TokenKind.KEY)
+        );
+        rules.put(TokenKind.KEY_SELECTOR,
+                new Lexer.LexemeRule(keysSelectorToken, TokenKind.KEY_SELECTOR)
+        );
+        rules.put(TokenKind.UNION,
+                new Lexer.LexemeRule(unionToken, TokenKind.UNION)
+        );
+        return rules;
     }
 
     /**
@@ -205,4 +249,13 @@ public class JSONPathEnvironment {
         return instance;
     }
 
+    /**
+     * Attempt to locate a custom LexerRule for the argument
+     * @param kind the TokenKind for which to locate a custom LexerRule.
+     * @return an Optional<LexerRule> with the custom rule if found, or an empty Optional otherwise.
+     */
+    public Optional<Lexer.LexerRule> findRule(TokenKind kind) {
+        Lexer.LexerRule rule = customRules.getOrDefault(kind, null);
+        return  Optional.ofNullable(rule);
+    }
 }
