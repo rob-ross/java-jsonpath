@@ -1,34 +1,6 @@
 package org.killeroonie.jsonpath;
 
 import java.util.*;
-import java.util.regex.Pattern;
-
-enum TokenCategory {
-    LITERAL,
-    KEYWORD,
-    COMPARISON_OPERATOR,
-    LOGICAL_OPERATOR,
-    DELIMITER,
-    IDENTIFIER,
-    // special
-    NO_OP,
-    UNKNOWN,
-    EOF,
-    ;
-}
-
-/**
- * Todo - yet another refactoring!
- * It turns out, we are painting ourselves into a corner by having TokenCategory as a member of TokenKind.
- * This prevents this specific customization example:
- *       AND_EXT(   EnumSet.of(TokenCategory.LOGICAL_OPERATOR, TokenCategory.KEYWORD) ),
- *  AND_EXT is intended to be the equivalent token to AND:'&&', as AND_EXT:'and'. That's why we categorize it as both
- *  a logical operator and a keyword. But if someone wanted to customize this token kind, say to use '&' , it would no
- *  longer be an actual keyword. But it would still be added to the keywords set because of its TokenCategory.
- *  In addition, AND_EXT:& would also be added to the oneCharLexemeSet.
- *  Although it would still be processed correctly as a one-char lexeme, it might cause confusion or subtle bugs further
- *  on down the line.  So we need to specify the TokenCategories in the LexerRule (`Lexer.lexerRules`) for the TokenKind.
- */
 
 /**
  * JSONPath tokens.
@@ -69,8 +41,9 @@ public enum TokenKind {
     OR( EnumSet.of(TokenCategory.LOGICAL_OPERATOR) ),
 
     // literal types
-    INT( EnumSet.of(TokenCategory.LITERAL) ),
-    FLOAT( EnumSet.of(TokenCategory.LITERAL) ),
+    NUMBER( EnumSet.of(TokenCategory.LITERAL)),
+    INT(    EnumSet.of(TokenCategory.LITERAL) ),
+    FLOAT(  EnumSet.of(TokenCategory.LITERAL) ),
     // todo refactor so a single slice token is emitted and parsed later
     LIST_SLICE( EnumSet.of(TokenCategory.LITERAL) ),
     SLICE_START( EnumSet.of(TokenCategory.LITERAL) ),
@@ -184,5 +157,9 @@ public enum TokenKind {
 
     public boolean isKeyword() {
         return categories.contains(TokenCategory.KEYWORD);
+    }
+
+    public boolean isLiteral() {
+        return categories.contains(TokenCategory.LITERAL);
     }
 }

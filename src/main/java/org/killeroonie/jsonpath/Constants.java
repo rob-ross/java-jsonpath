@@ -79,6 +79,14 @@ public class Constants {
     public static final String BARE_PROPERTY_RE = "[\\u0080-\\uFFFFa-zA-Z_][\\u0080-\\uFFFFa-zA-Z0-9_-]*";
     public static final String LIST_SLICE_RE = "(?<GLSLICESTART>\\-?\\d*)\\s*:\\s*(?<GLSLICESTOP>\\-?\\d*)\\s*(?::\\s*(?<GLSLICESTEP>\\-?\\d*))?";
     public static final String FUNCTION_RE = "(?<GFUNC>[a-z][a-z_0-9]+)\\(\\s*";
+
+    // python-jsonpath test for int and float separately. Here we just test for a number literal and create a single NUMBER liberal token.
+    static final String INT2_RE = "(?:0|-?[1-9][0-9]*)";  // no leading zeros allowed in integers
+    static final String FRACTION_RE = "\\.[1-9]+";
+    static final String EXPONENT_RE = "[eE][-+]?[1-9]+";
+    public static final String NUMBER_RE = "(?<NUMBER>(?<INTPART>%s|-0)(?<FRACTPART>%s)?(?<EXPONPART>%s)?)".formatted(INT2_RE, FRACTION_RE, EXPONENT_RE);
+
+
     public static final String FLOAT_RE = "-?\\d+\\.\\d*(?:[eE][+-]?\\d+)?";
     public static final String INT_RE = "-?\\d+(?<GEXP>[eE][+\\-]?\\d+)?\\b";
     public static final String REGEX_PATTERN_RE = "/(?<GRE>.+?)/(?<GREFLAGS>[aims]*)";

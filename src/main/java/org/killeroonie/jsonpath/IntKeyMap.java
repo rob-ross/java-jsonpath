@@ -5,8 +5,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
- * keys:   int
- * values: V
+ * <p>keys:   int</p>
+ * <p>values: V, at present intended to be TokenKind or String</p>
+ * <p>
+ * The use case for this class is as a lookup table, mapping a single character to a TokenKind or String;
+ * although, any type for Value will work correctly.
+ * The keys are intended to be Java char representing a character. We only need to map ASCII chars used as symbols,
+ * like $, #, etc., and these are all ASCII, so we only call the constructor with IntKeyMap(TokenKind.class, 128), e.g.
+ * Any char can all support the full Unicode BMP.</p>
+ * <p>This implementation uses boolean arrays. As with all Java arrays, array indices are ints. Each index is used
+ * as the value of the char it maps, so lookups just use the value of the char as the index. Each index can support the
+ * entire Unicode set, including surrogate pairs, although this has not been tested.</p>
  */
 public final class IntKeyMap<V> {
 

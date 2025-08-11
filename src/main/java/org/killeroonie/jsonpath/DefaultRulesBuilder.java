@@ -1,13 +1,9 @@
 package org.killeroonie.jsonpath;
 
 import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.regex.Pattern;
-import org.killeroonie.jsonpath.Lexer.LexerRule;
+import java.util.Map;
 
-public class DefaultRulesBuilder {
+public class DefaultRulesBuilder implements RulesBuilder {
 
     private final EnumMap<TokenKind, LexerRule> rules;
 
@@ -34,7 +30,7 @@ public class DefaultRulesBuilder {
         builders.put(TokenKind.FILTER, new LexerRuleBuilder(false, Constants.QUESTION));
         builders.put(TokenKind.WILD, new LexerRuleBuilder(false, Constants.STAR));
         builders.put(TokenKind.SELF, new LexerRuleBuilder(false, Constants.AT));
-        builders.put(TokenKind.COLON, new LexerRuleBuilder(false, Constants.COLON));
+        //builders.put(TokenKind.COLON, new LexerRuleBuilder(false, Constants.COLON));
         builders.put(TokenKind.NOT, new LexerRuleBuilder(false, Constants.LOGICAL_NOT_OP));
         builders.put(TokenKind.GT, new LexerRuleBuilder(false, Constants.GREATER_THAN));
         builders.put(TokenKind.LT, new LexerRuleBuilder(false, Constants.LESS_THAN));
@@ -45,6 +41,7 @@ public class DefaultRulesBuilder {
         builders.put(TokenKind.LE, new LexerRuleBuilder(false, Constants.LESS_THAN_OR_EQUAL));
         builders.put(TokenKind.AND, new LexerRuleBuilder(false, Constants.LOGICAL_AND_OP));
         builders.put(TokenKind.OR, new LexerRuleBuilder(false, Constants.LOGICAL_OR_OP));
+        builders.put(TokenKind.NUMBER, new LexerRuleBuilder(true, Constants.NUMBER_RE));
         builders.put(TokenKind.INT, new LexerRuleBuilder(true, Constants.INT_RE));
         builders.put(TokenKind.FLOAT, new LexerRuleBuilder(true, Constants.FLOAT_RE));
         builders.put(TokenKind.LIST_SLICE, new LexerRuleBuilder(true, Constants.LIST_SLICE_RE));
@@ -77,20 +74,21 @@ public class DefaultRulesBuilder {
         builders.put(TokenKind.INTERSECTION, new LexerRuleBuilder(false, Constants.AMPERSAND));
 
         // add first sets where applicable
-        addFirstSet(builders.get(TokenKind.SKIP), Constants.SPACE_FIRST_SET);
-        addFirstSet(builders.get(TokenKind.SPACE), Constants.SPACE_FIRST_SET);
+        RulesBuilder.addFirstSet(builders.get(TokenKind.SKIP), Constants.SPACE_FIRST_SET);
+        RulesBuilder.addFirstSet(builders.get(TokenKind.SPACE), Constants.SPACE_FIRST_SET);
         // skipped INT and FLOAT
-        addFirstSet(builders.get(TokenKind.LIST_SLICE), Constants.LIST_SLICE_RE);
-        addFirstSet(builders.get(TokenKind.DOUBLE_QUOTE_STRING), Constants.DOUBLE_QUOTE);
-        addFirstSet(builders.get(TokenKind.SINGLE_QUOTE_STRING), Constants.SINGLE_QUOTE);
-        addFirstSet(builders.get(TokenKind.DOT_PROPERTY), Constants.DOT);
+        RulesBuilder.addFirstSet(builders.get(TokenKind.LIST_SLICE), Constants.SLICE_FIRST_SET);
+        RulesBuilder.addFirstSet(builders.get(TokenKind.DOUBLE_QUOTE_STRING), Constants.DOUBLE_QUOTE);
+        RulesBuilder.addFirstSet(builders.get(TokenKind.SINGLE_QUOTE_STRING), Constants.SINGLE_QUOTE);
+        RulesBuilder.addFirstSet(builders.get(TokenKind.DOT_PROPERTY), Constants.DOT);
         // todo skipped BARE_PROPERTY and FUNCTION for now
-        addFirstSet(builders.get(TokenKind.RE_PATTERN), Constants.BACKSLASH);
+        RulesBuilder.addFirstSet(builders.get(TokenKind.RE_PATTERN), Constants.BACKSLASH);
 
         // add the emitToken to the builders that don't have one yet (most of them.)
-        for (var entry: builders.entrySet()) {
-            if (entry.getValue().emitKind == null ) {
-                builders.put(entry.getKey(), entry.getValue().withTokenKind(entry.getKey()));
+        for (Map.Entry<TokenKind, LexerRuleBuilder> entry: builders.entrySet()) {
+            if (entry.getValue().getEmitKind() == null ) {
+                LexerRuleBuilder lrb = entry.getValue();
+                lrb.emitKind(entry.getKey()); // emitKind is the same as the TokenKind, which is typical.
             }
         }
 
@@ -102,86 +100,4 @@ public class DefaultRulesBuilder {
 
         return rules;
     }
-
-    /**
-     * Adds all the characters in {@code chars} to the firstSet of the {@code builder} argument.
-     * @param builder the {@code LexerRuleBuilder} for which to add each character of `chars` to the firstSet.
-     * @param chars the String which contains the individual characters to add to the builder's firstSet.
-     * @return the same builder as the argument.
-     */
-    public static LexerRuleBuilder addFirstSet(LexerRuleBuilder builder, String chars) {
-        if (!builder.isRegExp){
-            throw new IllegalArgumentException("Cannot add to firstSet of a LexemeRule builder");
-        }
-        // Note: this will fail for characters outside the BMP
-        Set<Character> charSet = new HashSet<>();
-        for (char c : chars.toCharArray()) {
-            charSet.add(c);
-        }
-        return builder.withFirstSet(charSet);
-    }
-
-    /**
-     * Todo - need a way to specify RE flags when compiling a pattern.
-     * i.e., Pattern.DOTALL, etc.
-     */
-    public static class LexerRuleBuilder {
-
-        private final boolean isRegExp;
-        private final Pattern regexPattern;
-        private Set<Character> firstSet = new HashSet<>();
-        private final String lexeme;
-        private TokenKind emitKind;
-
-
-        public LexerRuleBuilder(boolean isRegExp, String lexemeOrRegexp) {
-            this.isRegExp = isRegExp;
-            if (isRegExp) {
-                lexeme = null;
-                regexPattern = Pattern.compile(lexemeOrRegexp);
-            }
-            else {
-                lexeme = lexemeOrRegexp;
-                regexPattern = null;
-            }
-        }
-
-        public LexerRuleBuilder(boolean isRegExp, String lexemeOrRegexp, TokenKind emitKind) {
-            this(isRegExp, lexemeOrRegexp);
-            this.emitKind = emitKind;
-        }
-
-        public LexerRuleBuilder withTokenKind(TokenKind emitKind) {
-            this.emitKind =  emitKind;
-            return this;
-        }
-
-        public LexerRuleBuilder withFirstSet(Set<Character> firstSet){
-            if (!isRegExp) {
-                throw new UnsupportedOperationException("Cannot pass a first-set to a lexeme rule builder.");
-            }
-            this.firstSet = firstSet;
-            return this;
-        }
-
-        public LexerRuleBuilder withAddToFirstSet(Character firstChar) {
-            if (!isRegExp) {
-                throw new UnsupportedOperationException("Cannot add to a first-set in a lexeme rule builder.");
-            }
-            firstSet.add(firstChar);
-            return this;
-        }
-
-        public Lexer.LexerRule build() {
-            Objects.requireNonNull(emitKind, "emitKind is required.");
-            if (isRegExp) {
-                Objects.requireNonNull(regexPattern, "Regex pattern is required.");
-                return new Lexer.RegexRule(regexPattern, emitKind, firstSet);
-            }
-            else {
-                Objects.requireNonNull(lexeme, "lexeme is required.");
-                return new Lexer.LexemeRule(lexeme, emitKind);
-            }
-        }
-    } //  end class LexerRuleBuilder
 }

@@ -1,0 +1,177 @@
+package org.killeroonie.jsonpath;
+
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
+public interface RulesBuilder {
+
+    EnumMap<TokenKind, LexerRule> getRules() ;
+
+
+    /**
+     * Adds all the characters in {@code chars} to the firstSet of the {@code builder} argument.
+     * @param builder the {@code LexerRuleBuilder} for which to add each character of `chars` to the firstSet.
+     * @param chars the String which contains the individual characters to add to the builder's firstSet.
+     */
+    static void addFirstSet(LexerRuleBuilder builder, String chars) {
+        if (!builder.isRegExp){
+            throw new IllegalArgumentException("Cannot add to firstSet of a LexemeRule builder");
+        }
+        builder.firstSet(chars);
+    }
+
+
+    //*************************************************************************
+    //*    LexerRule
+    //*************************************************************************
+
+    interface LexerRule {
+        TokenKind emitKind();
+    }
+
+    /**
+     * If scanned text matches the regex {@code Pattern}, emit the {@link TokenKind} in {@code emitKind}.
+     * @param pattern the regexp pattern to match.
+     * @param emitKind the TokenKind to emit when the pattern is matched
+     */
+    record RegexRule(Pattern pattern, TokenKind emitKind, int[] firstSet) implements LexerRule {
+
+        public RegexRule(Pattern pattern, TokenKind emitKind){
+            this(pattern, emitKind, null);
+        }
+
+        public boolean hasFirstSet() {
+            return firstSet != null;
+        }
+        /**
+         * Determines if the argument character exists in the firstSet.
+         * @param character the char to check existence in the firstSet.
+         * @return true if the argument is in the firstSet, else return false.
+         */
+        public boolean firstSetContains(int character){
+            for (int i : firstSet) {
+                if (i == character) { return true; }
+            }
+            return false;
+        }
+
+        public Matcher getRegionMatcher(String text, int startPosition){
+            return getRegionMatcher(text, startPosition, text.length());
+        }
+
+        public Matcher getRegionMatcher(String text, int startPosition, int  endPosition){
+            return pattern.matcher(text).region(startPosition, endPosition);
+        }
+
+    }
+
+    /**
+     * If scanned text matches the lexeme, emit the {@link TokenKind} in {@code emitKind}.
+     * @param lexeme the lexeme String to match.
+     * @param emitKind the TokenKind to emit when the lexeme is matched
+     */
+    record LexemeRule(String lexeme, TokenKind emitKind) implements LexerRule {}
+
+    /**
+     * Todo - need a way to specify RE flags when compiling a pattern.
+     * i.e., Pattern.DOTALL, etc.
+     */
+    class LexerRuleBuilder {
+
+        private final boolean isRegExp;
+        private final Pattern regexPattern;
+        private int[] firstSet;
+        private final String lexeme;
+        private TokenKind emitKind;
+        private EnumSet<TokenCategory> categories;
+
+        public LexerRuleBuilder(boolean isRegExp, String lexemeOrRegexp) {
+            this.isRegExp = isRegExp;
+            if (isRegExp) {
+                lexeme = null;
+                regexPattern = Pattern.compile(lexemeOrRegexp);
+            }
+            else {
+                lexeme = lexemeOrRegexp;
+                regexPattern = null;
+            }
+        }
+
+        public LexerRuleBuilder(boolean isRegExp, String lexemeOrRegexp, TokenKind emitKind) {
+            this(isRegExp, lexemeOrRegexp);
+            this.emitKind = emitKind;
+        }
+
+        public TokenKind getEmitKind() {
+            return emitKind;
+        }
+
+        public LexerRuleBuilder emitKind(TokenKind emitKind) {
+            this.emitKind =  emitKind;
+            return this;
+        }
+
+        int[] toIntArray(char[] characters) {
+            int[] result = new  int[characters.length];
+            for (int i = 0; i < characters.length; i++) {
+                result[i] = characters[i];
+            }
+            return result;
+        }
+
+        int[] toIntArray(String characters) {
+            int[] result = new  int[characters.length()];
+            for (int i = 0; i < characters.length(); i++) {
+                result[i] = characters.charAt(i);
+            }
+            return result;
+        }
+
+        public LexerRuleBuilder firstSet(String firstSetChars){
+            if (!isRegExp) {
+                throw new UnsupportedOperationException("Cannot pass a first-set to a lexeme rule builder.");
+            }
+            this.firstSet = toIntArray(firstSetChars);
+            return this;
+        }
+
+        public LexerRuleBuilder firstSet(char[] firstSetChars){
+            if (!isRegExp) {
+                throw new UnsupportedOperationException("Cannot pass a first-set to a lexeme rule builder.");
+            }
+            this.firstSet = toIntArray(firstSetChars);
+            return this;
+        }
+
+        public LexerRuleBuilder firstSet(int[] firstSetChars){
+            if (!isRegExp) {
+                throw new UnsupportedOperationException("Cannot pass a first-set to a lexeme rule builder.");
+            }
+            this.firstSet = firstSetChars;
+            return this;
+        }
+
+        public LexerRuleBuilder categories(EnumSet<TokenCategory> categories) {
+            this.categories = categories;
+            return this;
+        }
+
+        public LexerRule build() {
+            Objects.requireNonNull(emitKind, "emitKind is required.");
+            Objects.requireNonNull(categories, "categories is required.");
+            if (isRegExp) {
+                Objects.requireNonNull(regexPattern, "Regex pattern is required.");
+                return new RegexRule(regexPattern, emitKind, firstSet);
+            }
+            else {
+                Objects.requireNonNull(lexeme, "lexeme is required.");
+                return new LexemeRule(lexeme, emitKind);
+            }
+        }
+
+    } //  end class LexerRuleBuilder
+}

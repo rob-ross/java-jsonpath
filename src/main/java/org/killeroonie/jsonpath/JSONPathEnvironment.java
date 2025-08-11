@@ -92,7 +92,7 @@ public class JSONPathEnvironment {
     private final Lexer lexer;
     private final Parser parser;
 
-    private final EnumMap<TokenKind, Lexer.LexerRule> customRules;
+    private final EnumMap<TokenKind, RulesBuilder.LexerRule> customRules;
 
     public JSONPathEnvironment() {
         this(true, true, true);
@@ -134,9 +134,9 @@ public class JSONPathEnvironment {
      * actual `custom rules` used here are exactly the same as the default rules for each TokenKind, so no new behavior
      * is implemented.
      *
-     * @return the Map of {@link TokenKind} to custom {@link Lexer.LexerRule}s that will be used by Lexer class.
+     * @return the Map of {@link TokenKind} to custom {@link RulesBuilder.LexerRule}s that will be used by Lexer class.
      */
-    public EnumMap<TokenKind, Lexer.LexerRule> buildCustomRules() {
+    public EnumMap<TokenKind, RulesBuilder.LexerRule> buildCustomRules() {
         // These should be unescaped strings. `re.escape` will be called
         // on them automatically when compiling lexer rules.
         final String pseudoRootToken = "^";
@@ -145,24 +145,24 @@ public class JSONPathEnvironment {
         final String keyToken = "#";
         final String keysSelectorToken = "~";
         final String unionToken = "|";
-        EnumMap<TokenKind, Lexer.LexerRule> rules = new EnumMap<>(TokenKind.class);
+        EnumMap<TokenKind, RulesBuilder.LexerRule> rules = new EnumMap<>(TokenKind.class);
         rules.put(TokenKind.PSEUDO_ROOT,
-                new Lexer.LexemeRule(pseudoRootToken, TokenKind.PSEUDO_ROOT)
+                new RulesBuilder.LexemeRule(pseudoRootToken, TokenKind.PSEUDO_ROOT)
         );
         rules.put(TokenKind.FILTER_CONTEXT,
-                new Lexer.LexemeRule(filterContextToken, TokenKind.FILTER_CONTEXT)
+                new RulesBuilder.LexemeRule(filterContextToken, TokenKind.FILTER_CONTEXT)
         );
         rules.put(TokenKind.INTERSECTION,
-                new Lexer.LexemeRule(intersectionToken, TokenKind.INTERSECTION)
+                new RulesBuilder.LexemeRule(intersectionToken, TokenKind.INTERSECTION)
         );
         rules.put(TokenKind.KEY,
-                new Lexer.LexemeRule(keyToken, TokenKind.KEY)
+                new RulesBuilder.LexemeRule(keyToken, TokenKind.KEY)
         );
         rules.put(TokenKind.KEY_SELECTOR,
-                new Lexer.LexemeRule(keysSelectorToken, TokenKind.KEY_SELECTOR)
+                new RulesBuilder.LexemeRule(keysSelectorToken, TokenKind.KEY_SELECTOR)
         );
         rules.put(TokenKind.UNION,
-                new Lexer.LexemeRule(unionToken, TokenKind.UNION)
+                new RulesBuilder.LexemeRule(unionToken, TokenKind.UNION)
         );
         return rules;
     }
@@ -254,8 +254,8 @@ public class JSONPathEnvironment {
      * @param kind the TokenKind for which to locate a custom LexerRule.
      * @return an Optional<LexerRule> with the custom rule if found, or an empty Optional otherwise.
      */
-    public Optional<Lexer.LexerRule> findRule(TokenKind kind) {
-        Lexer.LexerRule rule = customRules.getOrDefault(kind, null);
+    public Optional<RulesBuilder.LexerRule> findRule(TokenKind kind) {
+        RulesBuilder.LexerRule rule = customRules.getOrDefault(kind, null);
         return  Optional.ofNullable(rule);
     }
 }

@@ -10,7 +10,9 @@ public record Token(TokenKind kind, String value, int index, String path) {
     @Override
     public @NotNull String toString() {
         String msg;
-        if ( kind.isIdentifier() || kind.isKeyword() ) {
+        if (kind == TokenKind.LIST_SLICE) {
+            msg = kind + ":[" + value + "]";
+        } else if ( kind.isIdentifier() || kind.isKeyword() || kind.isLiteral()) {
             msg = kind + ":" + value;
         } else {
             msg = kind + "";
@@ -45,8 +47,8 @@ public record Token(TokenKind kind, String value, int index, String path) {
                 line_number = self.value.count("\n", 0, self.index) + 1
                 column_number = self.index - self.value.rfind("\n", 0, self.index)
          */
-        int lineNumber = countOccurrences(value, "\n", 0, index ) + 1;
-        int columnNumber = index - value.substring(0, index).lastIndexOf("\n");
+        int lineNumber = countOccurrences(path, "\n", 0, index ) + 1;
+        int columnNumber = index - path.substring(0, index).lastIndexOf("\n");
 
         return new int[]{ lineNumber, columnNumber - 1};
     }
@@ -56,7 +58,7 @@ public record Token(TokenKind kind, String value, int index, String path) {
      * @return the line number for the start of this token.
      */
     public int getLineNumber() {
-        return countOccurrences(value, "\n", 0, index ) + 1;
+        return countOccurrences(path, "\n", 0, index ) + 1;
     }
 
     /**
@@ -64,7 +66,7 @@ public record Token(TokenKind kind, String value, int index, String path) {
      * @return the column number for the start of this token.
      */
     public int getColumnNumber() {
-        return index - value.substring(0, index).lastIndexOf("\n");
+        return index - path.substring(0, index).lastIndexOf("\n");
     }
 
 }
