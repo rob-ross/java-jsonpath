@@ -10,6 +10,9 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Tests {@link JsonPrettyPrinter} with primitive (scalar) JSON values. I.e., string, number, bool, null
+ */
 public class PrimitivesTest {
 
     @ParameterizedTest
