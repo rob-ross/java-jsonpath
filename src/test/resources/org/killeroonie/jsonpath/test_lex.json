@@ -1,5 +1,5 @@
 {
-    "description": "foo", 
+    "description": "Test cases for test_lex unit tests.",
     "tests" : [
     {
         "description": "just root",
