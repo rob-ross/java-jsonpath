@@ -1,10 +1,12 @@
 package org.killeroonie.jsonpath.lex;
 
 import org.killeroonie.jsonpath.*;
+import org.killeroonie.jsonpath.exception.JSONPathException;
 import org.killeroonie.jsonpath.exception.JSONPathSyntaxException;
 
 import java.util.*;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Implements the Lexer algorithm from the python-jsonpath project at <p>
@@ -12,15 +14,8 @@ import java.util.regex.Matcher;
  *  Full fidelity with that version also requires the proper Environment and RulesBuilder to be used,
  *  along with the Parser and Matcher, etc.
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class PJPLexer extends BaseLexer{
-    // Instance variables
-
-    private final Map<String, TokenKind> tokenLookupMap = new LinkedHashMap<>(TokenKind.values().length, 1);
-    private final IntKeyMap<String> oneCharLexemesMap = new IntKeyMap<>(String.class, 128);
-    private final Set<String> twoCharLexemesSet = new HashSet<>();
-    private final Map<String, TokenKind> keywordMap = new HashMap<>();
-
-    private final EnumSet<TokenKind> specialProcessing = EnumSet.noneOf(TokenKind.class);
 
     /**
      * Constructor for Lexer.
@@ -30,26 +25,16 @@ public class PJPLexer extends BaseLexer{
         super(env);
     }
 
+    /**
+     * Builds the rules for this Lexer and adds them to the argument Map.
+     * @param lexerRulesMap the Map of Lexer rules for this instance. This Map will be mutated. It will be cleared, then
+     *                      the rules added to them in definition order.
+     */
     @Override
     protected void buildRules(Map<TokenKind, RulesBuilder.LexerRule> lexerRulesMap) {
         // copy rules from the RulesBuilder
         lexerRulesMap.clear();
-        specialProcessing.clear();
         Map<TokenKind, RulesBuilder.LexerRule> rules = getEnv().getRulesBuilder().getRules();
-        // PJP has explicit checks and processing for these Token kinds
-        specialProcessing.add(TokenKind.DOT_PROPERTY);
-        specialProcessing.add(TokenKind.BARE_PROPERTY);
-        specialProcessing.add(TokenKind.LIST_SLICE);
-        specialProcessing.add(TokenKind.DOUBLE_QUOTE_STRING);
-        specialProcessing.add(TokenKind.SINGLE_QUOTE_STRING);
-        specialProcessing.add(TokenKind.INT);
-        specialProcessing.add(TokenKind.RE_PATTERN);
-        specialProcessing.add(TokenKind.NONE);
-        specialProcessing.add(TokenKind.NULL);
-        specialProcessing.add(TokenKind.FUNCTION);
-        specialProcessing.add(TokenKind.SKIP);
-        specialProcessing.add(TokenKind.ILLEGAL);
-
         lexerRulesMap.putAll(rules);
     }
 
@@ -57,13 +42,10 @@ public class PJPLexer extends BaseLexer{
     public List<Token> tokenize(String jsonPathText) {
         final ScannerState scanner = initScanner(jsonPathText);
         Map<TokenKind, RulesBuilder.LexerRule> lexerRules = getLexerRulesMap();
-        // current issue is that lexerRules isn't maintaining the order from PJPRulesBuilder, because it's defined as
-        // and EnumMap in BaseLexer. Which we want to maintain. We may need to redefined lexerRules so it can be a
-        // LinkedHashMap
         while ( currentChar() != EOF_CHAR) {
-            System.out.printf("current char is %s, pos= %d%n", currentChar(), position());
+//            System.out.printf("current char is %s, pos= %d%n", currentChar(), position());
             Matcher matcher = null;
-            RulesBuilder.RegexRule regexRule = null;
+            RulesBuilder.RegexRule regexRule;
             TokenKind kind = null;
             String matchtext = null;
             for (TokenKind key : lexerRules.keySet()) {
@@ -86,20 +68,29 @@ public class PJPLexer extends BaseLexer{
                 advanceToken(emitKind(kind), matchtext);
             }
             else if (kind == TokenKind.LIST_SLICE) {
-                // todo Token position will be off on STOP/STEP
-                int startPos = position();
-                advanceToken(TokenKind.SLICE_START, matcher.group("GLSLICESTART"));
-                advanceToken(TokenKind.SLICE_STOP, matcher.group("GLSLICESTOP"));
-                String sliceStep = matcher.group("GLSLICESTEP");
-                if ( sliceStep != null ) {
-                    advanceToken(TokenKind.SLICE_STEP, sliceStep);
-                } else {
-                    advanceToken(TokenKind.SLICE_STEP,"");
-                }
-                if (startPos <= position()) {
-                    // position hasn't advanced due to empty slice parts
-                    scanner.advance(matchtext.length());
-                }
+                Token sliceStart = new Token(
+                        TokenKind.SLICE_START,
+                        matcher.group("GLSLICESTART"),
+                        matcher.start("GLSLICESTART"),
+                        jsonPathText
+                );
+                Token sliceStop = new Token(
+                        TokenKind.SLICE_STOP,
+                        matcher.group("GLSLICESTOP"),
+                        matcher.start("GLSLICESTOP"),
+                        jsonPathText
+                );
+                String sliceStepText = matcher.group("GLSLICESTEP") == null ? "" : matcher.group( "GLSLICESTEP");
+                Token sliceStep = new Token(
+                        TokenKind.SLICE_STEP,
+                        sliceStepText,
+                        matcher.start("GLSLICESTEP"),
+                        jsonPathText
+                );
+                scanner.getTokenList().add(sliceStart);
+                scanner.getTokenList().add(sliceStop);
+                scanner.getTokenList().add(sliceStep);
+                scanner.advance(matchtext.length());
             }
             else if ( kind == TokenKind.DOUBLE_QUOTE_STRING ) {
                 scanner.advance(1); // opening quote
@@ -120,8 +111,9 @@ public class PJPLexer extends BaseLexer{
                 }
             }
             else if ( kind == TokenKind.RE_PATTERN ) {
-                // todo Token position will be off on RE_FLAGS
+                scanner.advance(1); // consume opening '/'
                 advanceToken( TokenKind.RE_PATTERN, matcher.group("GRE"));
+                scanner.advance(1);  // consume closing '/'
                 advanceToken( TokenKind.RE_FLAGS, matcher.group("GREFLAGS"));
             }
             else if ( kind == TokenKind.NONE  || kind == TokenKind.NULL ) {
@@ -131,6 +123,7 @@ public class PJPLexer extends BaseLexer{
             }
             else if ( kind == TokenKind.FUNCTION) {
                 advanceToken(emitKind(kind), matcher.group("GFUNC"));
+                scanner.advance(1); // to consume left-paren
             }
             else if ( kind == TokenKind.SKIP ) {
                 scanner.advance(matchtext.length());
@@ -139,9 +132,14 @@ public class PJPLexer extends BaseLexer{
                 throw new JSONPathSyntaxException("unexpected token %s".formatted(matchtext),
                         new Token(TokenKind.ILLEGAL, matchtext , position(), jsonPathText));
             }
-            else {
+            else //noinspection ConstantValue
+                if ( kind != null ) {
                 // standard behavior for the non-special tokens
                 advanceToken(emitKind(kind), matchtext);
+            }
+            else {
+                throw new JSONPathException("TokenKind is null. Position: " + position() +
+                        ", current char: " + currentChar() + ", jsonPathText: " + jsonPathText);
             }
         }
         return scanner.getTokenList();
@@ -155,17 +153,42 @@ public class PJPLexer extends BaseLexer{
         //lexer.setWhitespacePolicy(WhitespacePolicy.STRICT);
         String jsonpath;
         jsonpath = "$[]^# >= <> and && foofar bar() $.foo 1 2 3 4 5 789 \"I am groot\" 'I am also groot' 1 1: :1 00 01";
-        //jsonpath = "::-1:";
-        //jsonpath = "1 foo";
+
         var tokens = lexer.tokenize(jsonpath);
         System.out.println("input text: " + jsonpath);
         System.out.println(tokens);
     }
 
+    static void t2() {
+        /*
+        Java Regex notes:
+            matches(): must match the entire region (like ^pattern$ relative to region).
+            lookingAt(): must match at the region start (like ^pattern relative to the region), can be shorter than region.
+            find(): searches for the next occurrence anywhere in the region.
+
+        Compared to python:
+            Java Matcher.matches() ≈ Python re.fullmatch()
+            Java Matcher.lookingAt() ≈ Python re.match() (or compiled_pattern.match(s, pos))
+            Java Matcher.find() ≈ Python re.search(); repeated finds ≈ re.finditer() (or repeated search with updated pos)
+
+            Porting hint: Python’s pattern.match(s, pos) ≈ Java’s matcher.region(pos, end).lookingAt().
+            Python’s pattern.search(s, pos) ≈ Java’s matcher.region(pos, end).find().
+         */
+        String reStr = "[Nn]il\\b";
+        String text = "nil == none";
+        Pattern p = Pattern.compile(reStr);
+        Matcher m = p.matcher(text);
+        if (m.lookingAt()) {
+            System.out.println("match found");
+        } else {
+            System.out.println("no match");
+        }
+    }
+
+    // quick ad-hoc testing
     public static void main(String[] args) {
-        //showRegexpTokenStats();
-        //showLexemeTokenStats();
         t1();
+        t2();
     }
 
 }

@@ -1,7 +1,6 @@
 package org.killeroonie.jsonpath;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -15,7 +14,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.killeroonie.jsonpath.exception.JSONPathSyntaxException;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -41,7 +40,7 @@ public class test_lex {
         this.env = new PJPEnv();
     }
 
-    static Stream<Arguments> defaultsTestCases() {
+    static Stream<Arguments> testCases() {
         return load().tests().stream()
                 .map(c -> Arguments.of(Named.of(c.description(), c)));
     }
@@ -56,17 +55,17 @@ public class test_lex {
     }
 
     @ParameterizedTest
-    @MethodSource("defaultsTestCases")
+    @MethodSource("testCases")
     void test_default_lexer(Case testCase) {
         List<Token> tokens = env.getLexer().tokenize(testCase.path());
-//        System.out.println("Expected tokens: " + testCase.want());
-//        for (Token token : testCase.want()) {
-//            printTokenDetails(token);
-//        }
-//        System.out.println("Actual tokens: " + tokens);
-//        for (Token token : tokens) {
-//            printTokenDetails(token);
-//        }
+/*        System.out.println("Expected tokens: " + testCase.want());
+        for (Token token : testCase.want()) {
+            printTokenDetails(token);
+        }
+        System.out.println("Actual tokens: " + tokens);
+        for (Token token : tokens) {
+            printTokenDetails(token);
+        }*/
         assertEquals(testCase.want(),  tokens, "Tokenization of `%s`".formatted( testCase.path) );
     }
 
@@ -114,10 +113,11 @@ public class test_lex {
     static class TokenKindDeserializer extends JsonDeserializer<TokenKind> {
         @Override
         public TokenKind deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-            String raw = p.getText();
-            String name = raw;
+            String name = p.getText();
+            // strip "TOKEN" prefix from the serialized name
             if (name.startsWith("TOKEN_")) name = name.substring(6);
             // Map historical names to current enum constants
+            if ("KEYS".equals(name)) name = "KEY_SELECTOR";
             //if ("LIST_START".equals(name)) name = "LBRACKET";
             // Add other aliases as needed
             try {
@@ -147,12 +147,14 @@ public class test_lex {
         }
         mapper.addMixIn(Token.class, TokenIgnoreDerivedProps.class);
 
-        TestCases testCases = null;
-        try(var inputStream = test_lex.class.getResourceAsStream(fileName)) {
+        TestCases testCases;
+        try(InputStream inputStream = test_lex.class.getResourceAsStream(fileName)) {
             testCases = mapper.readValue(inputStream, new TypeReference<TestCases>() { });
         } catch (IOException e) {
             throw new RuntimeException("Couldn't load " + fileName, e);
         }
+
+/*      // pretty print to console
         String prettyJson = null;
         System.out.println("Test Cases loaded: ");
         System.out.println("num test cases: " + testCases.tests.size());
@@ -166,7 +168,7 @@ public class test_lex {
 
         System.out.println(prettyJson);
         System.out.println("num test cases: " + testCases.tests.size());
-        System.out.println("tests: " + testCases.tests);
+        System.out.println("tests: " + testCases.tests);*/
 
         return testCases;
     }

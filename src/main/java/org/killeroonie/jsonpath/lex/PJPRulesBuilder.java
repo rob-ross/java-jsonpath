@@ -27,8 +27,8 @@ public class PJPRulesBuilder implements RulesBuilder {
     public static final String FLOAT_RE = "-?\\d+\\.\\d*(?:[eE][+-]?\\d+)?";
     public static final String INT_RE = "-?\\d+(?<GEXP>[eE][+\\-]?\\d+)?\\b";
 
-    public static final String LOGICAL_AND_RE = "&&|(?:and\b)";
-    public static final String LOGICAL_OR_RE = "\\|\\||(?:or\b)";
+    public static final String LOGICAL_AND_RE = "&&|(?:and\\b)";
+    public static final String LOGICAL_OR_RE = "\\|\\||(?:or\\b)";
     public static final String LOGICAL_NOT_RE = "(?:not\\b)|!";
 
     public static final String ROOT_TOKEN_RE = "\\$"; // might have to escape these
@@ -82,16 +82,16 @@ public class PJPRulesBuilder implements RulesBuilder {
         // post-env:
         builders.put(TokenKind.WILD , new RulesBuilder.LexerRuleBuilder(true, "\\*"));
         builders.put(TokenKind.FILTER , new RulesBuilder.LexerRuleBuilder(true, "\\?"));
-        builders.put(TokenKind.IN , new RulesBuilder.LexerRuleBuilder(true, "in\b"));
-        builders.put(TokenKind.TRUE , new RulesBuilder.LexerRuleBuilder(true, "[Tt]rue\b"));
+        builders.put(TokenKind.IN , new RulesBuilder.LexerRuleBuilder(true, "in\\b"));
+        builders.put(TokenKind.TRUE , new RulesBuilder.LexerRuleBuilder(true, "[Tt]rue\\b"));
         builders.put(TokenKind.FALSE , new RulesBuilder.LexerRuleBuilder(true, "[Ff]alse\\b"));
 
-        builders.put(TokenKind.NIL , new RulesBuilder.LexerRuleBuilder(true, "[Nn]il\b"));
-        builders.put(TokenKind.NULL , new RulesBuilder.LexerRuleBuilder(true, "[Nn]ull\b", TokenKind.NIL));
-        builders.put(TokenKind.NONE , new RulesBuilder.LexerRuleBuilder(true, "[Nn]one\b", TokenKind.NIL));
-        builders.put(TokenKind.CONTAINS , new RulesBuilder.LexerRuleBuilder(true, "contains\b"));
-        builders.put(TokenKind.UNDEFINED , new RulesBuilder.LexerRuleBuilder(true, "undefined\b"));
-        builders.put(TokenKind.MISSING , new RulesBuilder.LexerRuleBuilder(true, "missing\b"));
+        builders.put(TokenKind.NIL , new RulesBuilder.LexerRuleBuilder(true, "[Nn]il\\b"));
+        builders.put(TokenKind.NULL , new RulesBuilder.LexerRuleBuilder(true, "[Nn]ull\\b", TokenKind.NIL));
+        builders.put(TokenKind.NONE , new RulesBuilder.LexerRuleBuilder(true, "[Nn]one\\b", TokenKind.NIL));
+        builders.put(TokenKind.CONTAINS , new RulesBuilder.LexerRuleBuilder(true, "contains\\b"));
+        builders.put(TokenKind.UNDEFINED , new RulesBuilder.LexerRuleBuilder(true, "undefined\\b"));
+        builders.put(TokenKind.MISSING , new RulesBuilder.LexerRuleBuilder(true, "missing\\b"));
         builders.put(TokenKind.LIST_START , new RulesBuilder.LexerRuleBuilder(true, "\\["));
 
 
@@ -112,6 +112,7 @@ public class PJPRulesBuilder implements RulesBuilder {
         builders.put(TokenKind.SKIP, new RulesBuilder.LexerRuleBuilder(true, "[ \\n\\t\\r\\.]+"));
         builders.put(TokenKind.ILLEGAL, new RulesBuilder.LexerRuleBuilder(true, "."));
 
+        // not
         assert builders.size() == 47 : "Expected 47 rules for this rule builder";
 
 
