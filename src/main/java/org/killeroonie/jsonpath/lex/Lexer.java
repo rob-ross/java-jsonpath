@@ -1,6 +1,9 @@
-package org.killeroonie.jsonpath;
-import org.jetbrains.annotations.Nullable;
-import org.killeroonie.jsonpath.exception.JSONPathException;
+package org.killeroonie.jsonpath.lex;
+import org.killeroonie.jsonpath.IntKeyMap;
+import org.killeroonie.jsonpath.JSONPathEnvironment;
+import org.killeroonie.jsonpath.Token;
+import org.killeroonie.jsonpath.TokenKind;
+import org.killeroonie.jsonpath.exception.JSONPathSyntaxException;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -13,6 +16,24 @@ The conventional order for field modifiers is:
 3.final
 4.transient
 5.volatile
+
+order for method modifiers:
+1. public, protected, private
+2. abstract
+3. static
+4. final
+5. synchronized
+6. native
+7. strictfp
+
+class modifiers:
+1. public, protected, private
+2. abstract
+3. static
+4. final
+5. synchronized
+6. native
+7. strictfp
  */
 
 /**
@@ -23,23 +44,17 @@ The conventional order for field modifiers is:
  *     key_pattern: The regular expression pattern used to match mapping
  *         keys/properties.
  *     logical_not_pattern: The regular expression pattern used to match
- *         logical negation tokens. By default, `not` and `!` are
+ *         logical negation getTokenList. By default, `not` and `!` are
  *         equivalent.
  *     logical_and_pattern: The regular expression pattern used to match
- *         logical and tokens. By default, `and` and `&&` are equivalent.
+ *         logical and getTokenList. By default, `and` and `&&` are equivalent.
  *     logical_or_pattern: The regular expression pattern used to match
- *         logical or tokens. By default, `or`and `||` are equivalent.
+ *         logical or getTokenList. By default, `or`and `||` are equivalent.
  */
-public class Lexer {
-
-    private final char EOF_CHAR = '\0';
+public class Lexer extends BaseLexer{
 
     // Instance variables
-    private final JSONPathEnvironment env;
-    private final EnumMap<TokenKind, RulesBuilder.LexerRule> customRules = new EnumMap<>(TokenKind.class);
-    private final EnumMap<TokenKind, RulesBuilder.LexerRule> lexerRules;
     private final Map<String, TokenKind> tokenLookupMap = new LinkedHashMap<>(TokenKind.values().length, 1);
-
     // This maps single-char lexemes as their char int values to their String representations. This avoids String creation
     // during the scanner loop.
     private final IntKeyMap<String> oneCharLexemesMap = new IntKeyMap<>(String.class, 128);
@@ -48,9 +63,6 @@ public class Lexer {
     // new String object every loop iteration.
     private final Set<String> twoCharLexemesSet = new HashSet<>();
     private final Map<String, TokenKind> keywordMap = new HashMap<>();
-
-    private transient ScannerState scannerState;
-    private WhitespacePolicy whitespacePolicy = WhitespacePolicy.LENIENT;
 
 
 
@@ -61,15 +73,9 @@ public class Lexer {
      * @param env The JSONPathEnvironment configuration
      */
     public Lexer(JSONPathEnvironment env) {
-        this.env = env;
-        // The order of these operations is significant.
-        buildCustomRules();
-        lexerRules = buildRules();
+        super(env);
     }
 
-    protected ScannerState getScannerState() {
-        return scannerState;
-    }
 
     /**
      * Populates the {@code customRules} Map.
@@ -83,7 +89,8 @@ public class Lexer {
      * is actually implemented here.
      *
      */
-    public void buildCustomRules() {
+    @Override
+    protected void buildCustomRules(EnumMap<TokenKind, RulesBuilder.LexerRule> customRulesMap) {
         /*
          * Customization rules
          * Token lexemes and regexp match rules can be customized in both the environment and the Lexer.
@@ -100,33 +107,26 @@ public class Lexer {
          */
         final String key_pattern = "[\\u0080-\\uFFFFA-Za-z_][\\u0080-\\uFFFFA-Za-z0-9_-]*";
         final String logical_not_pattern = "not";
-        customRules.put(TokenKind.BARE_PROPERTY,
+        customRulesMap.clear();
+        customRulesMap.put(TokenKind.BARE_PROPERTY,
                 new RulesBuilder.RegexRule(Pattern.compile(key_pattern), TokenKind.BARE_PROPERTY)
         );
-        customRules.put(TokenKind.NOT_EXT,
+        customRulesMap.put(TokenKind.NOT_EXT,
                 new RulesBuilder.LexemeRule(logical_not_pattern, TokenKind.NOT)
         );
     }
 
 
     /**
-     * If a custom rule exists in the JSONPathEnvironment or Lexer, return it.
-     * Environment rules take precedent over Lexer rules.
-     * @param kind the TokenKind of the custom rule to locate.
-     * @return the custom rule for the TokenKind or null.
-     */
-    private RulesBuilder.LexerRule findRule(TokenKind kind) {
-        Optional<RulesBuilder.LexerRule> rule = env.findRule(kind);
-        return rule.orElseGet(() -> customRules.get(kind) );
-    }
-
-    /**
      * Builds this Lexer's rules based on the default rules and including any custom rules
      * for the Lexer and the JSONPathEnvironment. It also populates {@code tokenLookupMap},
      * {@code oneCharLexemesMap}, {@code twoCharLexemesSet}, and {@code keywordMap}
      */
-    private EnumMap<TokenKind, RulesBuilder.LexerRule> buildRules() {
+    @Override
+    protected void buildRules(Map<TokenKind, RulesBuilder.LexerRule> lexerRulesMap) {
+        lexerRulesMap.clear();
         // start with default rules
+        // temp, we should get the rules builder from the Environment
         EnumMap<TokenKind, RulesBuilder.LexerRule> rules =  new DefaultRulesBuilder().getRules();
         // Now we apply custom rules from the Env and Lexer. Env rules have the highest priority, then Lexer rules.
         for (var entry: rules.entrySet()) {
@@ -158,15 +158,10 @@ public class Lexer {
                 }
             }
         }
-        return rules;
+        // copy rules to instance variable as passed in the argument
+        lexerRulesMap.putAll(rules);
     }
 
-
-    private ScannerState initScanner(String jsonPathText) {
-        // reset the Lexer state in preparation of tokenizing an input string
-        scannerState = new ScannerState(jsonPathText);
-        return scannerState;
-    }
 
     //*************************************************************************
     //*    TOKENIZE
@@ -181,26 +176,29 @@ public class Lexer {
      */
 
     /**
-     * Generate a sequence of tokens from a JSONPath string.
+     * Generate a sequence of getTokenList from a JSONPath string.
      *
      * @param jsonPathText The JSONPath string to tokenize
      * @return Iterator of Token objects
      */
+    @Override
     public List<Token> tokenize(String jsonPathText) {
         final ScannerState scanner = initScanner(jsonPathText);
-        while ( scannerState.currentChar() != EOF_CHAR) {
-            System.out.printf("current char is %s, pos= %d%n", scannerState.currentChar(), scannerState.positionIndex);
+        char EOF_CHAR = '\0';
+        Map<TokenKind, RulesBuilder.LexerRule> lexerRules = getLexerRulesMap();
+        while ( currentChar() != EOF_CHAR) {
+            System.out.printf("current char is %s, pos= %d%n", currentChar(), position());
             Matcher matcher;
             RulesBuilder.RegexRule regexRule;
             regexRule = (RulesBuilder.RegexRule) lexerRules.get(TokenKind.SPACE);
             if ( inFirstSet(regexRule) ) {
-                matcher = regexRule.getRegionMatcher(jsonPathText, scannerState.positionIndex);
+                matcher = regexRule.getRegionMatcher(jsonPathText, position());
                 if (matcher.lookingAt()) {
                     String spaces = matcher.group();
                     if (!spaces.isEmpty() && getWhitespacePolicy() == WhitespacePolicy.STRICT) {
-                        scannerState.advanceToken(TokenKind.SPACE, spaces);
+                        scanner.advanceToken(TokenKind.SPACE, spaces);
                     } else {
-                        scannerState.advance(spaces.length());  // advance without adding Token
+                        scanner.advance(spaces.length());  // advance without adding Token
                     }
                     continue;
                 }
@@ -208,16 +206,16 @@ public class Lexer {
 
             // todo - this is the only place in the loop we create String objects. We'll want to refactor this like we
             // did with the oneCharLexemesMap so we don't have to create new Strings in each iteration.
-            String firstTwoChars = scannerState.peekNextChars(2);
+            String firstTwoChars = scanner.peekNextChars(2);
             if (twoCharLexemesSet.contains(firstTwoChars)) {
                 final TokenKind kind = tokenLookupMap.get(firstTwoChars);
-                scannerState.advanceToken( emitKind(kind),  firstTwoChars);
+                scanner.advanceToken( emitKind(kind),  firstTwoChars);
                 continue;
             }
-            String lexeme = oneCharLexemesMap.get(scannerState.currentChar());
+            String lexeme = oneCharLexemesMap.get(currentChar());
             if ( lexeme != null ){
                 final TokenKind kind = tokenLookupMap.get(lexeme);
-                scannerState.advanceToken( emitKind(kind),  lexeme);
+                scanner.advanceToken( emitKind(kind),  lexeme);
                 continue;
             }
 
@@ -225,7 +223,7 @@ public class Lexer {
             // (member-name-shorthand, true, false, null, function names, extension keywords)
             //-----------------------------------------------------------------------------------------
             regexRule = (RulesBuilder.RegexRule) lexerRules.get(TokenKind.IDENTIFIER);
-            matcher = regexRule.getRegionMatcher(jsonPathText, scannerState.positionIndex);
+            matcher = regexRule.getRegionMatcher(jsonPathText, position());
             if (matcher.lookingAt()) {
                 processIdentifier(matcher.group());
                 continue;
@@ -235,26 +233,26 @@ public class Lexer {
             // todo combine these into a single method
             regexRule = (RulesBuilder.RegexRule) lexerRules.get(TokenKind.SINGLE_QUOTE_STRING);
             if ( inFirstSet(regexRule) ) {
-                matcher = regexRule.getRegionMatcher(jsonPathText, scannerState.positionIndex);
+                matcher = regexRule.getRegionMatcher(jsonPathText, position());
                 if (matcher.lookingAt()) {
-                    scannerState.advanceToken( emitKind(TokenKind.SINGLE_QUOTE_STRING),  matcher.group());
+                    scanner.advanceToken( emitKind(TokenKind.SINGLE_QUOTE_STRING),  matcher.group());
                     continue;
                 }
             }
             regexRule = (RulesBuilder.RegexRule) lexerRules.get(TokenKind.DOUBLE_QUOTE_STRING);
             if ( inFirstSet(regexRule) ) {
-                matcher = regexRule.getRegionMatcher(jsonPathText, scannerState.positionIndex);
+                matcher = regexRule.getRegionMatcher(jsonPathText, position());
                 if (matcher.lookingAt()) {
-                    scannerState.advanceToken( emitKind(TokenKind.DOUBLE_QUOTE_STRING),  matcher.group());
+                    scanner.advanceToken( emitKind(TokenKind.DOUBLE_QUOTE_STRING),  matcher.group());
                     continue;
                 }
             }
 
             // Slice selector
             regexRule = (RulesBuilder.RegexRule) lexerRules.get(TokenKind.LIST_SLICE);
-            matcher = regexRule.getRegionMatcher(jsonPathText, scannerState.positionIndex);
+            matcher = regexRule.getRegionMatcher(jsonPathText, position());
             if (matcher.lookingAt()) {
-                scannerState.advanceToken( emitKind(TokenKind.LIST_SLICE),  matcher.group());
+                scanner.advanceToken( emitKind(TokenKind.LIST_SLICE),  matcher.group());
                 continue;
             }
 
@@ -264,18 +262,20 @@ public class Lexer {
             regexRule = (RulesBuilder.RegexRule) lexerRules.get(TokenKind.NUMBER);
             if ( inFirstSet(regexRule) ) {
                // matcher = regexRule.pattern().matcher(jsonPathText);
-                matcher = regexRule.getRegionMatcher(jsonPathText, scannerState.positionIndex);
+                matcher = regexRule.getRegionMatcher(jsonPathText, position());
 
                 if (matcher.lookingAt()) {
-                    scannerState.advanceToken( emitKind(TokenKind.NUMBER),  matcher.group());
+                    scanner.advanceToken( emitKind(TokenKind.NUMBER),  matcher.group());
                     continue;
                 }
             }
 
+            // Illegal Character
             System.out.println(scanner.getTokenList());
-            throw new JSONPathException(
-                    "Unrecognized character: '%c' at start of string '%s'"
-                            .formatted(scanner.currentChar(), jsonPathText.substring(scanner.getPositionIndex())));
+            String errMsg = "Unrecognized character: '%c' at start of string '%s'"
+                    .formatted( scanner.currentChar(),jsonPathText.substring( scanner.getPositionIndex() ) );
+            throw new JSONPathSyntaxException( errMsg
+            , new Token( TokenKind.ILLEGAL, String.valueOf(scanner.currentChar()), scanner.getPositionIndex(), jsonPathText));
 
         }
         return scanner.getTokenList();
@@ -284,19 +284,11 @@ public class Lexer {
     protected final boolean inFirstSet(RulesBuilder.RegexRule regexRule) {
         boolean isInFirstSet = true;
         if (regexRule.hasFirstSet()) {
-            isInFirstSet = regexRule.firstSetContains(scannerState.currentChar());
+            isInFirstSet = regexRule.firstSetContains(getScannerState().currentChar());
         }
         return isInFirstSet;
     }
-    /**
-     * Looks up the argument {@link TokenKind} in the lexer rules and returns the TokenKind that should be emitted.
-     * @param lookupToken the lookup key.
-     * @return the TokenKind that should be emitted for the given key. This allows customization by aliasing several
-     * TokenKinds to a single emitted TokenKind.
-     */
-    protected TokenKind emitKind(TokenKind lookupToken) {
-        return lexerRules.get(lookupToken).emitKind();
-    }
+
 
     /**
      * Processes identifiers and keywords, including member-name-shorthand, `true`, `false`, `null`, function names,
@@ -307,8 +299,9 @@ public class Lexer {
         // todo - refactor after all unit tests pass
         // the Lexer *should* just create a Token for the identifier and let the parse deal with the specifics in context.
         // for the moment, we want to pass the existing unit tests for python-jsonpath, so we need to produce the same
-        // tokens as that library for the same input.
+        // getTokenList as that library for the same input.
         TokenKind kind = keywordMap.get(text);
+        ScannerState scannerState = getScannerState();
         if (kind != null) {
             // we scanned a keyword
             scannerState.advanceToken(emitKind(kind), text);
@@ -322,15 +315,15 @@ public class Lexer {
             return;
         }
 
-        // python-jsonpath creates explicit tokens for functions and name selectors
+        // python-jsonpath creates explicit getTokenList for functions and name selectors
         // (TOKEN_FUNCTION and TOKEN_BARE_PROPERTY
         // but here we just combine both into an IDENTIFIER
         scannerState.advanceToken(emitKind(TokenKind.IDENTIFIER), text);
     }
 
     public Iterator<Token> tokenizeOld(String jsonPathText) {
-        this.scannerState = initScanner(jsonPathText);
-        final List<Token> tokens = scannerState.tokenList;  // for readability
+        initScanner(jsonPathText);
+        final List<Token> tokens = getScannerState().getTokenList();  // for readability
 
 
 
@@ -410,179 +403,8 @@ public class Lexer {
 
     // Helper classes and methods
 
-    //*************************************************************************
-    //*    ScannerState
-    //*************************************************************************
-
-    protected static final class ScannerState {
-
-        private final String jsonPathText;
-        private int positionIndex;
-        private final List<Token> tokenList;
-
-        private ScannerState(String jsonPathText) {
-            this.jsonPathText = jsonPathText;
-            this.positionIndex = 0;
-            this.tokenList = new ArrayList<>();
-        }
-
-        protected String getJsonPathText() {
-            return jsonPathText;
-        }
-
-        protected int getPositionIndex() {
-            return positionIndex;
-        }
-
-        protected List<Token> getTokenList() {
-            return tokenList;
-        }
-
-        /**
-         * Returns the character from the input string at the current scanner position. If the current position is past
-         * the end of the input, this method returns null. Does not advance the position.
-         * @return the current scanner character, or null if the current position is past EOF.
-         */
-        protected char currentChar() {
-            return has0() ? c0() : '\0';
-        }
-
-        /**
-         * Return, without consuming, the first `numberOfChars` characters from the current position.
-         * @param numberOfChars the number of characters to peek.
-         * @return {@code numberOfChars} characters from the current scanner position. If the scanner position is at
-         * the end of the input, this method returns null. If there are fewer characters remaining to be scanned than
-         * requested in the argument, all characters from the current position to the end of the input are returned.
-         */
-        private @Nullable String peekNextChars(int numberOfChars) {
-            int len = jsonPathText.length();
-            if (positionIndex >= len) return null;
-            int end = Math.min(len, positionIndex + numberOfChars);
-            return jsonPathText.substring(positionIndex, end);
-        }
-
-        /**
-         * Returns the character from the input string just before the current scanner position.
-         * If the current position is 0, this method returns null. The position is unchanged after calling this method.
-         * @return the previous scanner character, or null if the current position is at the start of the text.
-         */
-        protected char previousChar() {
-            return hasp() ? cp() : '\0';
-        }
-
-        protected void advance(int length){
-            advanceImpl(length);
-        }
-
-        protected void advance(RulesBuilder.LexemeRule rule) {
-            advanceImpl(rule);
-        }
-
-        protected void advance(Token token) {
-            advanceImpl(token);
-        }
-
-        /**
-         * Advance the position in the scanned text by the length of the `length_specifier` argument.
-         * @param lengthSpecifier int, LexemeRule or Token from which to obtain the length to advance the scanner.
-         */
-        private void advanceImpl(Object lengthSpecifier) {
-            int length =
-                    switch (lengthSpecifier) {
-                        case Integer i -> i;
-                        case RulesBuilder.LexemeRule lr -> lr.lexeme().length();
-                        case Token t -> t.value().length();
-                        default -> throw new IllegalArgumentException(
-                                "Expected int, LexemeRule or Token, got %s"
-                                        .formatted(lengthSpecifier.getClass().getSimpleName()));
-                    };
-            positionIndex += length;
-        }
-
-        /**
-         * Create and add the new {@link Token} to the list of tokens and advance the scanner position by
-         * the length of the Token value.
-         * @param kind the {@link TokenKind} of the new Token.
-         * @param value the scanned text the Token represents.
-         * @return the newly created Token.
-         */
-        private Token advanceToken(TokenKind kind, String value) {
-            final Token newToken = makeToken(kind, value);
-            tokenList.add(newToken);
-            advance(value.length());
-            return newToken;
-        }
-
-        private Token makeToken(TokenKind kind, String value) {
-            return new Token(kind, value, positionIndex, jsonPathText);
-        }
 
 
-        ////////////////////////////////////////////////////////////////////
-        /// Helper Methods
-        ////////////////////////////////////////////////////////////////////
-
-        /**
-         * @return true if there is at least 1 unscanned character remaining in the input text,
-         * or false if the scanner is at EOF.
-         */
-        boolean has0() { return positionIndex < jsonPathText.length(); }
-        /**
-         * @return true if there are at least 2 unscanned characters remaining in the input text, or false otherwise.
-         */
-        boolean has1() { return positionIndex + 1 < jsonPathText.length(); }
-
-        /**
-         * @return fase if the current position is at the start of the input, or the input text is empty.
-         * Otherwise, returns true, indicating that a character before the current character is available.
-         */
-        boolean hasp() {
-            return !jsonPathText.isEmpty() && positionIndex > 0;
-        }
-        /**
-         * @return the character at the current position.
-         */
-        char c0() { return jsonPathText.charAt(positionIndex); }
-
-        /**
-         *
-         * @return the character after the current character, at index position + 1.
-         */
-        char c1() { return jsonPathText.charAt(positionIndex + 1); }
-
-        /**
-         *
-         * @return the character just before the current character
-         */
-        char cp() { return jsonPathText.charAt(positionIndex  - 1 ); }
-
-        boolean regionEquals(String s) {
-            return jsonPathText.regionMatches(positionIndex, s, 0, s.length());
-        }
-
-    } // end class ScannerState
-
-
-    public enum WhitespacePolicy {
-        LENIENT,
-        STRICT
-    }
-
-    public void setWhitespacePolicy(WhitespacePolicy policy) {
-        this.whitespacePolicy = policy;
-    }
-
-    /**
-     * Returns the current whitespace policy for this Lexer. {@code WhitespacePolicy.LENIENT} (the default) causes the
-     * Lexer to consume all whitespace and emit no SPACE tokens. {@code WhitespacePolicy.STRICT} will emit all
-     * whitespace characters as SPACE tokens. A run of contiguous whitespace characters only produces a single SPACE token.
-     * Note that a STRICT policy enforces whitespace rules in the RFC9535 spec, and thus JSON path strings that may parse
-     * correctly in LENIENT mode may fail with a syntax error when using STRICT mode.
-     * @return the current {@code WhitespacePolicy} for this Lexer.
-     */
-    public WhitespacePolicy getWhitespacePolicy() {
-        return this.whitespacePolicy;
-    }
     //**************************************************************************
 
 
@@ -607,13 +429,13 @@ public class Lexer {
      */
     public void displayRules() {
         //debug method
-        for (RulesBuilder.LexerRule rule : lexerRules.values()) {
+        for (RulesBuilder.LexerRule rule : getLexerRulesMap().values()) {
             System.out.println(rule);
         }
     }
 
     public void displayTokenLookup() {
-        System.out.println("Displaying " + tokenLookupMap.size() + " tokens in tokenLookupMap:");
+        System.out.println("Displaying " + tokenLookupMap.size() + " getTokenList in tokenLookupMap:");
         for (var entry: tokenLookupMap.entrySet()) {
             System.out.println(entry);
         }
@@ -639,7 +461,7 @@ public class Lexer {
 
     public void displayRegexpRules() {
         List<RulesBuilder.LexerRule> rules = new ArrayList<>();
-        for (RulesBuilder.LexerRule rule : lexerRules.values()) {
+        for (RulesBuilder.LexerRule rule : getLexerRulesMap().values()) {
             if (rule instanceof RulesBuilder.RegexRule r) {
                 rules.add(r);
             }
@@ -682,7 +504,8 @@ public class Lexer {
 
     static void t1() {
         JSONPathEnvironment env = new JSONPathEnvironment();
-        Lexer lexer = new Lexer(env);
+        var lexer = env.getLexer();
+        assert lexer.getClass() == Lexer.class : "lexer class is " + lexer.getClass();
         //lexer.setWhitespacePolicy(WhitespacePolicy.STRICT);
         String jsonpath;
         jsonpath = "$[]^# >= <> and && foofar bar() $.foo 1 2 3 4 5 789 \"I am groot\" 'I am also groot' 1 1: :1 00 01";

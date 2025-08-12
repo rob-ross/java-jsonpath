@@ -1,6 +1,10 @@
 package org.killeroonie.jsonpath;
 
 import org.jetbrains.annotations.NotNull;
+import org.killeroonie.jsonpath.lex.DefaultRulesBuilder;
+import org.killeroonie.jsonpath.lex.Lexer;
+import org.killeroonie.jsonpath.lex.LexerInterface;
+import org.killeroonie.jsonpath.lex.RulesBuilder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -82,20 +86,22 @@ public class JSONPathEnvironment {
     private final boolean cacheFilters;
     private final boolean unicodeEscape;
     private final boolean wellTyped;
-
-
-    // Override these to customize path tokenization and parsing.
-    Class<Lexer> lexer_class = Lexer.class;
-    Class<Parser> parser_class = Parser.class;
+    private final Class<? extends LexerInterface> lexerClass;
+    private final Class<? extends RulesBuilder>   rulesBuilderClass;
+    private final Class<? extends Parser>         parserClass;
     Class<JSONPathMatch> match_class= JSONPathMatch.class;
 
-    private final Lexer lexer;
-    private final Parser parser;
+    private LexerInterface lexer;
+    private Parser parser;
+    private RulesBuilder rulesBuilder;
 
-    private final EnumMap<TokenKind, RulesBuilder.LexerRule> customRules;
+    private final EnumMap<TokenKind, RulesBuilder.LexerRule> customRules =  new EnumMap<>(TokenKind.class);
 
+    /**
+     * No-arg constructor calls canonical constructor with all {@code true} arguments.
+     */
     public JSONPathEnvironment() {
-        this(true, true, true);
+        this(true, true, true, DefaultRulesBuilder.class,Lexer.class, Parser.class);
     }
 
     /**
@@ -105,15 +111,32 @@ public class JSONPathEnvironment {
      * @param wellTyped Control well-typedness checks on filter function expressions.
      */
     public JSONPathEnvironment(boolean cacheFilters, boolean unicodeEscape, boolean wellTyped) {
+        this(cacheFilters, unicodeEscape, wellTyped, DefaultRulesBuilder.class, Lexer.class, Parser.class);
+
+    }
+
+    public JSONPathEnvironment(boolean cacheFilters,
+                                   boolean unicodeEscape,
+                                   boolean wellTyped,
+                                   Class<? extends RulesBuilder> rulesBuilderClass,
+                                   Class<? extends LexerInterface> lexerClass,
+                                   Class<? extends Parser> parserClass
+                                   ) {
         this.cacheFilters = cacheFilters;
         this.unicodeEscape = unicodeEscape;
         this.wellTyped = wellTyped;
+        this.rulesBuilderClass = rulesBuilderClass;
+        this.lexerClass = lexerClass;
+        this.parserClass = parserClass;
 
-        customRules = buildCustomRules();
+
+        buildCustomRules();
         // The lexer bound to this environment.
-        lexer = factoryMethod( lexer_class, this);
+        //this.lexer = factoryMethod( lexerClass, this);
         // The parser bound to this environment.
-        parser = factoryMethod( parser_class, this);
+        //parser = factoryMethod( parserClass, this);
+
+        //rulesBuilder = factoryMethod( rulesBuilderClass, this);
 
 
         // A list of function extensions available to filters.
@@ -122,6 +145,52 @@ public class JSONPathEnvironment {
         self.function_extensions: Dict[str, Callable[..., Any]] = {}
         self.setup_function_extensions()
          */
+
+    }
+
+    public boolean isCacheFilters() {
+        return cacheFilters;
+    }
+
+    public boolean isUnicodeEscape() {
+        return unicodeEscape;
+    }
+
+    public boolean isWellTyped() {
+        return wellTyped;
+    }
+
+    public Class<? extends RulesBuilder> getRulesBuilderClass() {
+        return rulesBuilderClass;
+    }
+
+    public Class<? extends LexerInterface> getLexerClass() {
+        return lexerClass;
+    }
+
+    public Class<? extends Parser> getParser_class() {
+        return parserClass;
+    }
+
+    public RulesBuilder getRulesBuilder() {
+        if (rulesBuilder == null) {
+            rulesBuilder = factoryMethod( rulesBuilderClass, null);
+        }
+        return rulesBuilder;
+    }
+
+    public LexerInterface getLexer() {
+        if (lexer == null) {
+            lexer = factoryMethod( lexerClass, this);
+        }
+        return lexer;
+    }
+
+    public Parser getParser() {
+        if (parser == null) {
+            parser = factoryMethod( parserClass, this);
+        }
+        return parser;
     }
 
     /**
@@ -164,6 +233,8 @@ public class JSONPathEnvironment {
         rules.put(TokenKind.UNION,
                 new RulesBuilder.LexemeRule(unionToken, TokenKind.UNION)
         );
+        customRules.clear();
+        customRules.putAll(rules);
         return rules;
     }
 
@@ -234,17 +305,32 @@ public class JSONPathEnvironment {
      */
     protected <T> T factoryMethod(@NotNull Class<T> clazz, JSONPathEnvironment env) {
         Constructor<T> constructor;
-        try {
-            constructor = clazz.getDeclaredConstructor(JSONPathEnvironment.class);
-        } catch (NoSuchMethodException e) {
-            // this is a programming error, so an RTE is appropriate.
-            throw new RuntimeException(e);
-        }
         T instance;
-        try {
-            instance = constructor.newInstance(env);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
+        if (env == null) {
+            // no-arg constructor
+            try {
+                constructor = clazz.getDeclaredConstructor();
+            } catch (NoSuchMethodException e) {
+                // this is a programming error, so an RTE is appropriate.
+                throw new RuntimeException(e);
+            }
+            try {
+                instance = constructor.newInstance();
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            try {
+                constructor = clazz.getDeclaredConstructor(JSONPathEnvironment.class);
+            } catch (NoSuchMethodException e) {
+                // this is a programming error, so an RTE is appropriate.
+                throw new RuntimeException(e);
+            }
+            try {
+                instance = constructor.newInstance(env);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
         }
         return instance;
     }

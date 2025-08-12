@@ -1,17 +1,26 @@
-package org.killeroonie.jsonpath;
+package org.killeroonie.jsonpath.lex;
+
+import org.killeroonie.jsonpath.Constants;
+import org.killeroonie.jsonpath.JSONPathEnvironment;
+import org.killeroonie.jsonpath.TokenKind;
 
 import java.util.EnumMap;
 import java.util.Map;
 
+/**
+ * Builds the default rules for the Java JSONPath Query Lexer.
+ */
 public class DefaultRulesBuilder implements RulesBuilder {
 
-    private final EnumMap<TokenKind, LexerRule> rules;
+    private final EnumMap<TokenKind, LexerRule> rules = new EnumMap<>(TokenKind.class);
 
     public DefaultRulesBuilder() {
-        rules = buildDefaultRulesMap();
     }
 
     public EnumMap<TokenKind, LexerRule> getRules() {
+        if (rules.isEmpty()) {
+            rules.putAll(buildDefaultRulesMap());
+        }
         return rules;
     }
 

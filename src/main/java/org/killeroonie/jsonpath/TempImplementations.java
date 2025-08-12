@@ -1,6 +1,8 @@
 package org.killeroonie.jsonpath;
 
 
+import org.killeroonie.jsonpath.lex.Lexer;
+
 import java.io.InputStream;
 import java.util.regex.*;
 import java.util.*;
