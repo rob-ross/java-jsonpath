@@ -81,7 +81,7 @@ public class Lexer extends BaseLexer{
      * Populates the {@code customRules} Map.
      *
      * The default Lexer implementation provides no custom rules.
-     * Subclasses can override {@code buildCustomRules()} to specify custom matching and {@code TokenKind} emitting rules.
+     * Subclasses can override {@code buildCustomEnvRules()} to specify custom matching and {@code TokenKind} emitting rules.
      * When {@code buildRules} is called from this class' constructor, any custom rules specified here for a TokenKind
      * will be used instead of the default values as defined in TokenKind. <p>
      * {@code Note:} this implementation should be interpreted as an example of how subclasses could implement this method. The
@@ -90,7 +90,7 @@ public class Lexer extends BaseLexer{
      *
      */
     @Override
-    protected void buildCustomRules(EnumMap<TokenKind, RulesBuilder.LexerRule> customRulesMap) {
+    protected void buildCustomLexerRules(Map<TokenKind, RulesBuilder.LexerRule> customRulesMap) {
         /*
          * Customization rules
          * Token lexemes and regexp match rules can be customized in both the environment and the Lexer.
@@ -123,19 +123,12 @@ public class Lexer extends BaseLexer{
      * {@code oneCharLexemesMap}, {@code twoCharLexemesSet}, and {@code keywordMap}
      */
     @Override
-    protected void buildRules(Map<TokenKind, RulesBuilder.LexerRule> lexerRulesMap) {
-        lexerRulesMap.clear();
-        // start with default rules
-        // temp, we should get the rules builder from the Environment
-        EnumMap<TokenKind, RulesBuilder.LexerRule> rules =  new DefaultRulesBuilder().getRules();
-        // Now we apply custom rules from the Env and Lexer. Env rules have the highest priority, then Lexer rules.
-        for (var entry: rules.entrySet()) {
+    protected void buildRules(final Map<TokenKind, RulesBuilder.LexerRule> lexerRulesMap) {
+        super.buildRules(lexerRulesMap);
+
+        for (var entry: lexerRulesMap.entrySet()) {
             TokenKind kind = entry.getKey();
-            RulesBuilder.LexerRule customRule = findRule(kind);
-            if  (customRule != null) {
-                rules.put(kind, customRule); // replace the default rule with the custom rule.
-            }
-            RulesBuilder.LexerRule rule = rules.get(kind);
+            RulesBuilder.LexerRule rule = lexerRulesMap.get(kind);
             if (rule instanceof RulesBuilder.LexemeRule(String lexeme, TokenKind emitKind) && lexeme != null) {
                 // looking up a null or by a regex pattern string is useless, so we omit these from the lookup map
                 tokenLookupMap.put(lexeme, emitKind);
@@ -143,7 +136,7 @@ public class Lexer extends BaseLexer{
             }
         }
         // generate the lexeme sets for matching
-        for (var entry: rules.entrySet()) {
+        for (var entry: lexerRulesMap.entrySet()) {
             TokenKind kind = entry.getKey();
             RulesBuilder.LexerRule rule = entry.getValue();
             if (rule instanceof RulesBuilder.LexemeRule lr) {
@@ -158,8 +151,7 @@ public class Lexer extends BaseLexer{
                 }
             }
         }
-        // copy rules to instance variable as passed in the argument
-        lexerRulesMap.putAll(rules);
+
     }
 
 
@@ -414,8 +406,8 @@ public class Lexer extends BaseLexer{
          */
         Lexer lexer2 = new Lexer(new  JSONPathEnvironment(){
             @Override
-            public EnumMap<TokenKind, RulesBuilder.LexerRule> buildCustomRules() {
-                var rules = super.buildCustomRules();
+            public Map<TokenKind, RulesBuilder.LexerRule> buildCustomEnvRules() {
+                var rules = super.buildCustomEnvRules();
                 rules.put(TokenKind.PSEUDO_ROOT, new RulesBuilder.LexemeRule("%", TokenKind.PSEUDO_ROOT));
                 return rules;
             }

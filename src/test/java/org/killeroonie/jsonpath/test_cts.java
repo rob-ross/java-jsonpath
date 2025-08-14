@@ -1,20 +1,16 @@
-package org.killeroonie.json;
+package org.killeroonie.jsonpath;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DatabindException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class test_cts {
 
@@ -47,16 +43,17 @@ public class test_cts {
      Holds a single test case from a `cts` JSON file, and maps domain names from the test file domain to the domain names in
      RFC 9535. Abstracted away is the distinction between a single test result and multiple test results for a single
      test case by implementing only a {@code resultsValues} and {@code resultsPaths} list for each test case.
-     Test cases with {@code result} and {@code result_paths} keys are represented as single element
+     Test cases in the JSON file with {@code result} and {@code result_paths} keys are represented as single element
      {@code resultsValues} and {@code resultsPaths} lists.
      */
-    record CTSTestCase(String testName,
-                       String jsonPath,
-                       Object rootValue,
-                       boolean isInvalid,
-                       List<String> tags,
-                       List<Object> resultsValues,
-                       List<List<String>> resultsPaths) {
+    @JsonPropertyOrder({"name", "selector", "document", "invalid_selector", "tags", "results", "results_paths"})
+    record CTSTestCase(@JsonProperty("name") String testName,
+                       @JsonProperty("selector") String jsonPath,
+                       @JsonProperty("document") Object rootValue,
+                       @JsonProperty("invalid_selector") boolean isInvalid,
+                       @JsonProperty("tags") List<String> tags,
+                       @JsonProperty("results") List<Object> resultsValues,
+                       @JsonProperty("results_paths") List<List<String>> resultsPaths) {
 
 
         @JsonCreator
@@ -88,7 +85,7 @@ public class test_cts {
 
     }
 
-    static void test_load_ctsFile() {
+    static CTSTestCases test_load_ctsFile() {
         final String fileName = "cts.json";
         final ObjectMapper mapper = new ObjectMapper();
         CTSTestCases testCases = null;
@@ -97,17 +94,18 @@ public class test_cts {
         } catch (IOException  e) {
             throw new RuntimeException("Couldn't load " + fileName, e);
         }
-        String prettyJson = null;
-        System.out.println("Test Cases loaded: ");
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        try {
-            prettyJson = mapper.writeValueAsString(testCases);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
+//        String prettyJson = null;
+//        System.out.println("Test Cases loaded: ");
+//        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+//        try {
+//            prettyJson = mapper.writeValueAsString(testCases);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//
 //        System.out.println(prettyJson);
-        System.out.println("num test cases: " + testCases.tests.size());
+//        System.out.println("num test cases: " + testCases.tests.size());
+        return testCases;
     }
 
     public static void main(String[] args) {

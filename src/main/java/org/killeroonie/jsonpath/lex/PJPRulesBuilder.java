@@ -42,8 +42,6 @@ public class PJPRulesBuilder implements RulesBuilder {
 
     private final Map<TokenKind, RulesBuilder.LexerRule> rules = new LinkedHashMap<>();
 
-    public PJPRulesBuilder() {
-    }
 
     public Map<TokenKind, RulesBuilder.LexerRule> getRules() {
         if (rules.isEmpty()) {
@@ -120,12 +118,7 @@ public class PJPRulesBuilder implements RulesBuilder {
         // PJP doesn't use first sets here.
 
         // add the emitToken to the builders that don't have one yet (most of them.)
-        for (Map.Entry<TokenKind, RulesBuilder.LexerRuleBuilder> entry: builders.entrySet()) {
-            if (entry.getValue().getEmitKind() == null ) {
-                RulesBuilder.LexerRuleBuilder lrb = entry.getValue();
-                lrb.emitKind(entry.getKey()); // emitKind is the same as the TokenKind, which is typical.
-            }
-        }
+        RulesBuilder.addDefaultEmitKind(builders);
 
         // finally, we build all the rules
         final Map<TokenKind, RulesBuilder.LexerRule> rules = new LinkedHashMap<>();

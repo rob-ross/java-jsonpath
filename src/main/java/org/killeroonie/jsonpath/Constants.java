@@ -9,10 +9,14 @@ public class Constants {
     public static final String SOLIDUS         = chr(0x2F);  // forward slash '/'
     public static final String REVERSE_SOLIDUS = chr(0x5C);  // backslash '\'
     public static final String SLASH           = SOLIDUS;
+    public static final char   SLASH_CHAR      = '/';
+
     public static final String BACKSLASH       = REVERSE_SOLIDUS;
 
     public static final String SINGLE_QUOTE = chr(0x27);  // single quote ' character
+    public static final char SINGLE_QUOTE_CHAR = '\'';
     public static final String DOUBLE_QUOTE = chr(0x22);   // double quote " character
+    public static final char DOUBLE_QUOTE_CHAR = '\"';
     public static final String ESC          = BACKSLASH;   // '\'
 
     public static final String UNDERSCORE    = "_";
@@ -82,8 +86,8 @@ public class Constants {
 
     // python-jsonpath test for int and float separately. Here we just test for a number literal and create a single NUMBER liberal token.
     static final String INT2_RE = "(?:0|-?[1-9][0-9]*)";  // no leading zeros allowed in integers
-    static final String FRACTION_RE = "\\.[1-9]+";
-    static final String EXPONENT_RE = "[eE][-+]?[1-9]+";
+    static final String FRACTION_RE = "\\.\\d+";
+    static final String EXPONENT_RE = "[eE][-+]?\\d+";
     public static final String NUMBER_RE = "(?<NUMBER>(?<INTPART>%s|-0)(?<FRACTPART>%s)?(?<EXPONPART>%s)?)".formatted(INT2_RE, FRACTION_RE, EXPONENT_RE);
 
 

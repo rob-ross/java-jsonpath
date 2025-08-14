@@ -1,5 +1,6 @@
 package org.killeroonie.jsonpath.lex;
 
+import org.jetbrains.annotations.Nullable;
 import org.killeroonie.jsonpath.JSONPathEnvironment;
 import org.killeroonie.jsonpath.Token;
 import org.killeroonie.jsonpath.TokenKind;
@@ -10,13 +11,29 @@ public abstract class BaseLexer implements LexerInterface {
 
     private final JSONPathEnvironment env;
     private transient ScannerState scannerState;
-    private final Map<TokenKind, RulesBuilder.LexerRule> lexerRulesMap = new LinkedHashMap<>();
-    private final EnumMap<TokenKind, RulesBuilder.LexerRule> customRulesMap = new EnumMap<>(TokenKind.class);
+    // lexerRulesMap relies on insertion order
+    private final Map<TokenKind, RulesBuilder.LexerRule> lexerRulesMap = new LinkedHashMap<>(); //we rely on insertion order
+    // customLexerRulesMap is used to override entries in lexerRulesMap, so entry order here is not important
+    private final Map<TokenKind, RulesBuilder.LexerRule> customLexerRulesMap = new EnumMap<>(TokenKind.class);
 
     private WhitespacePolicy whitespacePolicy = WhitespacePolicy.LENIENT;
 
     public abstract List<Token> tokenize(String jsonPathText);
-    protected abstract void buildRules(Map<TokenKind, RulesBuilder.LexerRule> lexerRulesMap);
+
+    /**
+     * Builds the rules for this Lexer and adds them to the argument Map.
+     * @param lexerRulesMap the Map of Lexer rules for this instance. This Map will be mutated. It will be cleared, then
+     *                      the rules added to them in definition order.
+     */
+    protected void buildRules(Map<TokenKind, RulesBuilder.LexerRule> lexerRulesMap) {
+        lexerRulesMap.clear();
+        // start with default rules
+        final Map<TokenKind, RulesBuilder.LexerRule> rules = getEnv().getRulesBuilder().getRules();
+        // Now we apply custom rules from the Env and Lexer. Env rules have the highest priority, then Lexer rules.
+        rules.putAll(getCustomLexerRulesMap());
+        rules.putAll(getEnv().getCustomEnvRules());
+        lexerRulesMap.putAll(rules);
+    }
 
 
 
@@ -40,18 +57,25 @@ public abstract class BaseLexer implements LexerInterface {
     protected final ScannerState initScanner(String jsonPathText) {
         // reset the Lexer state in preparation of tokenizing an input string
         scannerState = new ScannerState(jsonPathText);
-        // The order of these operations is significant.
-        buildCustomRules(customRulesMap);
-        buildRules(lexerRulesMap);
         return scannerState;
     }
 
-    protected final Map<TokenKind, RulesBuilder.LexerRule> getLexerRulesMap() {
+    protected Map<TokenKind, RulesBuilder.LexerRule> initRules() {
+        // The order of these operations is significant.
+        buildCustomLexerRules(customLexerRulesMap);
+        buildRules(lexerRulesMap);
         return lexerRulesMap;
     }
 
-    protected final Map<TokenKind, RulesBuilder.LexerRule> getCustomRulesMap() {
-        return customRulesMap;
+    protected final Map<TokenKind, RulesBuilder.LexerRule> getLexerRulesMap() {
+        if (lexerRulesMap.isEmpty()) {
+            initRules();
+        }
+        return lexerRulesMap;
+    }
+
+    protected final Map<TokenKind, RulesBuilder.LexerRule> getCustomLexerRulesMap() {
+        return customLexerRulesMap;
     }
 
     /**
@@ -66,7 +90,7 @@ public abstract class BaseLexer implements LexerInterface {
         return this.whitespacePolicy;
     }
 
-    protected final void setWhitespacePolicy(LexerInterface.WhitespacePolicy policy) {
+    public final void setWhitespacePolicy(LexerInterface.WhitespacePolicy policy) {
         this.whitespacePolicy = policy;
     }
 
@@ -75,8 +99,8 @@ public abstract class BaseLexer implements LexerInterface {
     /**
      * Default implementation builds no custom rules. Subclasses can override to create custom lexer rules.
      */
-    protected void buildCustomRules( EnumMap<TokenKind, RulesBuilder.LexerRule> customRulesMap ) {
-        lexerRulesMap.clear();
+    protected void buildCustomLexerRules(Map<TokenKind, RulesBuilder.LexerRule> customRulesMap ) {
+        customRulesMap.clear();
     }
 
     /**
@@ -85,9 +109,9 @@ public abstract class BaseLexer implements LexerInterface {
      * @param kind the TokenKind of the custom rule to locate.
      * @return the custom rule for the TokenKind or null.
      */
-    protected final RulesBuilder.LexerRule findRule(TokenKind kind) {
+    protected final @Nullable RulesBuilder.LexerRule findRule(TokenKind kind) {
         Optional<RulesBuilder.LexerRule> rule = getEnv().findRule(kind);
-        return rule.orElseGet(() -> customRulesMap.get(kind) );
+        return rule.orElseGet(() -> customLexerRulesMap.get(kind) );
     }
 
     /**

@@ -32,16 +32,14 @@ public class PJPLexer extends BaseLexer{
      */
     @Override
     protected void buildRules(Map<TokenKind, RulesBuilder.LexerRule> lexerRulesMap) {
-        // copy rules from the RulesBuilder
-        lexerRulesMap.clear();
-        Map<TokenKind, RulesBuilder.LexerRule> rules = getEnv().getRulesBuilder().getRules();
-        lexerRulesMap.putAll(rules);
+        super.buildRules(lexerRulesMap);
     }
 
     @Override
-    public List<Token> tokenize(String jsonPathText) {
-        final ScannerState scanner = initScanner(jsonPathText);
-        Map<TokenKind, RulesBuilder.LexerRule> lexerRules = getLexerRulesMap();
+    public List<Token> tokenize(final String jsonPathText) {
+        final ScannerState  scanner = initScanner(jsonPathText);
+        final var        lexerRules = getLexerRulesMap();
+
         while ( currentChar() != EOF_CHAR) {
 //            System.out.printf("current char is %s, pos= %d%n", currentChar(), position());
             Matcher matcher = null;
@@ -57,7 +55,7 @@ public class PJPLexer extends BaseLexer{
                     break;
                 }
             }
-            assert kind != null;
+            assert kind != null : "Kind is null, ";
 
             if (kind == TokenKind.DOT_PROPERTY) {
                 scanner.advance(1); // consume the dot

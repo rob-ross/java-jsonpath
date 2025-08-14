@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface LexerInterface {
 
-    public static final char EOF_CHAR = '\0';
+    public static char EOF_CHAR = '\0';
 
     List<Token> tokenize(String jsonPathText);
 
@@ -16,6 +16,10 @@ public interface LexerInterface {
         LENIENT,
         STRICT
     }
+
+    WhitespacePolicy getWhitespacePolicy();
+
+    void setWhitespacePolicy(LexerInterface.WhitespacePolicy policy);
 
 
 }

@@ -127,7 +127,7 @@ public final class IntKeyMap<V> {
         size = 0;
     }
 
-    Set<Integer> keySet() {
+    public Set<Integer> keySet() {
         return keySet;
     }
 

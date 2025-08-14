@@ -5,7 +5,7 @@ import org.killeroonie.jsonpath.Token;
 /**
  * An exception raised when parsing a JSONPath string.
  */
-public class JSONPathSyntaxException extends JSONPathException {
+public class  JSONPathSyntaxException extends JSONPathException {
 
     /**
      * Constructs a new JSONPathSyntaxException.

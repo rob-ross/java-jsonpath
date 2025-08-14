@@ -2,7 +2,6 @@ package org.killeroonie.jsonpath.lex;
 
 import org.killeroonie.jsonpath.TokenKind;
 
-import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -29,6 +28,21 @@ public interface RulesBuilder {
             throw new IllegalArgumentException("Cannot add to firstSet of a LexemeRule builder");
         }
         builder.firstSet(chars);
+    }
+
+    /**
+     * Iterates over the LexerRuleBuilders in the argument Map and assigns the TokenKind key as the emitKind
+     * for any entries that have a null emitKind; i.e., have not been assigned yet.
+     * @param builders the Map of LexerRuleBuilders to update with a default emitKind if not set.
+     */
+    static void addDefaultEmitKind(Map<TokenKind, LexerRuleBuilder> builders) {
+        // add the emitToken to the builders that don't have one yet (most of them.)
+        for (Map.Entry<TokenKind, LexerRuleBuilder> entry: builders.entrySet()) {
+            if (entry.getValue().getEmitKind() == null ) {
+                LexerRuleBuilder lrb = entry.getValue();
+                lrb.emitKind(entry.getKey()); // emitKind is the same as the TokenKind, which is typical.
+            }
+        }
     }
 
 

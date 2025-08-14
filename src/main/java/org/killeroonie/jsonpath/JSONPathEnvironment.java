@@ -8,7 +8,8 @@ import org.killeroonie.jsonpath.lex.RulesBuilder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.EnumMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -95,10 +96,10 @@ public class JSONPathEnvironment {
     private Parser parser;
     private RulesBuilder rulesBuilder;
 
-    private final EnumMap<TokenKind, RulesBuilder.LexerRule> customRules =  new EnumMap<>(TokenKind.class);
+    private  Map<TokenKind, RulesBuilder.LexerRule> customEnvRules;
 
     /**
-     * No-arg constructor calls canonical constructor with all {@code true} arguments.
+     * No-arg constructor calls canonical constructor with all {@code true} and default arguments.
      */
     public JSONPathEnvironment() {
         this(true, true, true, DefaultRulesBuilder.class,Lexer.class, Parser.class);
@@ -129,23 +130,7 @@ public class JSONPathEnvironment {
         this.lexerClass = lexerClass;
         this.parserClass = parserClass;
 
-
-        buildCustomRules();
-        // The lexer bound to this environment.
-        //this.lexer = factoryMethod( lexerClass, this);
-        // The parser bound to this environment.
-        //parser = factoryMethod( parserClass, this);
-
-        //rulesBuilder = factoryMethod( rulesBuilderClass, this);
-
-
-        // A list of function extensions available to filters.
-
-        /*
-        self.function_extensions: Dict[str, Callable[..., Any]] = {}
-        self.setup_function_extensions()
-         */
-
+        // everything else is created lazily when first requested
     }
 
     public boolean isCacheFilters() {
@@ -193,49 +178,23 @@ public class JSONPathEnvironment {
         return parser;
     }
 
+    public final Map<TokenKind, RulesBuilder.LexerRule> getCustomEnvRules() {
+        if ( customEnvRules == null) {
+            customEnvRules = buildCustomEnvRules();
+        }
+        return customEnvRules;
+    }
+
     /**
      * The default {@code JSONPathEnvironment} implementation provides no custom rules.
-     * Subclasses can override {@code buildCustomRules()} to specify custom matching and {@code TokenKind} emitting rules.
-     * When {@code buildRules} is called from this class' constructor, any custom rules specified here for a TokenKind
-     * will be used instead of the default values as defined in TokenKind. <p>
+     * Subclasses can override {@code buildCustomEnvRules()} to specify custom matching and
+     * {@code TokenKind} emitting rules.
      * Custom rules defined here override any custom rules defined in the Lexer to which this instance is attached.
-     * Note this implementation should be interpreted as an example of how subclasses could implement this method. The
-     * actual `custom rules` used here are exactly the same as the default rules for each TokenKind, so no new behavior
-     * is implemented.
      *
      * @return the Map of {@link TokenKind} to custom {@link RulesBuilder.LexerRule}s that will be used by Lexer class.
      */
-    public EnumMap<TokenKind, RulesBuilder.LexerRule> buildCustomRules() {
-        // These should be unescaped strings. `re.escape` will be called
-        // on them automatically when compiling lexer rules.
-        final String pseudoRootToken = "^";
-        final String filterContextToken = "_";
-        final String intersectionToken = "&";
-        final String keyToken = "#";
-        final String keysSelectorToken = "~";
-        final String unionToken = "|";
-        EnumMap<TokenKind, RulesBuilder.LexerRule> rules = new EnumMap<>(TokenKind.class);
-        rules.put(TokenKind.PSEUDO_ROOT,
-                new RulesBuilder.LexemeRule(pseudoRootToken, TokenKind.PSEUDO_ROOT)
-        );
-        rules.put(TokenKind.FILTER_CONTEXT,
-                new RulesBuilder.LexemeRule(filterContextToken, TokenKind.FILTER_CONTEXT)
-        );
-        rules.put(TokenKind.INTERSECTION,
-                new RulesBuilder.LexemeRule(intersectionToken, TokenKind.INTERSECTION)
-        );
-        rules.put(TokenKind.KEY,
-                new RulesBuilder.LexemeRule(keyToken, TokenKind.KEY)
-        );
-        rules.put(TokenKind.KEY_SELECTOR,
-                new RulesBuilder.LexemeRule(keysSelectorToken, TokenKind.KEY_SELECTOR)
-        );
-        rules.put(TokenKind.UNION,
-                new RulesBuilder.LexemeRule(unionToken, TokenKind.UNION)
-        );
-        customRules.clear();
-        customRules.putAll(rules);
-        return rules;
+    protected Map<TokenKind, RulesBuilder.LexerRule> buildCustomEnvRules() {
+        return new LinkedHashMap<>(); // empty list
     }
 
     /**
@@ -341,7 +300,7 @@ public class JSONPathEnvironment {
      * @return an Optional<LexerRule> with the custom rule if found, or an empty Optional otherwise.
      */
     public Optional<RulesBuilder.LexerRule> findRule(TokenKind kind) {
-        RulesBuilder.LexerRule rule = customRules.getOrDefault(kind, null);
+        RulesBuilder.LexerRule rule = customEnvRules.getOrDefault(kind, null);
         return  Optional.ofNullable(rule);
     }
 }

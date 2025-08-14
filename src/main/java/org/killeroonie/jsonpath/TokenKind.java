@@ -23,7 +23,9 @@ public enum TokenKind {
     COMMA( EnumSet.of(TokenCategory.DELIMITER) ),
     DOT( EnumSet.of(TokenCategory.DELIMITER) ),
     ROOT( EnumSet.of(TokenCategory.DELIMITER) ), // my Python impl uses DOLLAR as TokenKind here.
+    DOLLAR( EnumSet.of(TokenCategory.DELIMITER) ),
     FILTER( EnumSet.of(TokenCategory.DELIMITER) ), // my Python impl uses QMARK as TokenKind here.
+    QMARK( EnumSet.of(TokenCategory.DELIMITER) ),
     WILD( EnumSet.of(TokenCategory.DELIMITER) ), // my Python impl uses STAR as TokenKind here.
     SELF( EnumSet.of(TokenCategory.DELIMITER) ),
     COLON( EnumSet.of(TokenCategory.DELIMITER) ),
@@ -125,6 +127,8 @@ public enum TokenKind {
     KEY( EnumSet.of(TokenCategory.DELIMITER) ),
     KEY_SELECTOR( EnumSet.of(TokenCategory.DELIMITER) ), //Python: TOKEN_KEYS,
     LG(  EnumSet.of(TokenCategory.COMPARISON_OPERATOR) ),
+    DIAMOND(  EnumSet.of(TokenCategory.COMPARISON_OPERATOR) ),
+
     RE(  EnumSet.of(TokenCategory.COMPARISON_OPERATOR) ),
     UNION( EnumSet.of(TokenCategory.DELIMITER) ),
     INTERSECTION( EnumSet.of(TokenCategory.DELIMITER) ),
