@@ -1,8 +1,6 @@
 package org.killeroonie.jsonpath;
 
 
-import org.killeroonie.jsonpath.lex.Lexer;
-
 import java.io.InputStream;
 import java.util.regex.*;
 import java.util.*;
@@ -126,19 +124,3 @@ class Regex {
     }
 }
 
-class LexerChild extends Lexer {
-
-    /**
-     * Constructor for Lexer.
-     *
-     * @param env The JSONPathEnvironment configuration
-     */
-    public LexerChild(JSONPathEnvironment env) {
-        super(env);
-    }
-
-    @Override
-    protected void processIdentifier(String group) {
-        super.processIdentifier(group);
-    }
-}

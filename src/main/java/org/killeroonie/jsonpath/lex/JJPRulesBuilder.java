@@ -1,6 +1,7 @@
-package org.killeroonie.jsonpath;
+package org.killeroonie.jsonpath.lex;
 
-import org.killeroonie.jsonpath.lex.RulesBuilder;
+import org.killeroonie.jsonpath.Constants;
+import org.killeroonie.jsonpath.TokenKind;
 
 import java.util.EnumMap;
 

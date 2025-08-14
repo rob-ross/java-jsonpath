@@ -1,7 +1,6 @@
 package org.killeroonie.jsonpath;
 
 import org.jetbrains.annotations.NotNull;
-import org.killeroonie.jsonpath.lex.Lexer;
 
 /**
  * A token, as returned from {@link Lexer}.{@code tokenize()}

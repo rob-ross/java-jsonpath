@@ -1,8 +1,6 @@
 package org.killeroonie.jsonpath;
 
 import org.jetbrains.annotations.NotNull;
-import org.killeroonie.jsonpath.lex.DefaultRulesBuilder;
-import org.killeroonie.jsonpath.lex.Lexer;
 import org.killeroonie.jsonpath.lex.LexerInterface;
 import org.killeroonie.jsonpath.lex.RulesBuilder;
 
@@ -98,12 +96,7 @@ public class JSONPathEnvironment {
 
     private  Map<TokenKind, RulesBuilder.LexerRule> customEnvRules;
 
-    /**
-     * No-arg constructor calls canonical constructor with all {@code true} and default arguments.
-     */
-    public JSONPathEnvironment() {
-        this(true, true, true, DefaultRulesBuilder.class,Lexer.class, Parser.class);
-    }
+
 
     /**
      *
@@ -111,11 +104,6 @@ public class JSONPathEnvironment {
      * @param unicodeEscape Enable or disable decoding of UTF-16 escape sequences found in JSONPath string literals.
      * @param wellTyped Control well-typedness checks on filter function expressions.
      */
-    public JSONPathEnvironment(boolean cacheFilters, boolean unicodeEscape, boolean wellTyped) {
-        this(cacheFilters, unicodeEscape, wellTyped, DefaultRulesBuilder.class, Lexer.class, Parser.class);
-
-    }
-
     public JSONPathEnvironment(boolean cacheFilters,
                                    boolean unicodeEscape,
                                    boolean wellTyped,

@@ -37,7 +37,7 @@ public class test_cts {
 
     The most reliable approach for arbitrary locations is to use the ClassLoader method without a leading slash.
      */
-    record CTSTestCases(String description, List<CTSTestCase> tests){}
+    public record CTSTestCases(String description, List<CTSTestCase> tests){}
 
     /**
      Holds a single test case from a `cts` JSON file, and maps domain names from the test file domain to the domain names in
@@ -47,7 +47,7 @@ public class test_cts {
      {@code resultsValues} and {@code resultsPaths} lists.
      */
     @JsonPropertyOrder({"name", "selector", "document", "invalid_selector", "tags", "results", "results_paths"})
-    record CTSTestCase(@JsonProperty("name") String testName,
+    public record CTSTestCase(@JsonProperty("name") String testName,
                        @JsonProperty("selector") String jsonPath,
                        @JsonProperty("document") Object rootValue,
                        @JsonProperty("invalid_selector") boolean isInvalid,
@@ -85,7 +85,7 @@ public class test_cts {
 
     }
 
-    static CTSTestCases test_load_ctsFile() {
+    public static CTSTestCases test_load_ctsFile() {
         final String fileName = "cts.json";
         final ObjectMapper mapper = new ObjectMapper();
         CTSTestCases testCases = null;

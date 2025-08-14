@@ -1,6 +1,7 @@
 package org.killeroonie.jsonpath;
 
 import org.killeroonie.jsonpath.lex.JJPLexer;
+import org.killeroonie.jsonpath.lex.JJPRulesBuilder;
 
 public class JJPEnv extends JSONPathEnvironment {
 

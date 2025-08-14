@@ -5,7 +5,6 @@ import org.killeroonie.jsonpath.exception.JSONPathSyntaxException;
 
 import java.util.*;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /*
 The conventional order for field modifiers is:
@@ -316,16 +315,16 @@ public class JJPLexer extends BaseLexer{
         /*
          * This test creates an anonymous JSONPathEnvironment subclass so we can test adding a custom rule.
          */
-        JJPLexer lexer2 = new JJPLexer(new  JSONPathEnvironment(){
-            @Override
-            public Map<TokenKind, RulesBuilder.LexerRule> buildCustomEnvRules() {
-                var rules = super.buildCustomEnvRules();
-                rules.put(TokenKind.PSEUDO_ROOT, new RulesBuilder.LexemeRule("%", TokenKind.PSEUDO_ROOT));
-                return rules;
-            }
-        });
-        System.out.println("Lexer2: ");
-        lexer2.displayRules();
+//        JJPLexer lexer2 = new JJPLexer(new  JSONPathEnvironment(){
+//            @Override
+//            public Map<TokenKind, RulesBuilder.LexerRule> buildCustomEnvRules() {
+//                var rules = super.buildCustomEnvRules();
+//                rules.put(TokenKind.PSEUDO_ROOT, new RulesBuilder.LexemeRule("%", TokenKind.PSEUDO_ROOT));
+//                return rules;
+//            }
+//        });
+//        System.out.println("Lexer2: ");
+//        lexer2.displayRules();
     }
 
     /* Debug methods
@@ -377,7 +376,7 @@ public class JJPLexer extends BaseLexer{
     }
 
     static void showLexemeTokenStats() {
-        JSONPathEnvironment env = new JSONPathEnvironment();
+        JJPEnv env = new JJPEnv();
         JJPLexer lexer = new JJPLexer(env);
         lexer.displayTokenLookup();
         System.out.println();
@@ -401,7 +400,7 @@ public class JJPLexer extends BaseLexer{
     }
 
     static void showRegexpTokenStats() {
-        JSONPathEnvironment env = new JSONPathEnvironment();
+        JJPEnv env = new JJPEnv();
         JJPLexer lexer = new JJPLexer(env);
         lexer.displayRegexpRules();
     }

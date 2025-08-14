@@ -1,4 +1,4 @@
-package org.killeroonie.jsonpath;
+package org.killeroonie.jsonpath.lex;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -7,8 +7,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.killeroonie.jsonpath.*;
 import org.killeroonie.jsonpath.exception.JSONPathException;
-import org.killeroonie.jsonpath.lex.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,17 +75,18 @@ public class LexTestDataGenerator {
      * the Lexer is stable and working correctly.
      * @param env
      */
-    static void generateLexerTestCasesFromCTS(JJPEnv env) {
+    static void generateLexerTestCasesFromCTS(JSONPathEnvironment env, String fileName, String msg) {
         RulesBuilder rb = env.getRulesBuilder();
         LexerInterface lexer = env.getLexer();
-        assert rb.getClass() == JJPRulesBuilder.class : "wanted JJPRulesBuilder, got " + rb.getClass();
-        assert lexer.getClass() == JJPLexer.class : "wanted JJPLexer, got " + lexer.getClass();
-        TestCases tc = forCTSTestCases(test_cts.test_load_ctsFile(), lexer);
+
+        List<Case> newCases = forCTSTestCases(test_cts.test_load_ctsFile(), lexer);
 /*        System.out.printf("size of TestCases: %d%n", tc.tests().size()); // This will print correctly
         for (Case c: tc.tests()) {
             System.out.println("test = " + c);
         }*/
-        writeJsonData(tc, "cts.jjplexer.json");
+        TestCases tc = new TestCases(
+                "Generated from JSONPath Compliance Test Suite to test tokenization of " + msg , newCases);
+        writeJsonData(tc, fileName);
     }
 
     /**
@@ -93,7 +94,7 @@ public class LexTestDataGenerator {
      * @param ctsTestCases
      * @return
      */
-    static TestCases forCTSTestCases(test_cts.CTSTestCases ctsTestCases, LexerInterface lexer) {
+    static List<Case> forCTSTestCases(test_cts.CTSTestCases ctsTestCases, LexerInterface lexer) {
         List<Case> newCases = new ArrayList<>(ctsTestCases.tests().size());
          for (test_cts.CTSTestCase c: ctsTestCases.tests()) {
             // skip invalid tests for now
@@ -113,13 +114,8 @@ public class LexTestDataGenerator {
                 List<Token> tokens = new ArrayList<>(lexer.tokenize(c.jsonPath()));
                 newCases.add(new Case(c.testName(), c.jsonPath(), tokens));
             }
-//            List<Token> tokens = new ArrayList<>(lexer.tokenize(c.jsonPath()));
-//            newCases.add(new Case(c.testName(), c.jsonPath(), tokens));
-        }
-        return new TestCases(
-                "Generated from JSONPath Compliance Test Suite to test tokenization of JJPLexer"
-                , newCases
-        );
+         }
+         return newCases;
     }
 
 
@@ -132,17 +128,18 @@ public class LexTestDataGenerator {
      * Generate pjp.lex.jjplexer.json file
      * @param env
      */
-    static void generateLexerTestCasesFromPJP(JSONPathEnvironment env) {
+    static void generateLexerTestCasesFromPJP(JSONPathEnvironment env, String fileName, String msg) {
         RulesBuilder rb = env.getRulesBuilder();
         LexerInterface lexer = env.getLexer();
-        assert rb.getClass() == JJPRulesBuilder.class : "wanted JJPRulesBuilder, got " + rb.getClass();
-        assert lexer.getClass() == JJPLexer.class : "wanted JJPLexer, got " + lexer.getClass();
 
-        TestCases testCases = loadPJPTestLexJsonFile("lex/test_lex.json");
-        TestCases newCases = forLexer(testCases, lexer);
+        TestCases  testCases = loadPJPTestLexJsonFile("test_lex.json");
+        List<Case> newCases = forLexer(testCases, lexer);
+
+        TestCases newTestCases = new TestCases(
+                "Generated from test_lex.json to test tokenization of " + msg, newCases);
         //System.out.println("New test cases:");
         //prettyPrint(tc);
-        writeJsonData(newCases, "pjp.lex.jjplexer.json");
+        writeJsonData(newTestCases, fileName);
     }
 
     /**
@@ -154,18 +151,23 @@ public class LexTestDataGenerator {
      * @param lexer
      * @return
      */
-    static TestCases forLexer(TestCases originalCases, LexerInterface lexer) {
+    static List<Case> forLexer(TestCases originalCases, LexerInterface lexer) {
         List<Case> newCases = new ArrayList<>();
         // first insert the illegal symbol test
         newCases.add(new Case("illegal symbol", "%", "org.killeroonie.jsonpath.exception.JSONPathSyntaxException"));
 
-        TestCases newTestCases = new TestCases(
-                "Generated from test_lex.json to test tokenization of JJPLexer", newCases);
         for (Case c: originalCases.tests()) {
-            List<Token> tokens = lexer.tokenize(c.path());
-            newCases.add(new Case(c.description(), c.path(),  tokens));
+            try {
+                List<Token> tokens = lexer.tokenize(c.path);
+                // Lexing succeeds if any valid grammar tokens are scanned, so most cases that fail parsing
+                // still pass lexing.
+                newCases.add(new Case(c.description(), c.path(), tokens));
+            } catch (JSONPathException e) {
+                // Record the exception class name.
+                newCases.add(new Case(c.description(), c.path(), e.getClass().getCanonicalName()));
+            }
         }
-        return newTestCases;
+        return newCases;
     }
 
     static TestCases loadPJPTestLexJsonFile(final String fileName) {
@@ -256,11 +258,6 @@ public class LexTestDataGenerator {
     }
 
 
-
-
-
-
-
     static void prettyPrint(TestCases testCases) {
           // pretty print to console
         final ObjectMapper mapper = new ObjectMapper();
@@ -288,8 +285,11 @@ public class LexTestDataGenerator {
     }
 
     public static void main(String[] args) {
-       // generateLexerTestCasesFromPJP(new JJPEnv());
-        generateLexerTestCasesFromCTS(new JJPEnv());
+//        generateLexerTestCasesFromPJP(new JJPEnv(), "pjp.lex.jjplexer.json", "JJPLexer");
+//        generateLexerTestCasesFromCTS(new JJPEnv(), "cts.jjplexer.json", "JJPLexer");
+
+        generateLexerTestCasesFromPJP(new RFCEnv(), "pjp.lex.rfc.json", "RFC lexer");
+        generateLexerTestCasesFromCTS(new RFCEnv(), "cts.rfc.json", "RFC lexer");
 
     }
 

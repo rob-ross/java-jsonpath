@@ -85,7 +85,7 @@ public class Constants {
     public static final String FUNCTION_RE = "(?<GFUNC>[a-z][a-z_0-9]+)\\(\\s*";
 
     // python-jsonpath test for int and float separately. Here we just test for a number literal and create a single NUMBER liberal token.
-    static final String INT2_RE = "(?:0|-?[1-9][0-9]*)";  // no leading zeros allowed in integers
+    public static final String INT2_RE = "(?:0|-?[1-9][0-9]*)";  // no leading zeros allowed in integers
     static final String FRACTION_RE = "\\.\\d+";
     static final String EXPONENT_RE = "[eE][-+]?\\d+";
     public static final String NUMBER_RE = "(?<NUMBER>(?<INTPART>%s|-0)(?<FRACTPART>%s)?(?<EXPONPART>%s)?)".formatted(INT2_RE, FRACTION_RE, EXPONENT_RE);

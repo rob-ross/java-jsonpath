@@ -47,8 +47,7 @@ public class RFCRulesBuilder implements RulesBuilder {
         builders.put(TokenKind.AND, new LexerRuleBuilder(false, Constants.LOGICAL_AND_OP));
         builders.put(TokenKind.OR, new LexerRuleBuilder(false, Constants.LOGICAL_OR_OP));
         builders.put(TokenKind.NUMBER, new LexerRuleBuilder(true, Constants.NUMBER_RE));
-        // todo - we need a RFC compliant INT_RE here
-        builders.put(TokenKind.INT, new LexerRuleBuilder(true, Constants.INT_RE));
+        builders.put(TokenKind.INT, new LexerRuleBuilder(true, Constants.INT2_RE));
         builders.put(TokenKind.FLOAT, new LexerRuleBuilder(true, Constants.FLOAT_RE));
         builders.put(TokenKind.LIST_SLICE, new LexerRuleBuilder(true, Constants.LIST_SLICE_RE));
         builders.put(TokenKind.DOUBLE_QUOTE_STRING, new LexerRuleBuilder(true, Constants.DOUBLE_QUOTE_STRING_RE));
@@ -59,7 +58,7 @@ public class RFCRulesBuilder implements RulesBuilder {
         builders.put(TokenKind.FALSE, new LexerRuleBuilder(false, Constants.KEYWORD_FALSE));
         builders.put(TokenKind.NULL, new LexerRuleBuilder(false, Constants.KEYWORD_NULL));
 
-        assert builders.size() == 47 : "Expected builder size: 47, got: " + builders.size();
+        assert builders.size() == 31 : "Expected builder size: 31, got: " + builders.size();
         // add first sets where applicable
         RulesBuilder.addFirstSet(builders.get(TokenKind.SPACE), Constants.SPACE_FIRST_SET);
         RulesBuilder.addFirstSet(builders.get(TokenKind.LIST_SLICE), Constants.SLICE_FIRST_SET);
