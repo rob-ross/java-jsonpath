@@ -7,7 +7,7 @@ import org.killeroonie.jsonpath.TokenKind;
 
 import java.util.*;
 
-public abstract class BaseLexer implements LexerInterface {
+public abstract class BaseLexer implements Lexer {
 
     private final JSONPathEnvironment env;
     private transient ScannerState scannerState;
@@ -90,7 +90,7 @@ public abstract class BaseLexer implements LexerInterface {
         return this.whitespacePolicy;
     }
 
-    public final void setWhitespacePolicy(LexerInterface.WhitespacePolicy policy) {
+    public final void setWhitespacePolicy(Lexer.WhitespacePolicy policy) {
         this.whitespacePolicy = policy;
     }
 

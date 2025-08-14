@@ -1,7 +1,7 @@
 package org.killeroonie.jsonpath;
 
 import org.jetbrains.annotations.NotNull;
-import org.killeroonie.jsonpath.lex.LexerInterface;
+import org.killeroonie.jsonpath.lex.Lexer;
 import org.killeroonie.jsonpath.lex.RulesBuilder;
 
 import java.lang.reflect.Constructor;
@@ -85,12 +85,12 @@ public class JSONPathEnvironment {
     private final boolean cacheFilters;
     private final boolean unicodeEscape;
     private final boolean wellTyped;
-    private final Class<? extends LexerInterface> lexerClass;
+    private final Class<? extends Lexer> lexerClass;
     private final Class<? extends RulesBuilder>   rulesBuilderClass;
     private final Class<? extends Parser>         parserClass;
     Class<JSONPathMatch> match_class= JSONPathMatch.class;
 
-    private LexerInterface lexer;
+    private Lexer lexer;
     private Parser parser;
     private RulesBuilder rulesBuilder;
 
@@ -108,7 +108,7 @@ public class JSONPathEnvironment {
                                    boolean unicodeEscape,
                                    boolean wellTyped,
                                    Class<? extends RulesBuilder> rulesBuilderClass,
-                                   Class<? extends LexerInterface> lexerClass,
+                                   Class<? extends Lexer> lexerClass,
                                    Class<? extends Parser> parserClass
                                    ) {
         this.cacheFilters = cacheFilters;
@@ -137,7 +137,7 @@ public class JSONPathEnvironment {
         return rulesBuilderClass;
     }
 
-    public Class<? extends LexerInterface> getLexerClass() {
+    public Class<? extends Lexer> getLexerClass() {
         return lexerClass;
     }
 
@@ -152,7 +152,7 @@ public class JSONPathEnvironment {
         return rulesBuilder;
     }
 
-    public LexerInterface getLexer() {
+    public Lexer getLexer() {
         if (lexer == null) {
             lexer = factoryMethod( lexerClass, this);
         }

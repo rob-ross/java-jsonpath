@@ -77,7 +77,7 @@ public class LexTestDataGenerator {
      */
     static void generateLexerTestCasesFromCTS(JSONPathEnvironment env, String fileName, String msg) {
         RulesBuilder rb = env.getRulesBuilder();
-        LexerInterface lexer = env.getLexer();
+        Lexer lexer = env.getLexer();
 
         List<Case> newCases = forCTSTestCases(test_cts.test_load_ctsFile(), lexer);
 /*        System.out.printf("size of TestCases: %d%n", tc.tests().size()); // This will print correctly
@@ -94,7 +94,7 @@ public class LexTestDataGenerator {
      * @param ctsTestCases
      * @return
      */
-    static List<Case> forCTSTestCases(test_cts.CTSTestCases ctsTestCases, LexerInterface lexer) {
+    static List<Case> forCTSTestCases(test_cts.CTSTestCases ctsTestCases, Lexer lexer) {
         List<Case> newCases = new ArrayList<>(ctsTestCases.tests().size());
          for (test_cts.CTSTestCase c: ctsTestCases.tests()) {
             // skip invalid tests for now
@@ -130,7 +130,7 @@ public class LexTestDataGenerator {
      */
     static void generateLexerTestCasesFromPJP(JSONPathEnvironment env, String fileName, String msg) {
         RulesBuilder rb = env.getRulesBuilder();
-        LexerInterface lexer = env.getLexer();
+        Lexer lexer = env.getLexer();
 
         TestCases  testCases = loadPJPTestLexJsonFile("test_lex.json");
         List<Case> newCases = forLexer(testCases, lexer);
@@ -151,7 +151,7 @@ public class LexTestDataGenerator {
      * @param lexer
      * @return
      */
-    static List<Case> forLexer(TestCases originalCases, LexerInterface lexer) {
+    static List<Case> forLexer(TestCases originalCases, Lexer lexer) {
         List<Case> newCases = new ArrayList<>();
         // first insert the illegal symbol test
         newCases.add(new Case("illegal symbol", "%", "org.killeroonie.jsonpath.exception.JSONPathSyntaxException"));
