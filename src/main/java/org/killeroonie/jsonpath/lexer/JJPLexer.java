@@ -34,7 +34,7 @@ class modifiers:
  */
 
 /**
- * Main Lexer class for Java-JSONPath. Attemps to have parity with python-jsonpath's feature set, with these exceptions:
+ * Main Lexer class for Java-JSONPath. Attempts to have parity with python-jsonpath's feature set, with these exceptions:
  * - Does not treat `none` nor `nil` as special keywords. They can be used as regular identifiers
  */
 public class JJPLexer extends BaseLexer{
@@ -227,20 +227,11 @@ public class JJPLexer extends BaseLexer{
                     .formatted( scanner.currentChar(),jsonPathText.substring( scanner.getPositionIndex() ),jsonPathText );
             throw new JSONPathSyntaxException( errMsg
             , new Token( TokenKind.ILLEGAL, String.valueOf(scanner.currentChar()), scanner.getPositionIndex(), jsonPathText));
-
         }
         // remove spaces if whitespace policy is lenient.
-        List<Token> tokens = scanner.getTokenList();
-        if ( getWhitespacePolicy() == WhitespacePolicy.STRICT ) {
-            return tokens;
-        }
-        List<Token> strippedTokens = new ArrayList<>(tokens.size());
-        for (Token token : tokens) {
-            if ( token.kind() != TokenKind.SPACE ) {
-                strippedTokens.add(token);
-            }
-        }
-        return strippedTokens;
+        List<Token> tokens = enactWhitespacePolicy(scanner.getTokenList());
+        tokens.add(Token.EOF);
+        return tokens;
     }
 
     /**

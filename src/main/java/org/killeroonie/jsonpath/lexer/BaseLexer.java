@@ -154,4 +154,21 @@ public abstract class BaseLexer implements Lexer {
         return scannerState.advanceToken(kind, value);
     }
 
+    /**
+     * Remove SPACE tokens from the argument List if the whitespace policy is LENIENT.
+     * @param tokens the List of tokens to process
+     * @return the same argument List if policy is STRICT, otherwise list of Tokens with all SPACE Tokens removed.
+     */
+    protected List<Token> enactWhitespacePolicy(List<Token> tokens) {
+        if ( getWhitespacePolicy() == WhitespacePolicy.STRICT ) {
+            return tokens;
+        }
+        List<Token> strippedTokens = new ArrayList<>(tokens.size());
+        for (Token token : tokens) {
+            if ( token.kind() != TokenKind.SPACE ) {
+                strippedTokens.add(token);
+            }
+        }
+        return strippedTokens;
+    }
 }

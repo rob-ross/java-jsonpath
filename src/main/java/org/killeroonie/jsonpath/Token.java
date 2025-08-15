@@ -1,11 +1,15 @@
 package org.killeroonie.jsonpath;
 
 import org.jetbrains.annotations.NotNull;
+import org.killeroonie.jsonpath.lexer.Lexer;
 
 /**
  * A token, as returned from {@link Lexer}.{@code tokenize()}
  */
 public record Token(TokenKind kind, String value, int index, String path) {
+
+    public static final Token NO_TOKEN = new Token(TokenKind.NO_OP, "", -1 , "");
+    public static final Token EOF = new Token(TokenKind.EOF, "", -1 , "");
 
     @Override
     public @NotNull String toString() {

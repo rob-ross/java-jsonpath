@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
  *  Full fidelity with that version also requires the proper Environment and RulesBuilder to be used,
  *  along with the Parser and Matcher, etc.
  */
-@SuppressWarnings("SpellCheckingInspection")
 public class PJPLexer extends BaseLexer{
 
     /**
@@ -140,7 +139,10 @@ public class PJPLexer extends BaseLexer{
                         ", current char: " + currentChar() + ", jsonPathText: " + jsonPathText);
             }
         }
-        return scanner.getTokenList();
+        // remove spaces if whitespace policy is lenient.
+        List<Token> tokens = enactWhitespacePolicy(scanner.getTokenList());
+        tokens.add(Token.EOF);
+        return tokens;
     }
 
     static void t1() {
