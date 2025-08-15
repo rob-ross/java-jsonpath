@@ -8,5 +8,5 @@ import java.util.List;
 public interface Parser {
 
     // Lists for now; we can get fancy later with iterables and token streams
-    List<JSONPathSegment> parse(List<Token> tokens);
+    List<JSONPathSegment> parse(TokenStream stream);
 }

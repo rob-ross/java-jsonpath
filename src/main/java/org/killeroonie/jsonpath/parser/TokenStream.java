@@ -37,6 +37,15 @@ public final class TokenStream  implements Iterator<Token> {
         return currentToken;
     }
 
+    /**
+     * Returns the {@link TokenKind} of the current token. It is a convenience method that is
+     * equivalent to calling {@code current().kind();}
+     * @return the TokenKind of the current token.
+     */
+    public TokenKind currentKind(){
+        return currentToken.kind();
+    }
+
     public int queueIndex() {
         return queueIndex;
     }
