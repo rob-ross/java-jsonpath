@@ -10,7 +10,6 @@ import java.util.*;
  */
 public enum TokenKind {
 
-    SKIP(  EnumSet.of(TokenCategory.DELIMITER) ),
     SPACE( EnumSet.of(TokenCategory.DELIMITER) ), // NEW. REPLACES SKIP,
 
     // single char tokens

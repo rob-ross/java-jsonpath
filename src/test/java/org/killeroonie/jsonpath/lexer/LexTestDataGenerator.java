@@ -285,8 +285,8 @@ public class LexTestDataGenerator {
     }
 
     public static void main(String[] args) {
-//        generateLexerTestCasesFromPJP(new JJPEnv(), "pjp.lexer.jjplexer.json", "JJPLexer");
-//        generateLexerTestCasesFromCTS(new JJPEnv(), "cts.jjplexer.json", "JJPLexer");
+        generateLexerTestCasesFromPJP(new JJPEnv(), "pjp.lexer.jjplexer.json", "JJPLexer");
+        generateLexerTestCasesFromCTS(new JJPEnv(), "cts.jjplexer.json", "JJPLexer");
 
         generateLexerTestCasesFromPJP(new RFCEnv(), "pjp.lexer.rfc.json", "RFC lexer");
         generateLexerTestCasesFromCTS(new RFCEnv(), "cts.rfc.json", "RFC lexer");

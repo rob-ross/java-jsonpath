@@ -122,7 +122,7 @@ public class PJPLexer extends BaseLexer{
                 advanceToken(emitKind(kind), matcher.group("GFUNC"));
                 scanner.advance(1); // to consume left-paren
             }
-            else if ( kind == TokenKind.SKIP ) {
+            else if ( kind == TokenKind.SPACE ) {
                 scanner.advance(matchtext.length());
             }
             else if ( kind == TokenKind.ILLEGAL ) {

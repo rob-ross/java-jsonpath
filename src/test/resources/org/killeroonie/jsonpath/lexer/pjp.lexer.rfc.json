@@ -1,5 +1,5 @@
 {
-  "description" : "Generated from test_lex.json to test tokenization of JJPLexer",
+  "description" : "Generated from test_lex.json to test tokenization of RFC lexer",
   "tests" : [ {
     "description" : "illegal symbol",
     "path" : "%",
@@ -14,6 +14,11 @@
       "value" : "$",
       "index" : 0,
       "path" : "$"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "just pseudo root",
@@ -49,6 +54,11 @@
       "value" : "thing",
       "index" : 7,
       "path" : "$.some.thing"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "pseudo root dot property",
@@ -94,6 +104,11 @@
       "value" : "]",
       "index" : 13,
       "path" : "$[some][thing]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root double quoted property",
@@ -118,6 +133,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[\"some\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root single quoted property",
@@ -142,6 +162,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$['some']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root dot bracket property",
@@ -186,6 +211,11 @@
       "value" : "]",
       "index" : 14,
       "path" : "$.[some][thing]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root bracket index",
@@ -210,6 +240,11 @@
       "value" : "]",
       "index" : 3,
       "path" : "$[1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root dot bracket index",
@@ -239,6 +274,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "$.[1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "empty slice",
@@ -258,6 +298,11 @@
       "value" : "]",
       "index" : 2,
       "path" : "[:]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "empty slice empty step",
@@ -277,6 +322,11 @@
       "value" : "]",
       "index" : 3,
       "path" : "[::]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice empty stop",
@@ -296,6 +346,11 @@
       "value" : "]",
       "index" : 3,
       "path" : "[1:]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice empty start",
@@ -315,6 +370,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "[:-1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice start and stop",
@@ -334,6 +394,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "[1:7]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice start, stop and step",
@@ -353,6 +418,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "[1:7:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root dot wild",
@@ -372,6 +442,11 @@
       "value" : "*",
       "index" : 2,
       "path" : "$.*"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root bracket wild",
@@ -396,6 +471,11 @@
       "value" : "]",
       "index" : 3,
       "path" : "$[*]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root dot bracket wild",
@@ -425,6 +505,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "$.[*]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root descend",
@@ -439,6 +524,11 @@
       "value" : "..",
       "index" : 1,
       "path" : "$.."
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root descend property",
@@ -458,6 +548,11 @@
       "value" : "thing",
       "index" : 3,
       "path" : "$..thing"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root descend dot property",
@@ -482,6 +577,11 @@
       "value" : "thing",
       "index" : 4,
       "path" : "$...thing"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root selector list of indices",
@@ -526,6 +626,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[1,4,5]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root selector list with a slice",
@@ -560,6 +665,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[1,4:9]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root selector list of properties",
@@ -594,6 +704,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[some,thing]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root dot filter on self dot property",
@@ -648,6 +763,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$.[?(@.some)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root dot filter on root dot property",
@@ -702,6 +822,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$.[?($.some)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "root dot filter on self index",
@@ -761,6 +886,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$.[?(@[1])]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter self dot property equality with float",
@@ -825,6 +955,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "[?(@.some == 1.1)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter self dot property equality with float in scientific notation",
@@ -889,6 +1024,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "[?(@.some == 1.1e10)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter self index equality with float",
@@ -958,6 +1098,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "[?(@[1] == 1.1)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter self dot property equality with int",
@@ -1022,6 +1167,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "[?(@.some == 1)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter self dot property equality with int in scientific notation",
@@ -1086,6 +1236,11 @@
       "value" : "]",
       "index" : 18,
       "path" : "[?(@.some == 1e10)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter self dot property regex",
@@ -1224,6 +1379,11 @@
       "value" : "]",
       "index" : 29,
       "path" : "[?(@.some > 1 and @.some < 5)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter expression with logical or",
@@ -1338,6 +1498,11 @@
       "value" : "]",
       "index" : 30,
       "path" : "[?(@.some == 1 or @.some == 5)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter expression with logical ||",
@@ -1452,6 +1617,11 @@
       "value" : "]",
       "index" : 30,
       "path" : "[?(@.some == 1 || @.some == 5)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter self dot property in list literal",
@@ -1541,6 +1711,11 @@
       "value" : "]",
       "index" : 23,
       "path" : "[?(@.thing in [1, '1'])]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter expression with logical not",
@@ -1665,6 +1840,11 @@
       "value" : "]",
       "index" : 33,
       "path" : "[?(@.some == 1 or not @.some < 5)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter expression with logical not using '!'",
@@ -1784,6 +1964,11 @@
       "value" : "]",
       "index" : 30,
       "path" : "[?(@.some == 1 or !@.some < 5)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter true and false",
@@ -1838,6 +2023,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "[?(true == false)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter true and false",
@@ -1932,6 +2122,11 @@
       "value" : "]",
       "index" : 30,
       "path" : "[?(nil == none && nil == null)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "list of quoted properties",
@@ -1971,6 +2166,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$['some', 'thing']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "call a function",
@@ -2065,6 +2265,11 @@
       "value" : "]",
       "index" : 29,
       "path" : "$.some[?(length(@.thing) < 2)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "keys selector",
@@ -2086,6 +2291,11 @@
       "value" : "anderson",
       "index" : 0,
       "path" : "anderson"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "implicit root selector, name selector starts with `or`",
@@ -2095,6 +2305,11 @@
       "value" : "order",
       "index" : 0,
       "path" : "order"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "implicit root selector, name selector starts with `true`",
@@ -2104,6 +2319,11 @@
       "value" : "trueblue",
       "index" : 0,
       "path" : "trueblue"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "implicit root selector, name selector starts with `false`",
@@ -2113,6 +2333,11 @@
       "value" : "falsehood",
       "index" : 0,
       "path" : "falsehood"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "implicit root selector, name selector starts with `not`",
@@ -2122,6 +2347,11 @@
       "value" : "nottingham",
       "index" : 0,
       "path" : "nottingham"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "implicit root selector, name selector starts with `null`",
@@ -2131,6 +2361,11 @@
       "value" : "nullable",
       "index" : 0,
       "path" : "nullable"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "implicit root selector, name selector starts with `none`",
@@ -2140,6 +2375,11 @@
       "value" : "nonexpert",
       "index" : 0,
       "path" : "nonexpert"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "implicit root selector, name selector starts with `undefined`",
@@ -2149,6 +2389,11 @@
       "value" : "undefinedness",
       "index" : 0,
       "path" : "undefinedness"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "implicit root selector, name selector starts with `missing`",
@@ -2158,6 +2403,11 @@
       "value" : "missingly",
       "index" : 0,
       "path" : "missingly"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   } ]
 }

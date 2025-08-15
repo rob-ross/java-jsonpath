@@ -41,6 +41,7 @@ public class test_lex {
     }
 
     static Stream<Arguments> testCases() {
+        List<Case> tests = load(DATA_FILENAME).tests();
         return load(DATA_FILENAME).tests().stream()
                 .map(c -> Arguments.of(Named.of(c.description(), c)));
     }
@@ -58,6 +59,10 @@ public class test_lex {
     @MethodSource("testCases")
     void test_default_lexer(Case testCase) {
         List<Token> tokens = env.getLexer().tokenize(testCase.path());
+        // `test_lex.json` is shared with the python-jsonpath project. That lexer does not
+        // include EOF in the token stream, but our Java implementation does. So we fix the missing EOF
+        // in the test data here.
+        testCase.want().add(Token.EOF);
         assertEquals(testCase.want(),  tokens, "Tokenization of `%s`".formatted( testCase.path()) );
     }
 }

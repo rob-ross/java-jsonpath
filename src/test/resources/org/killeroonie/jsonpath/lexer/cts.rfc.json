@@ -1,5 +1,5 @@
 {
-  "description" : "Generated from JSONPath Compliance Test Suite to test tokenization of JJPLexer",
+  "description" : "Generated from JSONPath Compliance Test Suite to test tokenization of RFC lexer",
   "tests" : [ {
     "description" : "basic, root",
     "path" : "$",
@@ -8,6 +8,11 @@
       "value" : "$",
       "index" : 0,
       "path" : "$"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, no leading whitespace",
@@ -22,6 +27,11 @@
       "value" : "$",
       "index" : 1,
       "path" : " $"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, no trailing whitespace",
@@ -36,6 +46,11 @@
       "value" : " ",
       "index" : 1,
       "path" : "$ "
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, name shorthand",
@@ -55,6 +70,11 @@
       "value" : "a",
       "index" : 2,
       "path" : "$.a"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, name shorthand, extended unicode ☺",
@@ -74,6 +94,11 @@
       "value" : "☺",
       "index" : 2,
       "path" : "$.☺"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, name shorthand, underscore",
@@ -93,6 +118,11 @@
       "value" : "_",
       "index" : 2,
       "path" : "$._"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, name shorthand, symbol",
@@ -118,6 +148,11 @@
       "value" : "1",
       "index" : 2,
       "path" : "$.1"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, name shorthand, absent data",
@@ -137,6 +172,11 @@
       "value" : "c",
       "index" : 2,
       "path" : "$.c"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, name shorthand, array data",
@@ -156,6 +196,11 @@
       "value" : "a",
       "index" : 2,
       "path" : "$.a"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, name shorthand, object data, nested",
@@ -195,6 +240,11 @@
       "value" : "c",
       "index" : 6,
       "path" : "$.a.b.c"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, wildcard shorthand, object data",
@@ -214,6 +264,11 @@
       "value" : "*",
       "index" : 2,
       "path" : "$.*"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, wildcard shorthand, array data",
@@ -233,6 +288,11 @@
       "value" : "*",
       "index" : 2,
       "path" : "$.*"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, wildcard selector, array data",
@@ -257,6 +317,11 @@
       "value" : "]",
       "index" : 3,
       "path" : "$[*]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, wildcard shorthand, then name shorthand",
@@ -286,6 +351,11 @@
       "value" : "a",
       "index" : 4,
       "path" : "$.*.a"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, multiple selectors",
@@ -320,6 +390,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[0,2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, multiple selectors, space instead of comma",
@@ -354,6 +429,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[0 2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, selector, leading comma",
@@ -383,6 +463,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "$[,0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, selector, trailing comma",
@@ -412,6 +497,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "$[0,]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, multiple selectors, name and index, array data",
@@ -446,6 +536,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$['a',1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, multiple selectors, name and index, object data",
@@ -480,6 +575,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$['a',1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, multiple selectors, index and slice",
@@ -514,6 +614,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[1,5:7]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, multiple selectors, index and slice, overlapping",
@@ -548,6 +653,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[1,0:3]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, multiple selectors, duplicate index",
@@ -582,6 +692,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[1,1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, multiple selectors, wildcard and index",
@@ -616,6 +731,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[*,1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, multiple selectors, wildcard and name",
@@ -650,6 +770,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[*,'a']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, multiple selectors, wildcard and slice",
@@ -684,6 +809,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[*,0:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, multiple selectors, multiple wildcards",
@@ -718,6 +848,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[*,*]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, empty segment",
@@ -737,6 +872,11 @@
       "value" : "]",
       "index" : 2,
       "path" : "$[]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, descendant segment, index",
@@ -766,6 +906,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$..[1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, descendant segment, name shorthand",
@@ -785,6 +930,11 @@
       "value" : "a",
       "index" : 3,
       "path" : "$..a"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, descendant segment, wildcard shorthand, array data",
@@ -804,6 +954,11 @@
       "value" : "*",
       "index" : 3,
       "path" : "$..*"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, descendant segment, wildcard selector, array data",
@@ -833,6 +988,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$..[*]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, descendant segment, wildcard selector, nested arrays",
@@ -862,6 +1022,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$..[*]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, descendant segment, wildcard selector, nested objects",
@@ -891,6 +1056,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$..[*]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, descendant segment, wildcard shorthand, object data",
@@ -910,6 +1080,11 @@
       "value" : "*",
       "index" : 3,
       "path" : "$..*"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, descendant segment, wildcard shorthand, nested data",
@@ -929,6 +1104,11 @@
       "value" : "*",
       "index" : 3,
       "path" : "$..*"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, descendant segment, multiple selectors",
@@ -968,6 +1148,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$..['a','d']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, descendant segment, object traversal, multiple selectors",
@@ -1007,6 +1192,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$..['a','d']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, bald descendant segment",
@@ -1021,6 +1211,11 @@
       "value" : "..",
       "index" : 1,
       "path" : "$.."
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, current node identifier without filter selector",
@@ -1055,6 +1250,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "basic, root node identifier in brackets without filter selector",
@@ -1089,6 +1289,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[$.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, existence, without segments",
@@ -1118,6 +1323,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "$[?@]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, existence",
@@ -1157,6 +1367,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[?@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, existence, present with null",
@@ -1196,6 +1411,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[?@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute existence, without segments",
@@ -1225,6 +1445,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "$[?$]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute existence, with segments",
@@ -1274,6 +1499,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[?$.*.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals string, single quotes",
@@ -1323,6 +1553,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a=='b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals numeric string, single quotes",
@@ -1372,6 +1607,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a=='1']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals string, double quotes",
@@ -1421,6 +1661,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a==\"b\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals numeric string, double quotes",
@@ -1470,6 +1715,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a==\"1\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number",
@@ -1519,6 +1769,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[?@.a==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals null",
@@ -1568,6 +1823,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a==null]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals null, absent from data",
@@ -1617,6 +1877,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a==null]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals true",
@@ -1666,6 +1931,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a==true]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals false",
@@ -1715,6 +1985,11 @@
       "value" : "]",
       "index" : 13,
       "path" : "$[?@.a==false]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals self",
@@ -1754,6 +2029,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[?@==@]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute, equals self",
@@ -1793,6 +2073,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[?$==$]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals, absent from index selector equals absent from name selector",
@@ -1867,6 +2152,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?@.absent==@.list[9]]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, deep equality, arrays",
@@ -1926,6 +2216,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a==@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, deep equality, objects",
@@ -1985,6 +2280,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a==@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, not-equals string, single quotes",
@@ -2034,6 +2334,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a!='b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, not-equals numeric string, single quotes",
@@ -2083,6 +2388,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a!='1']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, not-equals string, single quotes, different type",
@@ -2132,6 +2442,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a!='b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, not-equals string, double quotes",
@@ -2181,6 +2496,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a!=\"b\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, not-equals numeric string, double quotes",
@@ -2230,6 +2550,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a!=\"1\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, not-equals string, double quotes, different types",
@@ -2279,6 +2604,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a!=\"b\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, not-equals number",
@@ -2328,6 +2658,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[?@.a!=1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, not-equals number, different types",
@@ -2377,6 +2712,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[?@.a!=1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, not-equals null",
@@ -2426,6 +2766,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a!=null]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, not-equals null, absent from data",
@@ -2475,6 +2820,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a!=null]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, not-equals true",
@@ -2524,6 +2874,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a!=true]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, not-equals false",
@@ -2573,6 +2928,11 @@
       "value" : "]",
       "index" : 13,
       "path" : "$[?@.a!=false]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, less than string, single quotes",
@@ -2622,6 +2982,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@.a<'c']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, less than string, double quotes",
@@ -2671,6 +3036,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@.a<\"c\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, less than number",
@@ -2720,6 +3090,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[?@.a<10]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, less than null",
@@ -2769,6 +3144,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a<null]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, less than true",
@@ -2818,6 +3198,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a<true]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, less than false",
@@ -2867,6 +3252,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a<false]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, less than or equal to string, single quotes",
@@ -2916,6 +3306,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a<='c']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, less than or equal to string, double quotes",
@@ -2965,6 +3360,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a<=\"c\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, less than or equal to number",
@@ -3014,6 +3414,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@.a<=10]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, less than or equal to null",
@@ -3063,6 +3468,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a<=null]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, less than or equal to true",
@@ -3112,6 +3522,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a<=true]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, less than or equal to false",
@@ -3161,6 +3576,11 @@
       "value" : "]",
       "index" : 13,
       "path" : "$[?@.a<=false]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, greater than string, single quotes",
@@ -3210,6 +3630,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@.a>'c']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, greater than string, double quotes",
@@ -3259,6 +3684,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@.a>\"c\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, greater than number",
@@ -3308,6 +3738,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[?@.a>10]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, greater than null",
@@ -3357,6 +3792,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a>null]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, greater than true",
@@ -3406,6 +3846,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a>true]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, greater than false",
@@ -3455,6 +3900,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a>false]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, greater than or equal to string, single quotes",
@@ -3504,6 +3954,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a>='c']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, greater than or equal to string, double quotes",
@@ -3553,6 +4008,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a>=\"c\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, greater than or equal to number",
@@ -3602,6 +4062,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@.a>=10]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, greater than or equal to null",
@@ -3651,6 +4116,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a>=null]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, greater than or equal to true",
@@ -3700,6 +4170,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a>=true]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, greater than or equal to false",
@@ -3749,6 +4224,11 @@
       "value" : "]",
       "index" : 13,
       "path" : "$[?@.a>=false]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, exists and not-equals null, absent from data",
@@ -3818,6 +4298,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?@.a&&@.a!=null]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, exists and exists, data false",
@@ -3877,6 +4362,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a&&@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, exists or exists, data false",
@@ -3936,6 +4426,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a||@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, and",
@@ -4015,6 +4510,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?@.a>0&&@.a<10]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, or",
@@ -4094,6 +4594,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[?@.a=='b'||@.a=='d']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, not expression",
@@ -4158,6 +4663,11 @@
       "value" : "]",
       "index" : 14,
       "path" : "$[?!(@.a=='b')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, not exists",
@@ -4202,6 +4712,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[?!@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, not exists, data null",
@@ -4246,6 +4761,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[?!@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, non-singular existence, wildcard",
@@ -4285,6 +4805,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[?@.*]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, non-singular existence, multiple",
@@ -4359,6 +4884,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "$[?@[0, 0, 'a']]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, non-singular existence, slice",
@@ -4403,6 +4933,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[?@[0:2]]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, non-singular existence, negated",
@@ -4447,6 +4982,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[?!@.*]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, non-singular query in comparison, slice",
@@ -4501,6 +5041,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@[0:0]==0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, non-singular query in comparison, all children",
@@ -4555,6 +5100,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@[*]==0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, non-singular query in comparison, descendants",
@@ -4604,6 +5154,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@..a==0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, non-singular query in comparison, combined",
@@ -4678,6 +5233,11 @@
       "value" : "]",
       "index" : 14,
       "path" : "$[?@.a[*].a==0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, nested",
@@ -4737,6 +5297,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@[?@>1]]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, name segment on primitive, selects nothing",
@@ -4796,6 +5361,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a == 1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, name segment on array, selects nothing",
@@ -4860,6 +5430,11 @@
       "value" : "]",
       "index" : 14,
       "path" : "$[?@['0'] == 5]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, index segment on object, selects nothing",
@@ -4924,6 +5499,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@[0] == 5]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, followed by name selector",
@@ -4993,6 +5573,11 @@
       "value" : "x",
       "index" : 13,
       "path" : "$[?@.a==1].b.x"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, followed by child segment that selects multiple elements",
@@ -5067,6 +5652,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?@.z=='_']['x','y']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, relative non-singular query, index, equal",
@@ -5146,6 +5736,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?(@[0, 0]==42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, relative non-singular query, index, not equal",
@@ -5225,6 +5820,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?(@[0, 0]!=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, relative non-singular query, index, less-or-equal",
@@ -5304,6 +5904,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?(@[0, 0]<=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, relative non-singular query, name, equal",
@@ -5383,6 +5988,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?(@['a', 'a']==42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, relative non-singular query, name, not equal",
@@ -5462,6 +6072,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?(@['a', 'a']!=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, relative non-singular query, name, less-or-equal",
@@ -5541,6 +6156,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?(@['a', 'a']<=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, relative non-singular query, combined, equal",
@@ -5620,6 +6240,11 @@
       "value" : "]",
       "index" : 18,
       "path" : "$[?(@[0, '0']==42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, relative non-singular query, combined, not equal",
@@ -5699,6 +6324,11 @@
       "value" : "]",
       "index" : 18,
       "path" : "$[?(@[0, '0']!=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, relative non-singular query, combined, less-or-equal",
@@ -5778,6 +6408,11 @@
       "value" : "]",
       "index" : 18,
       "path" : "$[?(@[0, '0']<=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, relative non-singular query, wildcard, equal",
@@ -5837,6 +6472,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?(@.*==42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, relative non-singular query, wildcard, not equal",
@@ -5896,6 +6536,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?(@.*!=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, relative non-singular query, wildcard, less-or-equal",
@@ -5955,6 +6600,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?(@.*<=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, relative non-singular query, slice, equal",
@@ -6019,6 +6669,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "$[?(@[0:0]==42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, relative non-singular query, slice, not equal",
@@ -6083,6 +6738,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "$[?(@[0:0]!=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, relative non-singular query, slice, less-or-equal",
@@ -6147,6 +6807,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "$[?(@[0:0]<=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute non-singular query, index, equal",
@@ -6226,6 +6891,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?($[0, 0]==42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute non-singular query, index, not equal",
@@ -6305,6 +6975,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?($[0, 0]!=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute non-singular query, index, less-or-equal",
@@ -6384,6 +7059,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?($[0, 0]<=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute non-singular query, name, equal",
@@ -6463,6 +7143,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?($['a', 'a']==42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute non-singular query, name, not equal",
@@ -6542,6 +7227,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?($['a', 'a']!=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute non-singular query, name, less-or-equal",
@@ -6621,6 +7311,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?($['a', 'a']<=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute non-singular query, combined, equal",
@@ -6700,6 +7395,11 @@
       "value" : "]",
       "index" : 18,
       "path" : "$[?($[0, '0']==42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute non-singular query, combined, not equal",
@@ -6779,6 +7479,11 @@
       "value" : "]",
       "index" : 18,
       "path" : "$[?($[0, '0']!=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute non-singular query, combined, less-or-equal",
@@ -6858,6 +7563,11 @@
       "value" : "]",
       "index" : 18,
       "path" : "$[?($[0, '0']<=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute non-singular query, wildcard, equal",
@@ -6917,6 +7627,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?($.*==42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute non-singular query, wildcard, not equal",
@@ -6976,6 +7691,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?($.*!=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute non-singular query, wildcard, less-or-equal",
@@ -7035,6 +7755,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?($.*<=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute non-singular query, slice, equal",
@@ -7099,6 +7824,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "$[?($[0:0]==42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute non-singular query, slice, not equal",
@@ -7163,6 +7893,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "$[?($[0:0]!=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, absolute non-singular query, slice, less-or-equal",
@@ -7227,6 +7962,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "$[?($[0:0]<=42)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, multiple selectors",
@@ -7291,6 +8031,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a,?@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, multiple selectors, comparison",
@@ -7375,6 +8120,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[?@.a=='b',?@.b=='x']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, multiple selectors, overlapping",
@@ -7439,6 +8189,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a,?@.d]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, multiple selectors, filter and index",
@@ -7488,6 +8243,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[?@.a,1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, multiple selectors, filter and wildcard",
@@ -7537,6 +8297,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[?@.a,*]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, multiple selectors, filter and slice",
@@ -7586,6 +8351,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[?@.a,1:]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, multiple selectors, comparison filter, index and slice",
@@ -7665,6 +8435,11 @@
       "value" : "]",
       "index" : 18,
       "path" : "$[1, ?@.a=='b', 1:]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, zero and negative zero",
@@ -7714,6 +8489,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[?@.a==0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, negative zero and zero",
@@ -7763,6 +8543,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@.a==-0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, with and without decimal fraction",
@@ -7812,6 +8597,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a==1.0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, exponent",
@@ -7861,6 +8651,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a==1e2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, exponent upper e",
@@ -7910,6 +8705,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a==1E2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, positive exponent",
@@ -7959,6 +8759,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a==1e+2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, negative exponent",
@@ -8008,6 +8813,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a==1e-2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, exponent 0",
@@ -8057,6 +8867,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a==1e0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, exponent -0",
@@ -8106,6 +8921,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a==1e-0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, exponent +0",
@@ -8155,6 +8975,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a==1e+0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, exponent leading -0",
@@ -8204,6 +9029,11 @@
       "value" : "]",
       "index" : 13,
       "path" : "$[?@.a==1e-02]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, exponent +00",
@@ -8253,6 +9083,11 @@
       "value" : "]",
       "index" : 13,
       "path" : "$[?@.a==1e+00]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, decimal fraction",
@@ -8302,6 +9137,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a==1.1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, decimal fraction, trailing 0",
@@ -8351,6 +9191,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a==1.10]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, decimal fraction, exponent",
@@ -8400,6 +9245,11 @@
       "value" : "]",
       "index" : 13,
       "path" : "$[?@.a==1.1e2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, decimal fraction, positive exponent",
@@ -8449,6 +9299,11 @@
       "value" : "]",
       "index" : 14,
       "path" : "$[?@.a==1.1e+2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, decimal fraction, negative exponent",
@@ -8498,6 +9353,11 @@
       "value" : "]",
       "index" : 14,
       "path" : "$[?@.a==1.1e-2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, invalid plus",
@@ -8570,6 +9430,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@.a==.1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, invalid minus no int digit",
@@ -8630,6 +9495,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@.a==00]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, invalid leading 0",
@@ -8684,6 +9554,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@.a==01]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, invalid no fractional digit",
@@ -8738,6 +9613,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@.a==1.]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, invalid middle minus",
@@ -8797,6 +9677,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a==1.-1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, invalid no fractional digit e",
@@ -8856,6 +9741,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a==1.e1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, invalid no e digit",
@@ -8910,6 +9800,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@.a==1e]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, invalid no e digit minus",
@@ -8964,6 +9859,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a==1e-]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, invalid double e",
@@ -9018,6 +9918,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a==1eE1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, invalid e digit double minus",
@@ -9072,6 +9977,11 @@
       "value" : "]",
       "index" : 13,
       "path" : "$[?@.a==1e--1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, invalid e digit plus minus",
@@ -9137,6 +10047,11 @@
       "value" : "]",
       "index" : 13,
       "path" : "$[?@.a==1e2.3]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals number, invalid multi e",
@@ -9191,6 +10106,11 @@
       "value" : "]",
       "index" : 13,
       "path" : "$[?@.a==1e2e3]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals, special nothing",
@@ -9300,6 +10220,11 @@
       "value" : "]",
       "index" : 36,
       "path" : "$.values[?length(@.a) == value($..c)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals, empty node list and empty node list",
@@ -9369,6 +10294,11 @@
       "value" : "]",
       "index" : 13,
       "path" : "$[?@.a == @.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, equals, empty node list and special nothing",
@@ -9453,6 +10383,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[?@.a == length(@.b)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, object data",
@@ -9492,6 +10427,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[?@<3]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, and binds more tightly than or",
@@ -9591,6 +10531,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?@.a || @.b && @.c]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, left to right evaluation",
@@ -9690,6 +10635,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?@.a && @.b || @.c]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, group terms, left",
@@ -9799,6 +10749,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?(@.a || @.b) && @.c]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, group terms, right",
@@ -9908,6 +10863,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?@.a && (@.b || @.c)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, string literal, single quote in double quotes",
@@ -9957,6 +10917,11 @@
       "value" : "]",
       "index" : 25,
       "path" : "$[?@ == \"quoted' literal\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, string literal, double quote in single quotes",
@@ -10006,6 +10971,11 @@
       "value" : "]",
       "index" : 25,
       "path" : "$[?@ == 'quoted\" literal']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, string literal, escaped single quote in single quotes",
@@ -10055,6 +11025,11 @@
       "value" : "]",
       "index" : 26,
       "path" : "$[?@ == 'quoted\\' literal']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, string literal, escaped double quote in double quotes",
@@ -10104,6 +11079,11 @@
       "value" : "]",
       "index" : 26,
       "path" : "$[?@ == \"quoted\\\" literal\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, literal true must be compared",
@@ -10133,6 +11113,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[?true]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, literal false must be compared",
@@ -10162,6 +11147,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[?false]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, literal string must be compared",
@@ -10191,6 +11181,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[?'abc']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, literal int must be compared",
@@ -10220,6 +11215,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "$[?2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, literal float must be compared",
@@ -10249,6 +11249,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[?2.2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, literal null must be compared",
@@ -10278,6 +11283,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[?null]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, and, literals must be compared",
@@ -10327,6 +11337,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?true && false]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, or, literals must be compared",
@@ -10376,6 +11391,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?true || false]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, and, right hand literal must be compared",
@@ -10445,6 +11465,11 @@
       "value" : "]",
       "index" : 25,
       "path" : "$[?true == false && false]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, or, right hand literal must be compared",
@@ -10514,6 +11539,11 @@
       "value" : "]",
       "index" : 25,
       "path" : "$[?true == false || false]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, and, left hand literal must be compared",
@@ -10583,6 +11613,11 @@
       "value" : "]",
       "index" : 25,
       "path" : "$[?false && true == false]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, or, left hand literal must be compared",
@@ -10652,6 +11687,11 @@
       "value" : "]",
       "index" : 25,
       "path" : "$[?false || true == false]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, true, incorrectly capitalized",
@@ -10691,6 +11731,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@==True]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, false, incorrectly capitalized",
@@ -10730,6 +11775,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@==False]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "filter, null, incorrectly capitalized",
@@ -10769,6 +11819,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[?@==Null]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, first element",
@@ -10793,6 +11848,11 @@
       "value" : "]",
       "index" : 3,
       "path" : "$[0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, second element",
@@ -10817,6 +11877,11 @@
       "value" : "]",
       "index" : 3,
       "path" : "$[1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, out of bound",
@@ -10841,6 +11906,11 @@
       "value" : "]",
       "index" : 3,
       "path" : "$[2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, min exact index",
@@ -10865,6 +11935,11 @@
       "value" : "]",
       "index" : 19,
       "path" : "$[-9007199254740991]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, max exact index",
@@ -10889,6 +11964,11 @@
       "value" : "]",
       "index" : 18,
       "path" : "$[9007199254740991]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, min exact index - 1",
@@ -10913,6 +11993,11 @@
       "value" : "]",
       "index" : 19,
       "path" : "$[-9007199254740992]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, max exact index + 1",
@@ -10937,6 +12022,11 @@
       "value" : "]",
       "index" : 18,
       "path" : "$[9007199254740992]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, overflowing index",
@@ -10961,6 +12051,11 @@
       "value" : "]",
       "index" : 80,
       "path" : "$[231584178474632390847141970017375815706539969331281128078915168015826259279872]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, not actually an index, overflowing index leads into general text",
@@ -10990,6 +12085,11 @@
       "value" : "]",
       "index" : 79,
       "path" : "$[231584178474632390847141970017375815706539969331281128078915168SomeRandomText]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, negative",
@@ -11014,6 +12114,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "$[-1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, more negative",
@@ -11038,6 +12143,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "$[-2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, negative out of bound",
@@ -11062,6 +12172,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "$[-3]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, on object",
@@ -11086,6 +12201,11 @@
       "value" : "]",
       "index" : 3,
       "path" : "$[0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, leading 0",
@@ -11115,6 +12235,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "$[01]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, decimal",
@@ -11139,6 +12264,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[1.0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, plus",
@@ -11175,6 +12305,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "$[-0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "index selector, leading -0",
@@ -11204,6 +12339,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[-01]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes",
@@ -11228,6 +12368,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"a\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, absent data",
@@ -11252,6 +12397,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"c\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, array data",
@@ -11276,6 +12426,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"a\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, name, double quotes, contains single quote",
@@ -11300,6 +12455,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\"a'\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, name, double quotes, nested",
@@ -11354,6 +12514,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "$[\"a\"][\"b\"][\"c\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0000",
@@ -11378,6 +12543,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0000\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0001",
@@ -11402,6 +12572,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0001\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0002",
@@ -11426,6 +12601,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0002\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0003",
@@ -11450,6 +12630,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0003\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0004",
@@ -11474,6 +12659,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0004\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0005",
@@ -11498,6 +12688,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0005\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0006",
@@ -11522,6 +12717,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0006\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0007",
@@ -11546,6 +12746,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0007\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0008",
@@ -11570,6 +12775,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\b\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0009",
@@ -11594,6 +12804,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\t\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+000A",
@@ -11624,6 +12839,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u000B\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+000C",
@@ -11648,6 +12868,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\f\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+000D",
@@ -11678,6 +12903,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u000E\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+000F",
@@ -11702,6 +12932,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u000F\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0010",
@@ -11726,6 +12961,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0010\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0011",
@@ -11750,6 +12990,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0011\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0012",
@@ -11774,6 +13019,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0012\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0013",
@@ -11798,6 +13048,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0013\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0014",
@@ -11822,6 +13077,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0014\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0015",
@@ -11846,6 +13106,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0015\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0016",
@@ -11870,6 +13135,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0016\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0017",
@@ -11894,6 +13164,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0017\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0018",
@@ -11918,6 +13193,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0018\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0019",
@@ -11942,6 +13222,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u0019\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+001A",
@@ -11966,6 +13251,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u001A\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+001B",
@@ -11990,6 +13280,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u001B\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+001C",
@@ -12014,6 +13309,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u001C\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+001D",
@@ -12038,6 +13338,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u001D\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+001E",
@@ -12062,6 +13367,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u001E\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+001F",
@@ -12086,6 +13396,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\u001F\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+0020",
@@ -12110,6 +13425,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\" \"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded U+007F",
@@ -12134,6 +13454,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, supplementary plane character",
@@ -12158,6 +13483,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\"\uD834\uDD1E\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, escaped double quote",
@@ -12182,6 +13512,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\"\\\"\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, escaped reverse solidus",
@@ -12206,6 +13541,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\"\\\\\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, escaped solidus",
@@ -12230,6 +13570,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\"\\/\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, escaped backspace",
@@ -12254,6 +13599,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\"\\b\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, escaped form feed",
@@ -12278,6 +13628,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\"\\f\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, escaped line feed",
@@ -12302,6 +13657,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\"\\n\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, escaped carriage return",
@@ -12326,6 +13686,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\"\\r\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, escaped tab",
@@ -12350,6 +13715,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\"\\t\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, escaped ☺, upper case hex",
@@ -12374,6 +13744,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[\"\\u263A\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, escaped ☺, lower case hex",
@@ -12398,6 +13773,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[\"\\u263a\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, surrogate pair \uD834\uDD1E",
@@ -12422,6 +13802,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[\"\\uD834\\uDD1E\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, surrogate pair \uD83D\uDE00",
@@ -12446,6 +13831,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[\"\\uD83D\\uDE00\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, before high surrogates",
@@ -12470,6 +13860,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[\"\\uD7FF\\uD7FF\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, after low surrogates",
@@ -12494,6 +13889,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[\"\\uE000\\uE000\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, invalid escaped single quote",
@@ -12518,6 +13918,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\"\\'\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, embedded double quote",
@@ -12548,6 +13953,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[\"\\\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, escape at end of line",
@@ -12578,6 +13988,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\"\\?\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, bell escape",
@@ -12602,6 +14017,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\"\\a\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, vertical tab escape",
@@ -12626,6 +14046,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\"\\v\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, 0 escape",
@@ -12650,6 +14075,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\"\\0\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, x escape",
@@ -12674,6 +14104,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[\"\\x12\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, n escape",
@@ -12698,6 +14133,11 @@
       "value" : "]",
       "index" : 30,
       "path" : "$[\"\\N{LATIN CAPITAL LETTER A}\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, unicode escape no hex",
@@ -12722,6 +14162,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\"\\u\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, unicode escape too few hex",
@@ -12746,6 +14191,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[\"\\u123\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, unicode escape upper u",
@@ -12770,6 +14220,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[\"\\U1234\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, unicode escape upper u long",
@@ -12794,6 +14249,11 @@
       "value" : "]",
       "index" : 14,
       "path" : "$[\"\\U0010FFFF\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, unicode escape plus",
@@ -12818,6 +14278,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[\"\\u+1234\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, unicode escape brackets",
@@ -12842,6 +14307,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[\"\\u{1234}\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, unicode escape brackets long",
@@ -12866,6 +14336,11 @@
       "value" : "]",
       "index" : 14,
       "path" : "$[\"\\u{10ffff}\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, single high surrogate",
@@ -12890,6 +14365,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[\"\\uD800\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, single low surrogate",
@@ -12914,6 +14394,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[\"\\uDC00\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, high high surrogate",
@@ -12938,6 +14423,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[\"\\uD800\\uD800\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, low low surrogate",
@@ -12962,6 +14452,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[\"\\uDC00\\uDC00\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, surrogate non-surrogate",
@@ -12986,6 +14481,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[\"\\uD800\\u1234\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, non-surrogate surrogate",
@@ -13010,6 +14510,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[\"\\u1234\\uDC00\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, surrogate supplementary",
@@ -13034,6 +14539,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[\"\\uD800\uD834\uDD1E\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, supplementary surrogate",
@@ -13058,6 +14568,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[\"\uD834\uDD1E\\uDC00\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, surrogate incomplete low",
@@ -13082,6 +14597,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "$[\"\\uD800\\uDC0\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes",
@@ -13106,6 +14626,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['a']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, absent data",
@@ -13130,6 +14655,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['c']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, array data",
@@ -13154,6 +14684,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['a']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0000",
@@ -13178,6 +14713,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0000']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0001",
@@ -13202,6 +14742,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0001']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0002",
@@ -13226,6 +14771,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0002']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0003",
@@ -13250,6 +14800,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0003']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0004",
@@ -13274,6 +14829,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0004']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0005",
@@ -13298,6 +14858,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0005']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0006",
@@ -13322,6 +14887,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0006']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0007",
@@ -13346,6 +14916,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0007']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0008",
@@ -13370,6 +14945,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0009",
@@ -13394,6 +14974,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\t']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+000A",
@@ -13424,6 +15009,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u000B']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+000C",
@@ -13448,6 +15038,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\f']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+000D",
@@ -13478,6 +15073,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u000E']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+000F",
@@ -13502,6 +15102,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u000F']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0010",
@@ -13526,6 +15131,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0010']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0011",
@@ -13550,6 +15160,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0011']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0012",
@@ -13574,6 +15189,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0012']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0013",
@@ -13598,6 +15218,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0013']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0014",
@@ -13622,6 +15247,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0014']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0015",
@@ -13646,6 +15276,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0015']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0016",
@@ -13670,6 +15305,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0016']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0017",
@@ -13694,6 +15334,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0017']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0018",
@@ -13718,6 +15363,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0018']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0019",
@@ -13742,6 +15392,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u0019']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+001A",
@@ -13766,6 +15421,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u001A']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+001B",
@@ -13790,6 +15450,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u001B']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+001C",
@@ -13814,6 +15479,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u001C']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+001D",
@@ -13838,6 +15508,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u001D']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+001E",
@@ -13862,6 +15537,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u001E']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+001F",
@@ -13886,6 +15566,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\u001F']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded U+0020",
@@ -13910,6 +15595,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[' ']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, escaped single quote",
@@ -13934,6 +15624,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$['\\'']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, escaped reverse solidus",
@@ -13958,6 +15653,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$['\\\\']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, escaped solidus",
@@ -13982,6 +15682,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$['\\/']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, escaped backspace",
@@ -14006,6 +15711,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$['\\b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, escaped form feed",
@@ -14030,6 +15740,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$['\\f']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, escaped line feed",
@@ -14054,6 +15769,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$['\\n']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, escaped carriage return",
@@ -14078,6 +15798,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$['\\r']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, escaped tab",
@@ -14102,6 +15827,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$['\\t']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, escaped ☺, upper case hex",
@@ -14126,6 +15856,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$['\\u263A']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, escaped ☺, lower case hex",
@@ -14150,6 +15885,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$['\\u263a']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, surrogate pair \uD834\uDD1E",
@@ -14174,6 +15914,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$['\\uD834\\uDD1E']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, surrogate pair \uD83D\uDE00",
@@ -14198,6 +15943,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$['\\uD83D\\uDE00']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, invalid escaped double quote",
@@ -14222,6 +15972,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$['\\\"']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, embedded single quote",
@@ -14252,6 +16007,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$['\\']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, double quotes, empty",
@@ -14276,6 +16036,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "$[\"\"]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "name selector, single quotes, empty",
@@ -14300,6 +16065,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "$['']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, slice selector",
@@ -14324,6 +16094,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[1:3]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, slice selector with step",
@@ -14348,6 +16123,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[1:6:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, slice selector with everything omitted, short form",
@@ -14372,6 +16152,11 @@
       "value" : "]",
       "index" : 3,
       "path" : "$[:]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, slice selector with everything omitted, long form",
@@ -14396,6 +16181,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "$[::]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, slice selector with start omitted",
@@ -14420,6 +16210,11 @@
       "value" : "]",
       "index" : 4,
       "path" : "$[:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, slice selector with start and end omitted",
@@ -14444,6 +16239,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[::2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, negative step with default start and end",
@@ -14468,6 +16268,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[::-1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, negative step with default start",
@@ -14492,6 +16297,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[:0:-1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, negative step with default end",
@@ -14516,6 +16326,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[2::-1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, larger negative step",
@@ -14540,6 +16355,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[::-2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, negative range with default step",
@@ -14564,6 +16384,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[-1:-3]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, negative range with negative step",
@@ -14588,6 +16413,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[-1:-3:-1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, negative range with larger negative step",
@@ -14612,6 +16442,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[-1:-6:-2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, larger negative range with larger negative step",
@@ -14636,6 +16471,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[-1:-7:-2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, negative from, positive to",
@@ -14660,6 +16500,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[-5:7]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, negative from",
@@ -14684,6 +16529,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[-2:]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, positive from, negative to",
@@ -14708,6 +16558,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[1:-1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, negative from, positive to, negative step",
@@ -14732,6 +16587,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[-1:1:-1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, positive from, negative to, negative step",
@@ -14756,6 +16616,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[7:-5:-1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, in serial, on nested array",
@@ -14795,6 +16660,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$[1:3][1:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, in serial, on flat array",
@@ -14834,6 +16704,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[1:3][::]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, negative from, negative to, positive step",
@@ -14858,6 +16733,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[-5:-2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, too many colons",
@@ -14887,6 +16767,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[1:2:3:4]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, non-integer array index",
@@ -14916,6 +16801,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[1:2:a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, zero step",
@@ -14940,6 +16830,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[1:2:0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, empty range",
@@ -14964,6 +16859,11 @@
       "value" : "]",
       "index" : 5,
       "path" : "$[2:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, slice selector with everything omitted with empty array",
@@ -14988,6 +16888,11 @@
       "value" : "]",
       "index" : 3,
       "path" : "$[:]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, negative step with empty array",
@@ -15012,6 +16917,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[::-1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, maximal range with positive step",
@@ -15036,6 +16946,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[0:10]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, maximal range with negative step",
@@ -15060,6 +16975,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[9:0:-1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, excessively large to value",
@@ -15084,6 +17004,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[2:113667776004]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, excessively small from value",
@@ -15108,6 +17033,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[-113667776004:1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, excessively large from value with negative step",
@@ -15132,6 +17062,11 @@
       "value" : "]",
       "index" : 19,
       "path" : "$[113667776004:0:-1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, excessively small to value with negative step",
@@ -15156,6 +17091,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[3:-113667776004:-1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, excessively large step",
@@ -15180,6 +17120,11 @@
       "value" : "]",
       "index" : 19,
       "path" : "$[1:10:113667776004]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, excessively small step",
@@ -15204,6 +17149,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[-1:-10:-113667776004]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, start, min exact",
@@ -15228,6 +17178,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[-9007199254740991::]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, start, max exact",
@@ -15252,6 +17207,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[9007199254740991::]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, start, min exact - 1",
@@ -15276,6 +17236,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[-9007199254740992::]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, start, max exact + 1",
@@ -15300,6 +17265,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[9007199254740992::]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, end, min exact",
@@ -15324,6 +17294,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[:-9007199254740991:]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, end, max exact",
@@ -15348,6 +17323,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[:9007199254740991:]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, end, min exact - 1",
@@ -15372,6 +17352,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[:-9007199254740992:]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, end, max exact + 1",
@@ -15396,6 +17381,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[:9007199254740992:]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, step, min exact",
@@ -15420,6 +17410,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[::-9007199254740991]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, step, max exact",
@@ -15444,6 +17439,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[::9007199254740991]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, step, min exact - 1",
@@ -15468,6 +17468,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[::-9007199254740992]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, step, max exact + 1",
@@ -15492,6 +17497,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[::9007199254740992]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, overflowing to value",
@@ -15516,6 +17526,11 @@
       "value" : "]",
       "index" : 82,
       "path" : "$[2:231584178474632390847141970017375815706539969331281128078915168015826259279872]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, underflowing from value",
@@ -15540,6 +17555,11 @@
       "value" : "]",
       "index" : 83,
       "path" : "$[-231584178474632390847141970017375815706539969331281128078915168015826259279872:1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, overflowing from value with negative step",
@@ -15564,6 +17584,11 @@
       "value" : "]",
       "index" : 85,
       "path" : "$[231584178474632390847141970017375815706539969331281128078915168015826259279872:0:-1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, underflowing to value with negative step",
@@ -15588,6 +17613,11 @@
       "value" : "]",
       "index" : 86,
       "path" : "$[3:-231584178474632390847141970017375815706539969331281128078915168015826259279872:-1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, overflowing step",
@@ -15612,6 +17642,11 @@
       "value" : "]",
       "index" : 85,
       "path" : "$[1:10:231584178474632390847141970017375815706539969331281128078915168015826259279872]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, underflowing step",
@@ -15636,6 +17671,11 @@
       "value" : "]",
       "index" : 88,
       "path" : "$[-1:-10:-231584178474632390847141970017375815706539969331281128078915168015826259279872]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, start, leading 0",
@@ -15660,6 +17700,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[01::]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, start, decimal",
@@ -15689,6 +17734,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[1.0::]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, start, plus",
@@ -15725,6 +17775,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[-0::]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, start, leading -0",
@@ -15749,6 +17804,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[-01::]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, end, leading 0",
@@ -15773,6 +17833,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[:01:]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, end, decimal",
@@ -15807,6 +17872,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[:1.0:]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, end, plus",
@@ -15842,6 +17912,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[:- 1:]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, end, -0",
@@ -15866,6 +17941,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[:-0:]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, end, leading -0",
@@ -15890,6 +17970,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[:-01:]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, step, leading 0",
@@ -15914,6 +17999,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[::01]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, step, decimal",
@@ -15948,6 +18038,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[::1.0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, step, plus",
@@ -15988,6 +18083,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[::- 1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, step, -0",
@@ -16012,6 +18112,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[::-0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "slice selector, step, leading -0",
@@ -16036,6 +18141,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[::-01]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, count, count function",
@@ -16100,6 +18210,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?count(@..*)>2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, count, single-node arg",
@@ -16164,6 +18279,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "$[?count(@.a)>1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, count, multiple-selector arg",
@@ -16243,6 +18363,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?count(@['a','d'])>1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, count, non-query arg, number",
@@ -16297,6 +18422,11 @@
       "value" : "]",
       "index" : 13,
       "path" : "$[?count(1)>2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, count, non-query arg, string",
@@ -16351,6 +18481,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?count('string')>2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, count, non-query arg, true",
@@ -16405,6 +18540,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?count(true)>2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, count, non-query arg, false",
@@ -16459,6 +18599,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?count(false)>2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, count, non-query arg, null",
@@ -16513,6 +18658,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?count(null)>2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, count, result must be compared",
@@ -16567,6 +18717,11 @@
       "value" : "]",
       "index" : 14,
       "path" : "$[?count(@..*)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, count, no params",
@@ -16616,6 +18771,11 @@
       "value" : "]",
       "index" : 13,
       "path" : "$[?count()==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, count, too many params",
@@ -16700,6 +18860,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?count(@.a,@.b)==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, length, string data",
@@ -16764,6 +18929,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?length(@.a)>=2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, length, string data, unicode",
@@ -16818,6 +18988,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "$[?length(@)==2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, length, array data",
@@ -16882,6 +19057,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?length(@.a)>=2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, length, missing data",
@@ -16946,6 +19126,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?length(@.a)>=2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, length, number arg",
@@ -17000,6 +19185,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "$[?length(1)>=2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, length, true arg",
@@ -17054,6 +19244,11 @@
       "value" : "]",
       "index" : 18,
       "path" : "$[?length(true)>=2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, length, false arg",
@@ -17108,6 +19303,11 @@
       "value" : "]",
       "index" : 19,
       "path" : "$[?length(false)>=2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, length, null arg",
@@ -17162,6 +19362,11 @@
       "value" : "]",
       "index" : 18,
       "path" : "$[?length(null)>=2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, length, result must be compared",
@@ -17216,6 +19421,11 @@
       "value" : "]",
       "index" : 14,
       "path" : "$[?length(@.a)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, length, no params",
@@ -17265,6 +19475,11 @@
       "value" : "]",
       "index" : 14,
       "path" : "$[?length()==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, length, too many params",
@@ -17349,6 +19564,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[?length(@.a,@.b)==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, length, non-singular query arg",
@@ -17413,6 +19633,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?length(@.*)<3]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, length, arg is a function expression",
@@ -17527,6 +19752,11 @@
       "value" : "]",
       "index" : 42,
       "path" : "$.values[?length(@.a)==length(value($..c))]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, length, arg is special nothing",
@@ -17606,6 +19836,11 @@
       "value" : "]",
       "index" : 23,
       "path" : "$[?length(value(@.a))>0]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, found match",
@@ -17675,6 +19910,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?match(@.a, 'a.*')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, double quotes",
@@ -17744,6 +19984,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?match(@.a, \"a.*\")]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, regex from the document",
@@ -17823,6 +20068,11 @@
       "value" : "]",
       "index" : 27,
       "path" : "$.values[?match(@, $.regex)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, don't select match",
@@ -17897,6 +20147,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[?!match(@.a, 'a.*')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, not a match",
@@ -17966,6 +20221,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?match(@.a, 'a.*')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, select non-match",
@@ -18040,6 +20300,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[?!match(@.a, 'a.*')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, non-string first arg",
@@ -18099,6 +20364,11 @@
       "value" : "]",
       "index" : 18,
       "path" : "$[?match(1, 'a.*')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, non-string second arg",
@@ -18168,6 +20438,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?match(@.a, 1)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, filter, match function, unicode char class, uppercase",
@@ -18227,6 +20502,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?match(@, '\\\\p{Lu}')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, filter, match function, unicode char class negated, uppercase",
@@ -18286,6 +20566,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?match(@, '\\\\P{Lu}')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, filter, match function, unicode, surrogate pair",
@@ -18345,6 +20630,11 @@
       "value" : "]",
       "index" : 18,
       "path" : "$[?match(@, 'a.b')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, dot matcher on \\u2028",
@@ -18404,6 +20694,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?match(@, '.')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, dot matcher on \\u2029",
@@ -18463,6 +20758,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?match(@, '.')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, result cannot be compared",
@@ -18542,6 +20842,11 @@
       "value" : "]",
       "index" : 26,
       "path" : "$[?match(@.a, 'a.*')==true]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, too few params",
@@ -18606,6 +20911,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?match(@.a)==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, too many params",
@@ -18710,6 +21020,11 @@
       "value" : "]",
       "index" : 24,
       "path" : "$[?match(@.a,@.b,@.c)==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, arg is a function expression",
@@ -18824,6 +21139,11 @@
       "value" : "]",
       "index" : 41,
       "path" : "$.values[?match(@.a, value($..['regex']))]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, dot in character class",
@@ -18883,6 +21203,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[?match(@, 'a[.b]c')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, escaped dot",
@@ -18942,6 +21267,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?match(@, 'a\\\\.c')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, escaped backslash before dot",
@@ -19001,6 +21331,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?match(@, 'a\\\\\\\\.c')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, escaped left square bracket",
@@ -19060,6 +21395,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[?match(@, 'a\\\\[.c')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, escaped right square bracket",
@@ -19119,6 +21459,11 @@
       "value" : "]",
       "index" : 23,
       "path" : "$[?match(@, 'a[\\\\].]c')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, explicit caret",
@@ -19178,6 +21523,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?match(@, '^ab.*')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, match, explicit dollar",
@@ -19237,6 +21587,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?match(@, '.*bc$')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, at the end",
@@ -19306,6 +21661,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[?search(@.a, 'a.*')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, double quotes",
@@ -19375,6 +21735,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[?search(@.a, \"a.*\")]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, at the start",
@@ -19444,6 +21809,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[?search(@.a, 'a.*')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, in the middle",
@@ -19513,6 +21883,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[?search(@.a, 'a.*')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, regex from the document",
@@ -19592,6 +21967,11 @@
       "value" : "]",
       "index" : 28,
       "path" : "$.values[?search(@, $.regex)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, don't select match",
@@ -19666,6 +22046,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?!search(@.a, 'a.*')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, not a match",
@@ -19735,6 +22120,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[?search(@.a, 'a.*')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, select non-match",
@@ -19809,6 +22199,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?!search(@.a, 'a.*')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, non-string first arg",
@@ -19868,6 +22263,11 @@
       "value" : "]",
       "index" : 19,
       "path" : "$[?search(1, 'a.*')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, non-string second arg",
@@ -19937,6 +22337,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?search(@.a, 1)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, filter, search function, unicode char class, uppercase",
@@ -19996,6 +22401,11 @@
       "value" : "]",
       "index" : 23,
       "path" : "$[?search(@, '\\\\p{Lu}')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, filter, search function, unicode char class negated, uppercase",
@@ -20055,6 +22465,11 @@
       "value" : "]",
       "index" : 23,
       "path" : "$[?search(@, '\\\\P{Lu}')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, filter, search function, unicode, surrogate pair",
@@ -20114,6 +22529,11 @@
       "value" : "]",
       "index" : 19,
       "path" : "$[?search(@, 'a.b')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, dot matcher on \\u2028",
@@ -20173,6 +22593,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?search(@, '.')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, dot matcher on \\u2029",
@@ -20232,6 +22657,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?search(@, '.')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, result cannot be compared",
@@ -20311,6 +22741,11 @@
       "value" : "]",
       "index" : 27,
       "path" : "$[?search(@.a, 'a.*')==true]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, too few params",
@@ -20365,6 +22800,11 @@
       "value" : "]",
       "index" : 14,
       "path" : "$[?search(@.a)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, too many params",
@@ -20459,6 +22899,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?search(@.a,@.b,@.c)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, arg is a function expression",
@@ -20563,6 +23008,11 @@
       "value" : "]",
       "index" : 40,
       "path" : "$.values[?search(@, value($..['regex']))]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, dot in character class",
@@ -20622,6 +23072,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?search(@, 'a[.b]c')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, escaped dot",
@@ -20681,6 +23136,11 @@
       "value" : "]",
       "index" : 21,
       "path" : "$[?search(@, 'a\\\\.c')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, escaped backslash before dot",
@@ -20740,6 +23200,11 @@
       "value" : "]",
       "index" : 23,
       "path" : "$[?search(@, 'a\\\\\\\\.c')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, escaped left square bracket",
@@ -20799,6 +23264,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?search(@, 'a\\\\[.c')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, search, escaped right square bracket",
@@ -20858,6 +23328,11 @@
       "value" : "]",
       "index" : 24,
       "path" : "$[?search(@, 'a[\\\\].]c')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, value, single-value nodelist",
@@ -20922,6 +23397,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?value(@.*)==4]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, value, multi-value nodelist",
@@ -20986,6 +23466,11 @@
       "value" : "]",
       "index" : 16,
       "path" : "$[?value(@.*)==4]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, value, too few params",
@@ -21035,6 +23520,11 @@
       "value" : "]",
       "index" : 13,
       "path" : "$[?value()==4]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, value, too many params",
@@ -21119,6 +23609,11 @@
       "value" : "]",
       "index" : 20,
       "path" : "$[?value(@.a,@.b)==4]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "functions, value, result must be compared",
@@ -21173,6 +23668,11 @@
       "value" : "]",
       "index" : 13,
       "path" : "$[?value(@.a)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, filter, space between question mark and expression",
@@ -21217,6 +23717,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[? @.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, filter, newline between question mark and expression",
@@ -21261,6 +23766,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[?\n@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, filter, tab between question mark and expression",
@@ -21305,6 +23815,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[?\t@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, filter, return between question mark and expression",
@@ -21349,6 +23864,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[?\r@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, filter, space between question mark and parenthesized expression",
@@ -21403,6 +23923,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[? (@.a)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, filter, newline between question mark and parenthesized expression",
@@ -21457,6 +23982,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[?\n(@.a)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, filter, tab between question mark and parenthesized expression",
@@ -21511,6 +24041,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[?\t(@.a)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, filter, return between question mark and parenthesized expression",
@@ -21565,6 +24100,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[?\r(@.a)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, filter, space between parenthesized expression and bracket",
@@ -21619,6 +24159,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[?(@.a) ]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, filter, newline between parenthesized expression and bracket",
@@ -21673,6 +24218,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[?(@.a)\n]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, filter, tab between parenthesized expression and bracket",
@@ -21727,6 +24277,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[?(@.a)\t]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, filter, return between parenthesized expression and bracket",
@@ -21781,6 +24336,11 @@
       "value" : "]",
       "index" : 9,
       "path" : "$[?(@.a)\r]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, filter, space between bracket and question mark",
@@ -21825,6 +24385,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[ ?@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, filter, newline between bracket and question mark",
@@ -21869,6 +24434,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[\n?@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, filter, tab between bracket and question mark",
@@ -21913,6 +24483,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[\t?@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, filter, return between bracket and question mark",
@@ -21957,6 +24532,11 @@
       "value" : "]",
       "index" : 7,
       "path" : "$[\r?@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, space between function name and parenthesis",
@@ -22026,6 +24606,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?count (@.*)==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, newline between function name and parenthesis",
@@ -22095,6 +24680,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?count\n(@.*)==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, tab between function name and parenthesis",
@@ -22164,6 +24754,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?count\t(@.*)==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, return between function name and parenthesis",
@@ -22233,6 +24828,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?count\r(@.*)==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, space between parenthesis and arg",
@@ -22302,6 +24902,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?count( @.*)==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, newline between parenthesis and arg",
@@ -22371,6 +24976,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?count(\n@.*)==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, tab between parenthesis and arg",
@@ -22440,6 +25050,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?count(\t@.*)==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, return between parenthesis and arg",
@@ -22509,6 +25124,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?count(\r@.*)==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, space between arg and comma",
@@ -22568,6 +25188,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?search(@ ,'[a-z]+')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, newline between arg and comma",
@@ -22627,6 +25252,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?search(@\n,'[a-z]+')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, tab between arg and comma",
@@ -22686,6 +25316,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?search(@\t,'[a-z]+')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, return between arg and comma",
@@ -22745,6 +25380,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?search(@\r,'[a-z]+')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, space between comma and arg",
@@ -22804,6 +25444,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?search(@, '[a-z]+')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, newline between comma and arg",
@@ -22863,6 +25508,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?search(@,\n'[a-z]+')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, tab between comma and arg",
@@ -22922,6 +25572,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?search(@,\t'[a-z]+')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, return between comma and arg",
@@ -22981,6 +25636,11 @@
       "value" : "]",
       "index" : 22,
       "path" : "$[?search(@,\r'[a-z]+')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, space between arg and parenthesis",
@@ -23050,6 +25710,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?count(@.* )==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, newline between arg and parenthesis",
@@ -23119,6 +25784,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?count(@.*\n)==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, tab between arg and parenthesis",
@@ -23188,6 +25858,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?count(@.*\t)==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, return between arg and parenthesis",
@@ -23257,6 +25932,11 @@
       "value" : "]",
       "index" : 17,
       "path" : "$[?count(@.*\r)==1]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, spaces in a relative singular selector",
@@ -23351,6 +26031,11 @@
       "value" : "]",
       "index" : 23,
       "path" : "$[?length(@ .a .b) == 3]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, newlines in a relative singular selector",
@@ -23445,6 +26130,11 @@
       "value" : "]",
       "index" : 23,
       "path" : "$[?length(@\n.a\n.b) == 3]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, tabs in a relative singular selector",
@@ -23539,6 +26229,11 @@
       "value" : "]",
       "index" : 23,
       "path" : "$[?length(@\t.a\t.b) == 3]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, returns in a relative singular selector",
@@ -23633,6 +26328,11 @@
       "value" : "]",
       "index" : 23,
       "path" : "$[?length(@\r.a\r.b) == 3]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, spaces in an absolute singular selector",
@@ -23742,6 +26442,11 @@
       "value" : "]",
       "index" : 32,
       "path" : "$..[?length(@)==length($ [0] .a)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, newlines in an absolute singular selector",
@@ -23851,6 +26556,11 @@
       "value" : "]",
       "index" : 32,
       "path" : "$..[?length(@)==length($\n[0]\n.a)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, tabs in an absolute singular selector",
@@ -23960,6 +26670,11 @@
       "value" : "]",
       "index" : 32,
       "path" : "$..[?length(@)==length($\t[0]\t.a)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, functions, returns in an absolute singular selector",
@@ -24069,6 +26784,11 @@
       "value" : "]",
       "index" : 32,
       "path" : "$..[?length(@)==length($\r[0]\r.a)]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space before ||",
@@ -24133,6 +26853,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a ||@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline before ||",
@@ -24197,6 +26922,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a\n||@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab before ||",
@@ -24261,6 +26991,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a\t||@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return before ||",
@@ -24325,6 +27060,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a\r||@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space after ||",
@@ -24389,6 +27129,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a|| @.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline after ||",
@@ -24453,6 +27198,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a||\n@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab after ||",
@@ -24517,6 +27267,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a||\t@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return after ||",
@@ -24581,6 +27336,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a||\r@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space before &&",
@@ -24645,6 +27405,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a &&@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline before &&",
@@ -24709,6 +27474,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a\n&&@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab before &&",
@@ -24773,6 +27543,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a\t&&@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return before &&",
@@ -24837,6 +27612,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a\r&&@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space after &&",
@@ -24901,6 +27681,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a&& @.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline after &&",
@@ -24965,6 +27750,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a&& @.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab after &&",
@@ -25029,6 +27819,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a&& @.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return after &&",
@@ -25093,6 +27888,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a&& @.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space before ==",
@@ -25157,6 +27957,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a ==@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline before ==",
@@ -25221,6 +28026,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a\n==@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab before ==",
@@ -25285,6 +28095,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a\t==@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return before ==",
@@ -25349,6 +28164,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a\r==@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space after ==",
@@ -25413,6 +28233,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a== @.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline after ==",
@@ -25477,6 +28302,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a==\n@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab after ==",
@@ -25541,6 +28371,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a==\t@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return after ==",
@@ -25605,6 +28440,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a==\r@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space before !=",
@@ -25669,6 +28509,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a !=@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline before !=",
@@ -25733,6 +28578,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a\n!=@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab before !=",
@@ -25797,6 +28647,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a\t!=@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return before !=",
@@ -25861,6 +28716,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a\r!=@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space after !=",
@@ -25925,6 +28785,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a!= @.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline after !=",
@@ -25989,6 +28854,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a!=\n@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab after !=",
@@ -26053,6 +28923,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a!=\t@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return after !=",
@@ -26117,6 +28992,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a!=\r@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space before <",
@@ -26181,6 +29061,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a <@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline before <",
@@ -26245,6 +29130,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a\n<@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab before <",
@@ -26309,6 +29199,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a\t<@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return before <",
@@ -26373,6 +29268,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a\r<@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space after <",
@@ -26437,6 +29337,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a< @.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline after <",
@@ -26501,6 +29406,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a<\n@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab after <",
@@ -26565,6 +29475,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a<\t@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return after <",
@@ -26629,6 +29544,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.a<\r@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space before >",
@@ -26693,6 +29613,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.b >@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline before >",
@@ -26757,6 +29682,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.b\n>@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab before >",
@@ -26821,6 +29751,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.b\t>@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return before >",
@@ -26885,6 +29820,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.b\r>@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space after >",
@@ -26949,6 +29889,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.b> @.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline after >",
@@ -27013,6 +29958,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.b>\n@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab after >",
@@ -27077,6 +30027,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.b>\t@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return after >",
@@ -27141,6 +30096,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$[?@.b>\r@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space before <=",
@@ -27205,6 +30165,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a <=@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline before <=",
@@ -27269,6 +30234,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a\n<=@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab before <=",
@@ -27333,6 +30303,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a\t<=@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return before <=",
@@ -27397,6 +30372,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a\r<=@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space after <=",
@@ -27461,6 +30441,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a<= @.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline after <=",
@@ -27525,6 +30510,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a<=\n@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab after <=",
@@ -27589,6 +30579,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a<=\t@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return after <=",
@@ -27653,6 +30648,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.a<=\r@.b]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space before >=",
@@ -27717,6 +30717,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.b >=@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline before >=",
@@ -27781,6 +30786,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.b\n>=@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab before >=",
@@ -27845,6 +30855,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.b\t>=@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return before >=",
@@ -27909,6 +30924,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.b\r>=@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space after >=",
@@ -27973,6 +30993,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.b>= @.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline after >=",
@@ -28037,6 +31062,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.b>=\n@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab after >=",
@@ -28101,6 +31131,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.b>=\t@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return after >=",
@@ -28165,6 +31200,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$[?@.b>=\r@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space between logical not and test expression",
@@ -28214,6 +31254,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[?! @.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline between logical not and test expression",
@@ -28263,6 +31308,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[?!\n@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab between logical not and test expression",
@@ -28312,6 +31362,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[?!\t@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return between logical not and test expression",
@@ -28361,6 +31416,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[?!\r@.a]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, space between logical not and parenthesized expression",
@@ -28430,6 +31490,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "$[?! (@.a=='b')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, newline between logical not and parenthesized expression",
@@ -28499,6 +31564,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "$[?!\n(@.a=='b')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, tab between logical not and parenthesized expression",
@@ -28568,6 +31638,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "$[?!\t(@.a=='b')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, operators, return between logical not and parenthesized expression",
@@ -28637,6 +31712,11 @@
       "value" : "]",
       "index" : 15,
       "path" : "$[?!\r(@.a=='b')]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, space between root and bracket",
@@ -28666,6 +31746,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$ ['a']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, newline between root and bracket",
@@ -28695,6 +31780,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$\n['a']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, tab between root and bracket",
@@ -28724,6 +31814,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$\t['a']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, return between root and bracket",
@@ -28753,6 +31848,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$\r['a']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, space between bracket and bracket",
@@ -28797,6 +31897,11 @@
       "value" : "]",
       "index" : 11,
       "path" : "$['a'] ['b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, newline between bracket and bracket",
@@ -28841,6 +31946,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$['a'] \n['b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, tab between bracket and bracket",
@@ -28885,6 +31995,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$['a'] \t['b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, return between bracket and bracket",
@@ -28929,6 +32044,11 @@
       "value" : "]",
       "index" : 12,
       "path" : "$['a'] \r['b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, space between root and dot",
@@ -28953,6 +32073,11 @@
       "value" : "a",
       "index" : 3,
       "path" : "$ .a"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, newline between root and dot",
@@ -28977,6 +32102,11 @@
       "value" : "a",
       "index" : 3,
       "path" : "$\n.a"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, tab between root and dot",
@@ -29001,6 +32131,11 @@
       "value" : "a",
       "index" : 3,
       "path" : "$\t.a"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, return between root and dot",
@@ -29025,6 +32160,11 @@
       "value" : "a",
       "index" : 3,
       "path" : "$\r.a"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, space between dot and name",
@@ -29049,6 +32189,11 @@
       "value" : "a",
       "index" : 3,
       "path" : "$. a"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, newline between dot and name",
@@ -29073,6 +32218,11 @@
       "value" : "a",
       "index" : 3,
       "path" : "$.\na"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, tab between dot and name",
@@ -29097,6 +32247,11 @@
       "value" : "a",
       "index" : 3,
       "path" : "$.\ta"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, return between dot and name",
@@ -29121,6 +32276,11 @@
       "value" : "a",
       "index" : 3,
       "path" : "$.\ra"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, space between recursive descent and name",
@@ -29145,6 +32305,11 @@
       "value" : "a",
       "index" : 4,
       "path" : "$.. a"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, newline between recursive descent and name",
@@ -29169,6 +32334,11 @@
       "value" : "a",
       "index" : 4,
       "path" : "$..\na"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, tab between recursive descent and name",
@@ -29193,6 +32363,11 @@
       "value" : "a",
       "index" : 4,
       "path" : "$..\ta"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, return between recursive descent and name",
@@ -29217,6 +32392,11 @@
       "value" : "a",
       "index" : 4,
       "path" : "$..\ra"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, space between bracket and selector",
@@ -29246,6 +32426,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[ 'a']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, newline between bracket and selector",
@@ -29275,6 +32460,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\n'a']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, tab between bracket and selector",
@@ -29304,6 +32494,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\t'a']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, return between bracket and selector",
@@ -29333,6 +32528,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$[\r'a']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, space between selector and bracket",
@@ -29362,6 +32562,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$['a' ]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, newline between selector and bracket",
@@ -29391,6 +32596,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$['a'\n]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, tab between selector and bracket",
@@ -29420,6 +32630,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$['a'\t]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, return between selector and bracket",
@@ -29449,6 +32664,11 @@
       "value" : "]",
       "index" : 6,
       "path" : "$['a'\r]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, space between selector and comma",
@@ -29488,6 +32708,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$['a' ,'b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, newline between selector and comma",
@@ -29527,6 +32752,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$['a'\n,'b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, tab between selector and comma",
@@ -29566,6 +32796,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$['a'\t,'b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, return between selector and comma",
@@ -29605,6 +32840,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$['a'\r,'b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, space between comma and selector",
@@ -29644,6 +32884,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$['a', 'b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, newline between comma and selector",
@@ -29683,6 +32928,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$['a',\n'b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, tab between comma and selector",
@@ -29722,6 +32972,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$['a',\t'b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, selectors, return between comma and selector",
@@ -29761,6 +33016,11 @@
       "value" : "]",
       "index" : 10,
       "path" : "$['a',\r'b']"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, slice, space between start and colon",
@@ -29785,6 +33045,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[1 :5:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, slice, newline between start and colon",
@@ -29809,6 +33074,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[1\n:5:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, slice, tab between start and colon",
@@ -29833,6 +33103,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[1\t:5:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, slice, return between start and colon",
@@ -29857,6 +33132,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[1\r:5:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, slice, space between colon and end",
@@ -29881,6 +33161,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[1: 5:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, slice, newline between colon and end",
@@ -29905,6 +33190,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[1:\n5:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, slice, tab between colon and end",
@@ -29929,6 +33219,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[1:\t5:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, slice, return between colon and end",
@@ -29953,6 +33248,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[1:\r5:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, slice, space between end and colon",
@@ -29977,6 +33277,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[1:5 :2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, slice, newline between end and colon",
@@ -30001,6 +33306,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[1:5\n:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, slice, tab between end and colon",
@@ -30025,6 +33335,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[1:5\t:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, slice, return between end and colon",
@@ -30049,6 +33364,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[1:5\r:2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, slice, space between colon and step",
@@ -30073,6 +33393,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[1:5: 2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, slice, newline between colon and step",
@@ -30097,6 +33422,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[1:5:\n2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, slice, tab between colon and step",
@@ -30121,6 +33451,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[1:5:\t2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   }, {
     "description" : "whitespace, slice, return between colon and step",
@@ -30145,6 +33480,11 @@
       "value" : "]",
       "index" : 8,
       "path" : "$[1:5:\r2]"
+    }, {
+      "kind" : "TOKEN_EOF",
+      "value" : "",
+      "index" : -1,
+      "path" : ""
     } ]
   } ]
 }

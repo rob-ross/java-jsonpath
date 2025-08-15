@@ -41,7 +41,9 @@ public class Helper {
 
     static TestCases load(final String fileName) {
         final ObjectMapper mapper = new ObjectMapper();
-
+        System.out.println("load: fileName = " + fileName);
+        System.out.println("System.getenv().get(\"PWD\") = " + System.getenv().get("PWD"));
+        System.out.println("System.getenv().keySet() = " + System.getenv().keySet());
         JsonDeserializer<TokenKind> jsonDeserializer = new JsonDeserializer<>() {
             @Override
             public TokenKind deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
@@ -75,7 +77,7 @@ public class Helper {
         mapper.addMixIn(Token.class, TokenIgnoreDerivedProps.class);
 
         TestCases testCases;
-        try(InputStream inputStream = test_lex.class.getResourceAsStream(fileName)) {
+        try(InputStream inputStream = Helper.class.getResourceAsStream(fileName)) {
             testCases = mapper.readValue(inputStream, new TypeReference<TestCases>() { });
         } catch (IOException e) {
             throw new RuntimeException("Couldn't load " + fileName, e);

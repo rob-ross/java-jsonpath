@@ -105,7 +105,7 @@ public class PJPRulesBuilder implements RulesBuilder {
         builders.put(TokenKind.BARE_PROPERTY, new RulesBuilder.LexerRuleBuilder(true, KEY_PATTERN_RE));
         builders.put(TokenKind.LPAREN, new RulesBuilder.LexerRuleBuilder(true, "\\("));
         builders.put(TokenKind.RPAREN, new RulesBuilder.LexerRuleBuilder(true, "\\)"));
-        builders.put(TokenKind.SKIP, new RulesBuilder.LexerRuleBuilder(true, "[ \\n\\t\\r\\.]+"));
+        builders.put(TokenKind.SPACE, new RulesBuilder.LexerRuleBuilder(true, "[ \\n\\t\\r\\.]+"));
         builders.put(TokenKind.ILLEGAL, new RulesBuilder.LexerRuleBuilder(true, "."));
 
         assert builders.size() == 47 : "Expected 47 rules for this rule builder";
