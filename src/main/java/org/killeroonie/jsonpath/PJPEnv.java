@@ -1,8 +1,9 @@
 package org.killeroonie.jsonpath;
 
-import org.killeroonie.jsonpath.lex.PJPLexer;
-import org.killeroonie.jsonpath.lex.PJPRulesBuilder;
-import org.killeroonie.jsonpath.lex.RulesBuilder;
+import org.killeroonie.jsonpath.lexer.PJPLexer;
+import org.killeroonie.jsonpath.lexer.PJPRulesBuilder;
+import org.killeroonie.jsonpath.lexer.RulesBuilder;
+import org.killeroonie.jsonpath.parser.PJPParser;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -20,7 +21,7 @@ import java.util.regex.Pattern;
  */
 public class PJPEnv extends JSONPathEnvironment {
     public PJPEnv() {
-        super(true, true, true, PJPRulesBuilder.class, PJPLexer.class, Parser.class);
+        super(true, true, true, PJPRulesBuilder.class, PJPLexer.class, PJPParser.class);
     }
 
     // todo these are here to duplicate PJP custom env rules, but these are redundant and have been moved into

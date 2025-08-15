@@ -336,8 +336,8 @@ public class JSONPointer {
      * pointer is ignored, and a new {@code JSONPointer} is created, and processing of
      * remaining parts continues.
      *
-     * @param parts One or more strings representing pointer segments. If any segment starts with
-     *              "/", it replaces this pointer entirely, and subsequent segments are ignored.
+     * @param parts One or more strings representing pointer segment. If any segment starts with
+     *              "/", it replaces this pointer entirely, and subsequent segment are ignored.
      * @return a new {@code JSONPointer} representing the combined path.
      */
     public JSONPointer join(String... parts) {

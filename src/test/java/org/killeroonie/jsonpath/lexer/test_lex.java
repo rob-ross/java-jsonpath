@@ -1,4 +1,4 @@
-package org.killeroonie.jsonpath.lex;
+package org.killeroonie.jsonpath.lexer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Named;
@@ -10,14 +10,14 @@ import org.killeroonie.jsonpath.JSONPathEnvironment;
 import org.killeroonie.jsonpath.PJPEnv;
 import org.killeroonie.jsonpath.Token;
 import org.killeroonie.jsonpath.exception.JSONPathSyntaxException;
-import org.killeroonie.jsonpath.lex.Helper.Case;
+import org.killeroonie.jsonpath.lexer.Helper.Case;
 
 import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.killeroonie.jsonpath.lex.Helper.load;
+import static org.killeroonie.jsonpath.lexer.Helper.load;
 
 /**
  * Port of test_lex.py from python-jsonpath

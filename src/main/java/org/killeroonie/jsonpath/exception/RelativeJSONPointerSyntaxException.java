@@ -1,7 +1,7 @@
 package org.killeroonie.jsonpath.exception;
 
 /**
- * An exception raised when we fail to parse a relative JSON Pointer.
+ * An exception raised when we fail to parser a relative JSON Pointer.
  */
 public class RelativeJSONPointerSyntaxException extends RelativeJSONPointerException {
     private final String rel;

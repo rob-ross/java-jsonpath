@@ -47,10 +47,6 @@ def load_data(data: object) -> Any:
  */
 
 
-class Parser {
-    public Parser(JSONPathEnvironment env) {}
-    Token tokenize() { return null; };
-}
 
 class JSONPathMatch {
     public final FilterContextVars filterContext;

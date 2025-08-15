@@ -1,4 +1,4 @@
-package org.killeroonie.jsonpath.lex;
+package org.killeroonie.jsonpath.lexer;
 
 import org.jetbrains.annotations.Nullable;
 import org.killeroonie.jsonpath.JSONPathEnvironment;
@@ -82,7 +82,7 @@ public abstract class BaseLexer implements Lexer {
      * Returns the current whitespace policy for this Lexer. {@code WhitespacePolicy.LENIENT} (the default) causes the
      * Lexer to consume all whitespace and emit no SPACE getTokenList. {@code WhitespacePolicy.STRICT} will emit all
      * whitespace characters as SPACE getTokenList. A run of contiguous whitespace characters only produces a single SPACE token.
-     * Note that a STRICT policy enforces whitespace rules in the RFC9535 spec, and thus JSON path strings that may parse
+     * Note that a STRICT policy enforces whitespace rules in the RFC9535 spec, and thus JSON path strings that may parser
      * correctly in LENIENT mode may fail with a syntax error when using STRICT mode.
      * @return the current {@code WhitespacePolicy} for this Lexer.
      */

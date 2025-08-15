@@ -1,4 +1,4 @@
-package org.killeroonie.jsonpath.lex;
+package org.killeroonie.jsonpath.lexer;
 
 import org.killeroonie.jsonpath.*;
 import org.killeroonie.jsonpath.exception.JSONPathSyntaxException;

@@ -1,8 +1,8 @@
 package org.killeroonie.jsonpath;
 
-import org.killeroonie.jsonpath.lex.JJPLexer;
-import org.killeroonie.jsonpath.lex.Lexer;
-import org.killeroonie.jsonpath.lex.RFCRulesBuilder;
+import org.killeroonie.jsonpath.lexer.JJPLexer;
+import org.killeroonie.jsonpath.lexer.Lexer;
+import org.killeroonie.jsonpath.lexer.RFCRulesBuilder;
 
 public class RFCEnv extends JSONPathEnvironment {
 

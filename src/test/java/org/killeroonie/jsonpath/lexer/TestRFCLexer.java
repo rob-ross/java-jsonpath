@@ -1,12 +1,12 @@
-package org.killeroonie.jsonpath.lex;
+package org.killeroonie.jsonpath.lexer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.killeroonie.jsonpath.JJPEnv;
 import org.killeroonie.jsonpath.JSONPathEnvironment;
+import org.killeroonie.jsonpath.RFCEnv;
 import org.killeroonie.jsonpath.Token;
 import org.killeroonie.jsonpath.exception.JSONPathSyntaxException;
 
@@ -16,7 +16,10 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class TestJJPLexer {
+/**
+ * The RFCEnv environment uses the JJPLexer, but it uses an RFCRulesBuilder and a STRICT whitespace policy.
+ */
+public class TestRFCLexer {
 
     private JSONPathEnvironment env; // shared per-test instance
 
@@ -27,18 +30,20 @@ public class TestJJPLexer {
 
     @BeforeEach
     void env(){
-        this.env = new JJPEnv();
+        this.env = new RFCEnv();
     }
 
+
     static Stream<Arguments> allTestCases() {
-        Stream<Arguments> ctsTests = Helper.load("cts.jjplexer.json").tests().stream()
+        Stream<Arguments> ctsTests = Helper.load("cts.rfc.json").tests().stream()
                 .map(c -> Arguments.of(Named.of("CTS: " + c.description(), c)));
 
-        Stream<Arguments> pjpTests = Helper.load("pjp.lex.jjplexer.json").tests().stream()
+        Stream<Arguments> pjpTests = Helper.load("pjp.lexer.rfc.json").tests().stream()
                 .map(c -> Arguments.of(Named.of("PJP: " + c.description(), c)));
 
         return Stream.concat(ctsTests, pjpTests);
     }
+
 
     ////////////////////////////////////////////////////////////////////
     /// UNIT TESTS

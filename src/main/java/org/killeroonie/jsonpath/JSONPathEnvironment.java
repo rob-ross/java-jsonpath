@@ -1,8 +1,9 @@
 package org.killeroonie.jsonpath;
 
 import org.jetbrains.annotations.NotNull;
-import org.killeroonie.jsonpath.lex.Lexer;
-import org.killeroonie.jsonpath.lex.RulesBuilder;
+import org.killeroonie.jsonpath.lexer.Lexer;
+import org.killeroonie.jsonpath.lexer.RulesBuilder;
+import org.killeroonie.jsonpath.parser.Parser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

@@ -1,4 +1,4 @@
-package org.killeroonie.jsonpath.lex;
+package org.killeroonie.jsonpath.lexer;
 
 import org.killeroonie.jsonpath.*;
 import org.killeroonie.jsonpath.exception.JSONPathException;
@@ -38,7 +38,7 @@ public class PJPLexer extends BaseLexer{
     @Override
     public List<Token> tokenize(final String jsonPathText) {
         final ScannerState  scanner = initScanner(jsonPathText);
-        final var        lexerRules = getLexerRulesMap();
+        final Map<TokenKind, RulesBuilder.LexerRule> lexerRules = getLexerRulesMap();
 
         while ( currentChar() != EOF_CHAR) {
 //            System.out.printf("current char is %s, pos= %d%n", currentChar(), position());

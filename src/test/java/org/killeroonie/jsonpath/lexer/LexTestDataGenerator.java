@@ -1,4 +1,4 @@
-package org.killeroonie.jsonpath.lex;
+package org.killeroonie.jsonpath.lexer;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -125,7 +125,7 @@ public class LexTestDataGenerator {
     ////////////////////////////////////////////////////////////////////
 
     /**
-     * Generate pjp.lex.jjplexer.json file
+     * Generate pjp.lexer.jjplexer.json file
      * @param env
      */
     static void generateLexerTestCasesFromPJP(JSONPathEnvironment env, String fileName, String msg) {
@@ -285,10 +285,10 @@ public class LexTestDataGenerator {
     }
 
     public static void main(String[] args) {
-//        generateLexerTestCasesFromPJP(new JJPEnv(), "pjp.lex.jjplexer.json", "JJPLexer");
+//        generateLexerTestCasesFromPJP(new JJPEnv(), "pjp.lexer.jjplexer.json", "JJPLexer");
 //        generateLexerTestCasesFromCTS(new JJPEnv(), "cts.jjplexer.json", "JJPLexer");
 
-        generateLexerTestCasesFromPJP(new RFCEnv(), "pjp.lex.rfc.json", "RFC lexer");
+        generateLexerTestCasesFromPJP(new RFCEnv(), "pjp.lexer.rfc.json", "RFC lexer");
         generateLexerTestCasesFromCTS(new RFCEnv(), "cts.rfc.json", "RFC lexer");
 
     }

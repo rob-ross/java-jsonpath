@@ -1,4 +1,4 @@
-package org.killeroonie.jsonpath.lex;
+package org.killeroonie.jsonpath.lexer;
 
 
 import org.killeroonie.jsonpath.TokenKind;
@@ -17,28 +17,28 @@ public class PJPRulesBuilder implements RulesBuilder {
 
     public static final String DOUBLE_QUOTE_STRING_RE = "\"(?<GDQUOTE>(?:(?!(?<!\\\\)\").)*)\"";
     public static final String SINGLE_QUOTE_STRING_RE = "'(?<GSQUOTE>(?:(?!(?<!\\\\)').)*)'";
-    public static final String REGEX_PATTERN_RE = "/(?<GRE>.+?)/(?<GREFLAGS>[aims]*)";
-    public static final String LIST_SLICE_RE =  "(?<GLSLICESTART>\\-?\\d*)\\s*" +
-                                                ":\\s*(?<GLSLICESTOP>\\-?\\d*)\\s*" +
-                                                "(?::\\s*(?<GLSLICESTEP>\\-?\\d*))?";
-    public static final String FUNCTION_RE = "(?<GFUNC>[a-z][a-z_0-9]+)\\(\\s*";
+    public static final String REGEX_PATTERN_RE       = "/(?<GRE>.+?)/(?<GREFLAGS>[aims]*)";
+    public static final String LIST_SLICE_RE          = "(?<GLSLICESTART>\\-?\\d*)\\s*" +
+                                                        ":\\s*(?<GLSLICESTOP>\\-?\\d*)\\s*" +
+                                                        "(?::\\s*(?<GLSLICESTEP>\\-?\\d*))?";
+    public static final String FUNCTION_RE     = "(?<GFUNC>[a-z][a-z_0-9]+)\\(\\s*";
     public static final String DOT_PROPERTY_RE = "\\.(?<GPROP>[\\u0080-\\uFFFFa-zA-Z_][\\u0080-\\uFFFFa-zA-Z0-9_-]*)";
-    public static final String KEY_PATTERN_RE = "[\\u0080-\\uFFFFa-zA-Z_][\\u0080-\\uFFFFa-zA-Z0-9_-]*";
-    public static final String FLOAT_RE = "-?\\d+\\.\\d*(?:[eE][+-]?\\d+)?";
-    public static final String INT_RE = "-?\\d+(?<GEXP>[eE][+\\-]?\\d+)?\\b";
+    public static final String KEY_PATTERN_RE  = "[\\u0080-\\uFFFFa-zA-Z_][\\u0080-\\uFFFFa-zA-Z0-9_-]*";
+    public static final String FLOAT_RE        = "-?\\d+\\.\\d*(?:[eE][+-]?\\d+)?";
+    public static final String INT_RE          = "-?\\d+(?<GEXP>[eE][+\\-]?\\d+)?\\b";
 
     public static final String LOGICAL_AND_RE = "&&|(?:and\\b)";
-    public static final String LOGICAL_OR_RE = "\\|\\||(?:or\\b)";
+    public static final String LOGICAL_OR_RE  = "\\|\\||(?:or\\b)";
     public static final String LOGICAL_NOT_RE = "(?:not\\b)|!";
 
-    public static final String ROOT_TOKEN_RE = "\\$"; // might have to escape these
-    public static final String PSEUDO_ROOT_RE = "\\^";
-    public static final String SELF_TOKEN_RE = "@";
-    public static final String KEY_TOKEN_RE = "\\#";
-    public static final String UNION_TOKEN_RE = "\\|";
-    public static final String INTERSECTION_TOKEN_RE = "\\&";
+    public static final String ROOT_TOKEN_RE           = "\\$";
+    public static final String PSEUDO_ROOT_RE          = "\\^";
+    public static final String SELF_TOKEN_RE           = "@";
+    public static final String KEY_TOKEN_RE            = "\\#";
+    public static final String UNION_TOKEN_RE          = "\\|";
+    public static final String INTERSECTION_TOKEN_RE   = "\\&";
     public static final String FILTER_CONTEXT_TOKEN_RE = "_";
-    public static final String KEYS_SELECTOR_TOKEN_RE = "\\~";
+    public static final String KEYS_SELECTOR_TOKEN_RE  = "\\~";
 
     private final Map<TokenKind, RulesBuilder.LexerRule> rules = new LinkedHashMap<>();
 
@@ -54,7 +54,7 @@ public class PJPRulesBuilder implements RulesBuilder {
     private  Map<TokenKind, RulesBuilder.LexerRule> buildDefaultRulesMap() {
         // first, create builders for each TokenKind in the default rules.
         final Map<TokenKind, RulesBuilder.LexerRuleBuilder> builders = new LinkedHashMap<>();
-        // these match the order and regex pattern from compile_rules() in lex.py
+        // these match the order and regex pattern from compile_rules() in lexer.py
         builders.put(TokenKind.DOUBLE_QUOTE_STRING, new RulesBuilder.LexerRuleBuilder(true, DOUBLE_QUOTE_STRING_RE));
         builders.put(TokenKind.SINGLE_QUOTE_STRING, new RulesBuilder.LexerRuleBuilder(true, SINGLE_QUOTE_STRING_RE));
         builders.put(TokenKind.RE_PATTERN, new RulesBuilder.LexerRuleBuilder(true, REGEX_PATTERN_RE));
@@ -91,8 +91,6 @@ public class PJPRulesBuilder implements RulesBuilder {
         builders.put(TokenKind.UNDEFINED , new RulesBuilder.LexerRuleBuilder(true, "undefined\\b"));
         builders.put(TokenKind.MISSING , new RulesBuilder.LexerRuleBuilder(true, "missing\\b"));
         builders.put(TokenKind.LIST_START , new RulesBuilder.LexerRuleBuilder(true, "\\["));
-
-
         builders.put(TokenKind.RBRACKET, new RulesBuilder.LexerRuleBuilder(true, "]"));
         builders.put(TokenKind.COMMA, new RulesBuilder.LexerRuleBuilder(true, ","));
         builders.put(TokenKind.EQ, new RulesBuilder.LexerRuleBuilder(true, "=="));
@@ -110,7 +108,6 @@ public class PJPRulesBuilder implements RulesBuilder {
         builders.put(TokenKind.SKIP, new RulesBuilder.LexerRuleBuilder(true, "[ \\n\\t\\r\\.]+"));
         builders.put(TokenKind.ILLEGAL, new RulesBuilder.LexerRuleBuilder(true, "."));
 
-        // not
         assert builders.size() == 47 : "Expected 47 rules for this rule builder";
 
 

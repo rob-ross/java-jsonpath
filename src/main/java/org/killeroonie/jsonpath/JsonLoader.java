@@ -34,14 +34,14 @@ public class JsonLoader {
             } catch (IOException e) {
                 // Python version returns the string if it's not malformed JSON.
                 // For simplicity here, we'll throw. A more complex check could be added.
-                throw new UncheckedIOException("Failed to parse JSON string", e);
+                throw new UncheckedIOException("Failed to parser JSON string", e);
             }
         }
         if (data instanceof InputStream is) {
             try {
                 return MAPPER.readTree( is );
             } catch (IOException e) {
-                throw new UncheckedIOException("Failed to parse JSON from stream", e);
+                throw new UncheckedIOException("Failed to parser JSON from stream", e);
             }
         }
         return data;
