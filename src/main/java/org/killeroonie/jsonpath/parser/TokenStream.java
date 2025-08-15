@@ -55,6 +55,11 @@ public final class TokenStream  implements Iterator<Token> {
         return queueIndex < queueSize;
     }
 
+    /**
+     * Returns the next Token in the stream, advancing the queueIndex by 1.
+     * If there are no more Tokens, returns Token.EOF.
+     * @return
+     */
     @Override
     public Token next() {
         Token nextToken;
@@ -113,27 +118,56 @@ public final class TokenStream  implements Iterator<Token> {
     }
 
     /**
+     * Throws an exception if the current Token kine is not equal to the argument kind.
+     */
+    public void expect(TokenKind kind) throws JSONPathSyntaxException {
+        expectImpl(kind, currentToken);
+    }
+
+    /**
      * Throws an exception if the current token type is not in the argument Set.
      */
-    public void expect(Set<TokenKind> kinds) {
-        expectImpl(currentToken, kinds);
+    public void expect(Set<TokenKind> kinds) throws JSONPathSyntaxException {
+        expectImpl(kinds, currentToken);
+    }
+
+
+    /**
+     * Throws an exception if the kind of the next Token is not equal to the argument kind.
+     */
+    public void expectPeek(TokenKind kind) throws JSONPathSyntaxException {
+        expectImpl(kind, peek());
     }
 
     /**
      * Throws an exception if the TokenKind of the next Token in the queue is not in the argument Set.
      */
-    public void expectPeek(Set<TokenKind> kinds) {
-        expectImpl(peek(), kinds);
+    public void expectPeek(Set<TokenKind> kinds) throws JSONPathSyntaxException {
+        expectImpl(kinds, peek());
     }
 
-    private void expectImpl(Token t, Set<TokenKind> ts) {
-        if (!ts.contains(t.kind())) {
+    private void expectImpl(TokenKind expectedKind, Token actual) {
+        if ( expectedKind != actual.kind()) {
             throw new JSONPathSyntaxException(
-                    "token kind: %s is not in the set: %s"
-                            .formatted(t.kind(), ts.toString()), t);
+                    "expected: %s, got %s"
+                            .formatted(expectedKind, actual), actual);
         }
     }
 
+    private void expectImpl(Set<TokenKind> kinds,Token actual) {
+        if (!kinds.contains(actual.kind())) {
+            throw new JSONPathSyntaxException(
+                    "token kind: %s is not in the set: %s"
+                            .formatted(actual.kind(), kinds.toString()), actual);
+        }
+    }
+
+
+    public void peekNotExpected(TokenKind kind, String message) {
+        if (kind != peek().kind()) {
+            throw new JSONPathSyntaxException(message, peek());
+        }
+    }
     /**
      * Throws an exception if the TokenKind of the next Token in the queue is present in the argument Set.
      */

@@ -11,14 +11,14 @@ import java.util.List;
  */
 public abstract class JSONPathSelector {
 
-    private static JSONPathEnvironment env;
+    private final JSONPathEnvironment env;
 
 
     public JSONPathSelector(JSONPathEnvironment env, Token token) {
         this.env = env;
     }
 
-    public static JSONPathEnvironment getEnv() {
+    public  JSONPathEnvironment getEnv() {
         return env;
     }
 
