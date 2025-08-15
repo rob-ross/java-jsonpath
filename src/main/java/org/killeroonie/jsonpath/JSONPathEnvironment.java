@@ -77,7 +77,6 @@ import java.util.Optional;
  */
 public class JSONPathEnvironment {
 
-    private final boolean cacheFilters;
     private final boolean unicodeEscape;
     private final boolean wellTyped;
     private final Class<? extends Lexer> lexerClass;
@@ -98,18 +97,15 @@ public class JSONPathEnvironment {
 
 
     /**
-     * @param cacheFilters  Enable or disable filter expression caching.
      * @param unicodeEscape Enable or disable decoding of UTF-16 escape sequences found in JSONPath string literals.
      * @param wellTyped     Control well-typedness checks on filter function expressions.
      */
-    public JSONPathEnvironment(boolean cacheFilters,
-                               boolean unicodeEscape,
+    public JSONPathEnvironment(boolean unicodeEscape,
                                boolean wellTyped,
                                Class<? extends RulesBuilder> rulesBuilderClass,
                                Class<? extends Lexer> lexerClass,
                                Class<? extends Parser> parserClass
     ) {
-        this.cacheFilters = cacheFilters;
         this.unicodeEscape = unicodeEscape;
         this.wellTyped = wellTyped;
         this.rulesBuilderClass = rulesBuilderClass;
@@ -117,10 +113,6 @@ public class JSONPathEnvironment {
         this.parserClass = parserClass;
 
         // everything else is created lazily when first requested
-    }
-
-    public boolean isCacheFilters() {
-        return cacheFilters;
     }
 
     public boolean isUnicodeEscape() {

@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  */
 public class PJPEnv extends JSONPathEnvironment {
     public PJPEnv() {
-        super(true, true, true, PJPRulesBuilder.class, PJPLexer.class, PJPParser.class);
+        super(true, true, PJPRulesBuilder.class, PJPLexer.class, PJPParser.class);
     }
 
     // todo these are here to duplicate PJP custom env rules, but these are redundant and have been moved into
