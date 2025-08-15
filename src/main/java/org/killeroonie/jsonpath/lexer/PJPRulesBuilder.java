@@ -63,14 +63,14 @@ public class PJPRulesBuilder implements RulesBuilder {
         builders.put(TokenKind.DOT_PROPERTY, new RulesBuilder.LexerRuleBuilder(true, DOT_PROPERTY_RE, TokenKind.PROPERTY));
         builders.put(TokenKind.FLOAT, new RulesBuilder.LexerRuleBuilder(true, FLOAT_RE));
         builders.put(TokenKind.INT, new RulesBuilder.LexerRuleBuilder(true, INT_RE));
-        builders.put(TokenKind.DDOT , new RulesBuilder.LexerRuleBuilder(true, "\\.\\." ));
+        builders.put(TokenKind.DOUBLE_DOT, new RulesBuilder.LexerRuleBuilder(true, "\\.\\." ));
         builders.put(TokenKind.AND , new RulesBuilder.LexerRuleBuilder(true, LOGICAL_AND_RE ));
         builders.put(TokenKind.OR , new RulesBuilder.LexerRuleBuilder(true, LOGICAL_OR_RE ));
 
         // env:
         builders.put(TokenKind.ROOT , new RulesBuilder.LexerRuleBuilder(true, ROOT_TOKEN_RE));
         builders.put(TokenKind.PSEUDO_ROOT , new RulesBuilder.LexerRuleBuilder(true, PSEUDO_ROOT_RE));
-        builders.put(TokenKind.SELF , new RulesBuilder.LexerRuleBuilder(true, SELF_TOKEN_RE));
+        builders.put(TokenKind.CURRENT, new RulesBuilder.LexerRuleBuilder(true, SELF_TOKEN_RE));
         builders.put(TokenKind.KEY , new RulesBuilder.LexerRuleBuilder(true, KEY_TOKEN_RE));
         builders.put(TokenKind.UNION , new RulesBuilder.LexerRuleBuilder(true, UNION_TOKEN_RE));
         builders.put(TokenKind.INTERSECTION , new RulesBuilder.LexerRuleBuilder(true, INTERSECTION_TOKEN_RE));
@@ -90,7 +90,7 @@ public class PJPRulesBuilder implements RulesBuilder {
         builders.put(TokenKind.CONTAINS , new RulesBuilder.LexerRuleBuilder(true, "contains\\b"));
         builders.put(TokenKind.UNDEFINED , new RulesBuilder.LexerRuleBuilder(true, "undefined\\b"));
         builders.put(TokenKind.MISSING , new RulesBuilder.LexerRuleBuilder(true, "missing\\b"));
-        builders.put(TokenKind.LIST_START , new RulesBuilder.LexerRuleBuilder(true, "\\["));
+        builders.put(TokenKind.LBRACKET , new RulesBuilder.LexerRuleBuilder(true, "\\["));
         builders.put(TokenKind.RBRACKET, new RulesBuilder.LexerRuleBuilder(true, "]"));
         builders.put(TokenKind.COMMA, new RulesBuilder.LexerRuleBuilder(true, ","));
         builders.put(TokenKind.EQ, new RulesBuilder.LexerRuleBuilder(true, "=="));

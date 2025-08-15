@@ -54,7 +54,11 @@ public class Helper {
                 if (name.startsWith("TOKEN_")) name = name.substring(6);
                 // Map historical names to current enum constants
                 if ("KEYS".equals(name)) name = "KEY_SELECTOR";
-                //if ("LIST_START".equals(name)) name = "LBRACKET";
+                if ("LIST_START".equals(name)) name = "LBRACKET";
+                if ("SELF".equals(name)) name = "CURRENT";
+                if ("DDOT".equals(name)) name = "DOUBLE_DOT";
+
+
                 // Add other aliases as needed
                 try {
                     return TokenKind.valueOf(name);

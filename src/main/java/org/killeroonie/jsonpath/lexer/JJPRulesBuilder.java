@@ -21,7 +21,7 @@ public class JJPRulesBuilder implements RulesBuilder {
         // first create builders for each TokenKind in the default rules.
         final EnumMap<TokenKind, LexerRuleBuilder> builders = new EnumMap<>(TokenKind.class);
         builders.put(TokenKind.SPACE, new LexerRuleBuilder(true, Constants.SPACES_RE));
-        builders.put(TokenKind.LIST_START, new LexerRuleBuilder(false, Constants.LEFT_BRACKET));
+        builders.put(TokenKind.LBRACKET, new LexerRuleBuilder(false, Constants.LEFT_BRACKET));
         builders.put(TokenKind.RBRACKET, new LexerRuleBuilder(false, Constants.RIGHT_BRACKET));
         builders.put(TokenKind.LPAREN, new LexerRuleBuilder(false, Constants.LEFT_PAREN));
         builders.put(TokenKind.RPAREN, new LexerRuleBuilder(false, Constants.RIGHT_PAREN));
@@ -30,12 +30,12 @@ public class JJPRulesBuilder implements RulesBuilder {
         builders.put(TokenKind.ROOT, new LexerRuleBuilder(false, Constants.DOLLAR));
         builders.put(TokenKind.FILTER, new LexerRuleBuilder(false, Constants.QUESTION));
         builders.put(TokenKind.WILD, new LexerRuleBuilder(false, Constants.STAR));
-        builders.put(TokenKind.SELF, new LexerRuleBuilder(false, Constants.AT));
+        builders.put(TokenKind.CURRENT, new LexerRuleBuilder(false, Constants.AT));
         //builders.put(TokenKind.COLON, new LexerRuleBuilder(false, Constants.COLON));
         builders.put(TokenKind.NOT, new LexerRuleBuilder(false, Constants.LOGICAL_NOT_OP));
         builders.put(TokenKind.GT, new LexerRuleBuilder(false, Constants.GREATER_THAN));
         builders.put(TokenKind.LT, new LexerRuleBuilder(false, Constants.LESS_THAN));
-        builders.put(TokenKind.DDOT, new LexerRuleBuilder(false, Constants.DOUBLE_DOT));
+        builders.put(TokenKind.DOUBLE_DOT, new LexerRuleBuilder(false, Constants.DOUBLE_DOT));
         builders.put(TokenKind.EQ, new LexerRuleBuilder(false, Constants.EQUAL));
         builders.put(TokenKind.NE, new LexerRuleBuilder(false, Constants.NOT_EQUAL));
         builders.put(TokenKind.GE, new LexerRuleBuilder(false, Constants.GREATER_THAN_OR_EQUAL));

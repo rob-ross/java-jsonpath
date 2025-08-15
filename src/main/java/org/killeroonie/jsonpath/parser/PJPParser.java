@@ -46,7 +46,7 @@ public class PJPParser extends BaseParser {
     }
 
     private static final EnumSet<TokenKind> parseQuerySet =
-            EnumSet.of(TokenKind.LIST_START, TokenKind.PROPERTY, TokenKind.WILD);
+            EnumSet.of(TokenKind.LBRACKET, TokenKind.PROPERTY, TokenKind.WILD);
     /**
      * Parse a top-level JSONPath expression or a filter query.
      * @param inFilter true if this method should parse the current position as a filter query

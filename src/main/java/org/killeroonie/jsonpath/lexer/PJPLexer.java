@@ -60,10 +60,6 @@ public class PJPLexer extends BaseLexer{
                 scanner.advance(1); // consume the dot
                 advanceToken(emitKind(kind), matcher.group("GPROP"));
             }
-            else if (kind == TokenKind.BARE_PROPERTY) {
-                // this doesn't seem to do anything different from the default behavior.
-                advanceToken(emitKind(kind), matchtext);
-            }
             else if (kind == TokenKind.LIST_SLICE) {
                 Token sliceStart = new Token(
                         TokenKind.SLICE_START,

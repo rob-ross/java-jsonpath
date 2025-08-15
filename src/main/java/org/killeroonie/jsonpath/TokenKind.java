@@ -13,7 +13,6 @@ public enum TokenKind {
     SPACE( EnumSet.of(TokenCategory.DELIMITER) ), // NEW. REPLACES SKIP,
 
     // single char tokens
-    LIST_START( EnumSet.of(TokenCategory.DELIMITER) ),
     LBRACKET( EnumSet.of(TokenCategory.DELIMITER) ), // NEW. REPLACES LIST_START
     RBRACKET( EnumSet.of(TokenCategory.DELIMITER) ),
     LPAREN( EnumSet.of(TokenCategory.DELIMITER) ),
@@ -22,18 +21,16 @@ public enum TokenKind {
     COMMA( EnumSet.of(TokenCategory.DELIMITER) ),
     DOT( EnumSet.of(TokenCategory.DELIMITER) ),
     ROOT( EnumSet.of(TokenCategory.DELIMITER) ), // my Python impl uses DOLLAR as TokenKind here.
-    DOLLAR( EnumSet.of(TokenCategory.DELIMITER) ),
     FILTER( EnumSet.of(TokenCategory.DELIMITER) ), // my Python impl uses QMARK as TokenKind here.
-    QMARK( EnumSet.of(TokenCategory.DELIMITER) ),
     WILD( EnumSet.of(TokenCategory.DELIMITER) ), // my Python impl uses STAR as TokenKind here.
-    SELF( EnumSet.of(TokenCategory.DELIMITER) ),
+    CURRENT( EnumSet.of(TokenCategory.DELIMITER) ), // Current Node Identifier
     COLON( EnumSet.of(TokenCategory.DELIMITER) ),
     NOT( EnumSet.of(TokenCategory.LOGICAL_OPERATOR) ),
     GT( EnumSet.of(TokenCategory.COMPARISON_OPERATOR) ),
     LT( EnumSet.of(TokenCategory.COMPARISON_OPERATOR) ),
 
     // multi-char tokens
-    DDOT( EnumSet.of(TokenCategory.DELIMITER) ),
+    DOUBLE_DOT( EnumSet.of(TokenCategory.DELIMITER) ),
     EQ( EnumSet.of(TokenCategory.COMPARISON_OPERATOR) ),
     NE( EnumSet.of(TokenCategory.COMPARISON_OPERATOR) ),
     GE( EnumSet.of(TokenCategory.COMPARISON_OPERATOR) ),
@@ -70,7 +67,7 @@ public enum TokenKind {
      They are allowed as member values,
        e.g., { "key1" : "true"}, where the member value is the string "true" and not the JSON value true,
        which is distinct from { "key1": true } (no quotes around true here).
-     and they are allowed as member names, e.g., { "null": "foo"}.
+     And they are allowed as member names, e.g., { "null": "foo"}.
      Although these examples might be confusing design choices for an object/map and should be avoided,
      they are syntactically allowed by the spec.
     */
