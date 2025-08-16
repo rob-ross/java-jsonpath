@@ -5,6 +5,7 @@ import org.killeroonie.jsonpath.JSONPathEnvironment;
 import org.killeroonie.jsonpath.Token;
 import org.killeroonie.jsonpath.TokenKind;
 import org.killeroonie.jsonpath.exception.JSONPathSyntaxException;
+import org.killeroonie.jsonpath.lexer.RulesBuilder;
 import org.killeroonie.jsonpath.parser.segment.JSONChildSegment;
 import org.killeroonie.jsonpath.parser.segment.JSONPathRecursiveDescentSegment;
 import org.killeroonie.jsonpath.parser.segment.JSONPathSegment;
@@ -13,6 +14,8 @@ import org.killeroonie.jsonpath.parser.selector.*;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class PJPParser extends BaseParser {
 
@@ -97,6 +100,11 @@ public class PJPParser extends BaseParser {
     }
 
     protected SliceSelector parseSlice(){
+        Optional<RulesBuilder.LexerRule> p = getEnv().findRule(TokenKind.LIST_SLICE);
+
+
+
+
         return new SliceSelector( getEnv() , stream.current(), 0,0,0);
     }
 
@@ -111,7 +119,7 @@ public class PJPParser extends BaseParser {
             final TokenKind kind = stream.current().kind();
             switch (kind) {
                 case LIST_SLICE -> {
-                    
+                    selectors.add(parseSlice());
                 }   
                 case NUMBER -> {
                     

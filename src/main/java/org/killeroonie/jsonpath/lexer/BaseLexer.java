@@ -110,6 +110,7 @@ public abstract class BaseLexer implements Lexer {
      * @return the custom rule for the TokenKind or null.
      */
     protected final @Nullable RulesBuilder.LexerRule findRule(TokenKind kind) {
+
         Optional<RulesBuilder.LexerRule> rule = getEnv().findRule(kind);
         return rule.orElseGet(() -> customLexerRulesMap.get(kind) );
     }
@@ -121,7 +122,7 @@ public abstract class BaseLexer implements Lexer {
      * TokenKinds to a single emitted TokenKind.
      */
     protected final TokenKind emitKind(TokenKind lookupToken) {
-        return lexerRulesMap.get(lookupToken).emitKind();
+        return getLexerRulesMap().get(lookupToken).emitKind();
     }
 
     /**
