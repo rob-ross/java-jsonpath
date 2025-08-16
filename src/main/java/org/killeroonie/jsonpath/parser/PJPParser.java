@@ -1,6 +1,7 @@
 package org.killeroonie.jsonpath.parser;
 
 import org.jetbrains.annotations.NotNull;
+import org.killeroonie.jsonpath.Constants;
 import org.killeroonie.jsonpath.JSONPathEnvironment;
 import org.killeroonie.jsonpath.Token;
 import org.killeroonie.jsonpath.TokenKind;
@@ -14,7 +15,7 @@ import org.killeroonie.jsonpath.parser.selector.*;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PJPParser extends BaseParser {
@@ -99,15 +100,6 @@ public class PJPParser extends BaseParser {
         return selectors;
     }
 
-    protected SliceSelector parseSlice(){
-        Optional<RulesBuilder.LexerRule> p = getEnv().findRule(TokenKind.LIST_SLICE);
-
-
-
-
-        return new SliceSelector( getEnv() , stream.current(), 0,0,0);
-    }
-
     /**
      * Parses a comma-separated list of JSONPath selectors
      * @return the List of JSONPath selectors
@@ -122,7 +114,7 @@ public class PJPParser extends BaseParser {
                     selectors.add(parseSlice());
                 }   
                 case NUMBER -> {
-                    
+                    selectors.add(parseIndexSelector());
                 }
                 case DOUBLE_QUOTE_STRING, SINGLE_QUOTE_STRING -> {
                     selectors.add(new NameSelector( getEnv(), stream.current(), stream.current().value()));
@@ -163,9 +155,92 @@ public class PJPParser extends BaseParser {
         return selectors;
     }
 
-    protected FilterSelector parseFilterSelector() {
+    protected SliceSelector parseSlice() {
+        RulesBuilder.LexerRule p = getEnv().findRule(TokenKind.LIST_SLICE);
+        assert p instanceof RulesBuilder.RegexRule :
+                "Expected Regexrule, got %s for %s".formatted(p, TokenKind.LIST_SLICE);
+
+        RulesBuilder.RegexRule regexRule = (RulesBuilder.RegexRule) p;
+        Matcher matcher = regexRule.pattern().matcher(stream.current().value());
+        Long start = null;
+        Long stop  = null;
+        Long step  = null;
+
+        if (matcher.lookingAt()) {
+            String startStr = matcher.group(Constants.GN_SLICE_START);
+            String  stopStr = matcher.group(Constants.GN_SLICE_STOP);
+            String  stepStr = matcher.group(Constants.GN_SLICE_STEP);
+            try {
+                start = ( startStr == null || startStr.isEmpty() ) ?
+                        null : Long.parseLong(stepStr);
+            } catch (NumberFormatException e) {
+                throw e; // todo do we wrap this in a framework exception?
+            }
+            try {
+                stop = ( stopStr == null || stopStr.isEmpty() ) ?
+                        null : Long.parseLong(stopStr);
+            } catch (NumberFormatException e) {
+                throw e; // todo do we wrap this in a framework exception?
+            }
+            try {
+                // default step is 1 per spec
+                step = ( stepStr == null || stepStr.isEmpty() ) ?
+                        1 : Long.parseLong(stepStr);
+            } catch (NumberFormatException e) {
+                throw e; // todo do we wrap this in a framework exception?
+            }
+        } else {
+            // throw invalid slice selector exception
+            throw new JSONPathSyntaxException("Invalid slice literal: " + stream.current().value(), stream.current());
+        }
+        return new SliceSelector( getEnv() , stream.current(), start, stop, step);
+    }
+
+    protected IndexSelector parseIndexSelector() {
+
+        // todo - reconcile Constants.INT_RE and INT2_RE
+        // We should  get the Int regex rule from the Lexer. But the current
+        // PJPRulesBuilder uses a rule for ints (INT_RE) that requires extra checking after the fact
+        // to ensure it's valid.
+
+        Matcher matcher = Constants.INT2_PATTERN.matcher(stream.current().value());
+        if (matcher.matches()) {
+            return new IndexSelector(getEnv(), stream.current(), Long.parseLong(matcher.group()));
+        } else {
+            throw new JSONPathSyntaxException("invalid int literal", stream.current());
+        }
+
+
+
+        /*
+                value = stream.current.value
+        if value.startswith("0") and len(value) > 1:
+            raise JSONPathSyntaxError("invalid integer literal", token=stream.current)
+
+        # Convert to float first to handle scientific notation.
+        try:
+            return IntegerLiteral(stream.current, value=int(float(value)))
+        except ValueError as err:
+            raise JSONPathSyntaxError(
+                "invalid integer literal", token=stream.current
+            ) from err
+         */
+
+    }
+
+    protected FilterSelector  parseFilterSelector() {
         Token token = stream.next();
         Expression expr = parseFilterExpression();
+
+        if ( expr instanceof FilterExpression ) {
+            ;
+        }
+
+        if (expr instanceof FilterExpression ) {
+            throw new JSONPathSyntaxException(
+                    "filter expression literals outside of function expressions " +
+                            "must be compared", expr.getToken());
+        }
         return new FilterSelector(getEnv(), token, new FilterExpression(expr.getToken(), expr));
     }
 

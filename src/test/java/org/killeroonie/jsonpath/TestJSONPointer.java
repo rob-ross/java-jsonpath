@@ -55,8 +55,8 @@ public class TestJSONPointer {
 
     @Test
     void test_pointer_index_out_of_range() {
-        long max_plus_one = JsonPathUtils.JSON_MAX_INT_INDEX + 1;
-        long min_minus_one = JsonPathUtils.JSON_MIN_INT_INDEX - 1;
+        long max_plus_one = Constants.JSON_MAX_INT_INDEX + 1;
+        long min_minus_one = Constants.JSON_MIN_INT_INDEX - 1;
         assertThrows(JSONPointerException.class, ()-> new JSONPointer("/some/thing/%d".formatted(max_plus_one)));
         assertThrows(JSONPointerException.class, ()-> new JSONPointer("/some/thing/%d".formatted(min_minus_one)));
     }

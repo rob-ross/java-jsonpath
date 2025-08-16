@@ -1,5 +1,7 @@
 package org.killeroonie.jsonpath;
 
+import java.util.regex.Pattern;
+
 public class Constants {
 
     public static final String BLANK_CHAR = " \\t\\n\\x0B\\f\\r";
@@ -81,11 +83,29 @@ public class Constants {
     // Default regex patterns
     public static final String DOT_PROPERTY_RE = "\\.(?<GPROP>[\\u0080-\\uFFFFa-zA-Z_][\\u0080-\\uFFFFa-zA-Z0-9_-]*)";
     public static final String BARE_PROPERTY_RE = "[\\u0080-\\uFFFFa-zA-Z_][\\u0080-\\uFFFFa-zA-Z0-9_-]*";
-    public static final String LIST_SLICE_RE = "(?<GLSLICESTART>\\-?\\d*)\\s*:\\s*(?<GLSLICESTOP>\\-?\\d*)\\s*(?::\\s*(?<GLSLICESTEP>\\-?\\d*))?";
+
+    public static final String LIST_SLICE_RE  = "(?<GLSLICESTART>\\-?\\d*)\\s*:\\s*(?<GLSLICESTOP>\\-?\\d*)\\s*(?::\\s*(?<GLSLICESTEP>\\-?\\d*))?";
+    public static final String GN_SLICE_START = "GLSLICESTART";
+    public static final String GN_SLICE_STOP  = "GLSLICESTOP";
+    public static final String GN_SLICE_STEP  = "GLSLICESTEP";
+
     public static final String FUNCTION_RE = "(?<GFUNC>[a-z][a-z_0-9]+)\\(\\s*";
+
+    // The JSON spec allows positive and negative array indices.
+    // Java Lists only allow the range 0 - Integer.MAX_VALUE.
+    // These ranges are smaller than the JSON Spec allows.
+    // We can support List indexes from 0 - Integer.MAX_VALUE
+
+    // We normalize this index before we try to get items, so only non-negative indices are actually used.
+    public static final long JSON_MAX_INT_INDEX = (1L << 53) - 1;
+    public static final long JSON_MIN_INT_INDEX = -(1L << 53) + 1;
+    public static final int Java_MAX_INT_INDEX = Integer.MAX_VALUE;
+    public static final int Java_MIN_INT_INDEX = Integer.MIN_VALUE;
 
     // python-jsonpath test for int and float separately. Here we just test for a number literal and create a single NUMBER liberal token.
     public static final String INT2_RE = "(?:0|-?[1-9][0-9]*)";  // no leading zeros allowed in integers
+    public static final Pattern INT2_PATTERN = Pattern.compile(INT2_RE);
+
     static final String FRACTION_RE = "\\.\\d+";
     static final String EXPONENT_RE = "[eE][-+]?\\d+";
     public static final String NUMBER_RE = "(?<NUMBER>(?<INTPART>%s|-0)(?<FRACTPART>%s)?(?<EXPONPART>%s)?)".formatted(INT2_RE, FRACTION_RE, EXPONENT_RE);

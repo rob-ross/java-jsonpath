@@ -94,6 +94,7 @@ public class JSONPathEnvironment {
     private RulesBuilder rulesBuilder;
 
     private Map<TokenKind, RulesBuilder.LexerRule> customEnvRules;
+    private Map<String, FilterFunction> functionExtensionMap = new LinkedHashMap<>();
 
 
     /**
@@ -161,6 +162,10 @@ public class JSONPathEnvironment {
             customEnvRules = buildCustomEnvRules();
         }
         return customEnvRules;
+    }
+
+    public Map<String, FilterFunction> getFunctionExtensionMap() {
+        return functionExtensionMap;
     }
 
     /**
@@ -276,13 +281,12 @@ public class JSONPathEnvironment {
     }
 
     /**
-     * Attempt to locate a custom LexerRule for the argument
+     * Returns the LexerRule for the argument
      *
      * @param kind the TokenKind for which to locate a custom LexerRule.
      * @return an Optional<LexerRule> with the custom rule if found, or an empty Optional otherwise.
      */
-    public Optional<RulesBuilder.LexerRule> findRule(TokenKind kind) {
-        RulesBuilder.LexerRule rule = customEnvRules.getOrDefault(kind, null);
-        return Optional.ofNullable(rule);
+    public RulesBuilder.LexerRule findRule(TokenKind kind) {
+        return getLexer().findRule(kind);
     }
 }

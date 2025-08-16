@@ -1,8 +1,10 @@
 package org.killeroonie.jsonpath.parser.selector;
 
+import org.killeroonie.jsonpath.Constants;
 import org.killeroonie.jsonpath.JSONPathEnvironment;
 import org.killeroonie.jsonpath.JSONPathMatch;
 import org.killeroonie.jsonpath.Token;
+import org.killeroonie.jsonpath.exception.JSONPathIndexException;
 
 import java.util.List;
 
@@ -12,14 +14,19 @@ import java.util.List;
 public abstract class JSONPathSelector {
 
     private final JSONPathEnvironment env;
-
+    private final Token token;
 
     public JSONPathSelector(JSONPathEnvironment env, Token token) {
         this.env = env;
+        this.token = token;
     }
 
     public  JSONPathEnvironment getEnv() {
         return env;
+    }
+
+    public Token getToken() {
+        return token;
     }
 
     /**
@@ -34,6 +41,14 @@ public abstract class JSONPathSelector {
      */
     protected List<JSONPathMatch> resolve() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    void checkRange(long indexValue, String indexName) {
+        if ( indexValue < Constants.JSON_MIN_INT_INDEX || indexValue > Constants.JSON_MAX_INT_INDEX) {
+            throw new JSONPathIndexException("%s index out of JSON range: %d".formatted(indexName, indexValue), getToken());
+        } else if (indexValue < Constants.Java_MIN_INT_INDEX ||  indexValue > Constants.Java_MAX_INT_INDEX) {
+            throw new JSONPathIndexException("%s index out of Java range: %d".formatted(indexName, indexValue), getToken());
+        }
     }
 
     /*

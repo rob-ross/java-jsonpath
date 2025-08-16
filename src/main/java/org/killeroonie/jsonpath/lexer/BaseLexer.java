@@ -67,6 +67,10 @@ public abstract class BaseLexer implements Lexer {
         return lexerRulesMap;
     }
 
+    /**
+     * Lazily loaded.
+     * @return
+     */
     protected final Map<TokenKind, RulesBuilder.LexerRule> getLexerRulesMap() {
         if (lexerRulesMap.isEmpty()) {
             initRules();
@@ -103,16 +107,18 @@ public abstract class BaseLexer implements Lexer {
         customRulesMap.clear();
     }
 
-    /**
-     * If a custom rule exists in the JSONPathEnvironment or Lexer, return it.
-     * Environment rules take precedent over Lexer rules.
-     * @param kind the TokenKind of the custom rule to locate.
-     * @return the custom rule for the TokenKind or null.
-     */
-    protected final @Nullable RulesBuilder.LexerRule findRule(TokenKind kind) {
 
-        Optional<RulesBuilder.LexerRule> rule = getEnv().findRule(kind);
-        return rule.orElseGet(() -> customLexerRulesMap.get(kind) );
+    /**
+     * Returns the LexerRule for the argument TokenKind. This will return null if
+     * no rule is defined for a Token. This should not happen for any Tokens that are
+     * included in the Lexer's defined rules; but it may occur if passed a TokenKind
+     * that is not part of the Lexer's rules or associated Parser's grammar.
+     * @param kind the TokenKind to obtain the rule for.
+     * @return the LexerRule for the given TokenKind, or null if no rule is defined
+     * for this TokenKind.
+     */
+    public final @Nullable RulesBuilder.LexerRule findRule(TokenKind kind) {
+        return getLexerRulesMap().get(kind);
     }
 
     /**

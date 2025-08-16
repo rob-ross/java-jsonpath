@@ -16,17 +16,6 @@ import static org.killeroonie.jsonpath.JSONPointer.UNDEFINED;
  */
 public class JsonPathUtils {
 
-    // The JSON spec allows positive and negative array indices.
-    // Java Lists only allow the range 0 - Integer.MAX_VALUE.
-    // These ranges are smaller than the JSON Spec allows.
-    // We can support List indexes from Integer.MIN_VALUE - Integer.MAX_VALUE
-    // to allow for negative indexing. This is just an alternate way of specifying
-    // an index relative to the end of the list, as in Python and JavaScript.
-    // We normalize this index before we try to get items, so only non-negative indices are actually used.
-    public static final long JSON_MAX_INT_INDEX = (1L << 53) - 1;
-    public static final long JSON_MIN_INT_INDEX = -(1L << 53) + 1;
-    public static final int MAX_INT_INDEX = Integer.MAX_VALUE;
-    public static final int MIN_INT_INDEX = Integer.MIN_VALUE;
     public static final String HYPHEN = "-";
     public static final String HASH = "#";
 

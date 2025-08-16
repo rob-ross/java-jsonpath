@@ -387,7 +387,7 @@ public class JSONPointer {
         }
         try {
             long index = Long.parseLong(s);
-            if (index < JsonPathUtils.MIN_INT_INDEX || index > JsonPathUtils.MAX_INT_INDEX) {
+            if (index < Constants.Java_MIN_INT_INDEX || index > Constants.Java_MAX_INT_INDEX) {
                 throw new JSONPointerIndexException("Index out of range: " + index);
             }
             return (int)index;
