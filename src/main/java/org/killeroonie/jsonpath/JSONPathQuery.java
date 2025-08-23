@@ -1,7 +1,10 @@
 package org.killeroonie.jsonpath;
 
+import org.killeroonie.jsonpath.parser.segment.JSONChildSegment;
 import org.killeroonie.jsonpath.parser.segment.JSONPathRecursiveDescentSegment;
 import org.killeroonie.jsonpath.parser.segment.JSONPathSegment;
+import org.killeroonie.jsonpath.parser.selector.IndexSelector;
+import org.killeroonie.jsonpath.parser.selector.NameSelector;
 
 import java.util.List;
 
@@ -40,9 +43,13 @@ public class JSONPathQuery {
             if (segment instanceof JSONPathRecursiveDescentSegment) {
                 return false;
             }
-            if ( segment.getSelectors().size() == 1 ){
-
+            if ( segment.getSelectors().size() == 1 ) {
+                Object firstSelector =  segment.getSelectors().getFirst();
+                if ( firstSelector instanceof NameSelector || firstSelector instanceof IndexSelector) {
+                    continue;
+                }
             }
+            return false;
         }
         return true;
     }
@@ -54,19 +61,15 @@ public class JSONPathQuery {
     public boolean isEmpty() {
         return segments == null || segments.isEmpty();
     }
+
+    public JSONPathNodeList find(Object root) {
+        return null;
+    }
 }
 
 
 /*
 
-    def __init__(
-        self,
-        *,
-        env: JSONPathEnvironment,
-        segments: Tuple[JSONPathSegment, ...],
-    ) -> None:
-        self.env = env
-        self.segments = segments
 
     def __str__(self) -> str:
         return "$" + "".join(str(segment) for segment in self.segments)
@@ -144,23 +147,5 @@ public class JSONPathQuery {
             return next(iter(self.finditer(value)))
         except StopIteration:
             return None
-
-    def singular_query(self) -> bool:
-        """Return `True` if this JSONPath expression is a singular query."""
-        for segment in self.segments:
-            if isinstance(segment, JSONPathRecursiveDescentSegment):
-                return False
-
-            if len(segment.selectors) == 1 and isinstance(
-                segment.selectors[0], (NameSelector, IndexSelector)
-            ):
-                continue
-
-            return False
-
-        return True
-
-
-
 
  */

@@ -1,5 +1,6 @@
 package org.killeroonie.jsonpath.parser;
 
+import org.killeroonie.jsonpath.JSONPathNodeList;
 import org.killeroonie.jsonpath.JSONPathQuery;
 import org.killeroonie.jsonpath.Token;
 
@@ -12,6 +13,11 @@ public class RootFilterQuery extends FilterQuery {
     @Override
     public String toString() {
         return getQuery().toString();
+    }
+
+    @Override
+    public Object evaluate(FilterContext context) {
+        return new JSONPathNodeList(getQuery().find(context.getRoot()));
     }
 }
 

@@ -11,6 +11,13 @@ public class JSONPathNodeList extends AbstractList<JSONPathNode> {
 
     private final List<JSONPathNode> nodes = new ArrayList<>();
 
+    public JSONPathNodeList(List<JSONPathNode> nodes) {
+        this.nodes.addAll(nodes);
+    }
+
+    public JSONPathNodeList() { }
+
+
     public JSONPathNode get(int index) {
         return nodes.get(index);
     }

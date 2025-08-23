@@ -1,11 +1,33 @@
 package org.killeroonie.jsonpath.parser;
 
+import org.killeroonie.jsonpath.JSONPathNodeList;
 import org.killeroonie.jsonpath.JSONPathQuery;
 import org.killeroonie.jsonpath.Token;
+
+import java.util.List;
+import java.util.Map;
 
 public class RelativeFilterQuery extends FilterQuery{
     public RelativeFilterQuery(Token token, JSONPathQuery jsonPathQuery) {
         super(token, jsonPathQuery);
+    }
+
+    public String toString(){
+        return "@%s".formatted(getQuery().toString());
+    }
+
+    @Override
+    public Object evaluate(FilterContext context) {
+        boolean isListOrMap = context.getCurrent() instanceof List ||
+                                context.getCurrent() instanceof Map;
+        if (! isListOrMap) {
+            if (getQuery().isEmpty()) {
+                return context.getCurrent();
+            }
+            return new JSONPathNodeList();
+        }
+
+        return new JSONPathNodeList(getQuery().find(context));
     }
 }
 

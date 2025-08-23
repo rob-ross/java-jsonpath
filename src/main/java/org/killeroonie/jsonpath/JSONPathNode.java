@@ -14,7 +14,7 @@ public class JSONPathNode {
     private final List<Object> location; // in Python Tuple[Union[int, str], ...]
     private final Object root;
 
-    public JSONPathNode(Object value, List<Object> location, JSONValue root) {
+    public JSONPathNode(Object value, List<Object> location, Object root) {
         this.value = value;
         this.location = location;
         this.root = root;
