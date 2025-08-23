@@ -10,4 +10,9 @@ public class FilterExpression extends Expression {
         super(token);
         this.expression = expression;
     }
+
+    @Override
+    public Object evaluate(FilterContext context) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

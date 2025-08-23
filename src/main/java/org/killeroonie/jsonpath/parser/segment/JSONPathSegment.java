@@ -1,31 +1,50 @@
 package org.killeroonie.jsonpath.parser.segment;
 
+import org.killeroonie.jsonpath.JSONPathEnvironment;
+import org.killeroonie.jsonpath.JSONPathNode;
+import org.killeroonie.jsonpath.Token;
+import org.killeroonie.jsonpath.parser.selector.JSONPathSelector;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Base class for all JSONPath segment classes.
+ */
 public abstract class JSONPathSegment {
+
+    private final JSONPathEnvironment env;
+    private final Token token;
+    private final List<JSONPathSelector> selectors;
+
+    /**
+     * Applies this segment to each JSONPathNode in nodes.
+     * @return
+     */
+    public abstract List<JSONPathNode> resolve(List<JSONPathNode> nodes);
+
+    JSONPathSegment(JSONPathEnvironment env, Token token, List<JSONPathSelector> selectors) {
+        this.env = env;
+        this.token = token;
+        this.selectors = selectors;
+    }
+
+    public JSONPathEnvironment getEnv() {
+        return env;
+    }
+
+    public Token getToken() {
+        return token;
+    }
+
+    public List<JSONPathSelector> getSelectors() {
+        return selectors;
+    }
+
 
 }
 
 /*
-
-"""JSONPath child and descendant segment definitions."""
-
-from __future__ import annotations
-
-import random
-from abc import ABC
-from abc import abstractmethod
-from collections import deque
-from typing import TYPE_CHECKING
-from typing import Deque
-from typing import Iterable
-from typing import Tuple
-
-from .exceptions import JSONPathRecursionError
-
-if TYPE_CHECKING:
-    from .environment import JSONPathEnvironment
-    from .node import JSONPathNode
-    from .selectors import JSONPathSelector
-    from .tokens import Token
 
 
 class JSONPathSegment(ABC):

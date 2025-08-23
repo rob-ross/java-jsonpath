@@ -10,6 +10,8 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.killeroonie.jsonpath.JSONPathEnvironment;
+import org.killeroonie.jsonpath.parser.selector.IndexSelector;
+
 /**
  * A compiled JSONPath ready to be applied to a JSON string or Java object.
  */
@@ -218,10 +220,9 @@ public class JSONPath {
             if (selector instanceof PropertySelector || selector instanceof IndexSelector) {
                 continue;
             }
-            if (selector instanceof ListSelector) {
-                ListSelector listSelector = (ListSelector) selector;
+            if (selector instanceof ListSelector listSelector) {
                 if (listSelector.items.size() == 1 &&
-                        (listSelector.items.get(0) instanceof PropertySelector ||
+                        (listSelector.items.getFirst() instanceof PropertySelector ||
                                 listSelector.items.get(0) instanceof IndexSelector)) {
                     continue;
                 }

@@ -22,11 +22,16 @@ public class FunctionExtension extends Expression {
     public List<Expression> getArgs() {
         return args;
     }
+
+    @Override
+    public Object evaluate(FilterContext context) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
 
 /*
 
-lass FunctionExtension(Expression):
+class FunctionExtension(Expression):
     """A filter function."""
 
     __slots__ = ("name", "args")

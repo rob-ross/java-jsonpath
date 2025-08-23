@@ -56,6 +56,7 @@ public final class TokenStream  implements Iterator<Token> {
     }
 
     /**
+     * Advances the stream one Token and returns the new current Token.
      * Returns the next Token in the stream, advancing the queueIndex by 1.
      * If there are no more Tokens, returns Token.EOF.
      * @return

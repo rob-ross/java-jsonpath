@@ -13,4 +13,6 @@ public abstract class Expression {
     public Token getToken() {
         return token;
     }
+
+    public abstract Object evaluate(FilterContext context);
 }

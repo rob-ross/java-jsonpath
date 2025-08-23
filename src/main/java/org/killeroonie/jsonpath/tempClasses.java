@@ -30,7 +30,7 @@ interface JSONPathSelector {
     CompletableFuture<Stream<JSONPathMatch>> resolveAsync(CompletableFuture<Stream<JSONPathMatch>> matches);
 }
 
-class IndexSelector implements JSONPathSelector {
+class IndexSelectorALT implements JSONPathSelector {
     @Override
     public Iterable<JSONPathMatch> resolve(Iterable<JSONPathMatch> matches) {
         // Dummy implementation

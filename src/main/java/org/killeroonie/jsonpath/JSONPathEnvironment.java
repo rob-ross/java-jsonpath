@@ -3,11 +3,13 @@ package org.killeroonie.jsonpath;
 import org.jetbrains.annotations.NotNull;
 import org.killeroonie.jsonpath.lexer.Lexer;
 import org.killeroonie.jsonpath.lexer.RulesBuilder;
+import org.killeroonie.jsonpath.parser.Expression;
 import org.killeroonie.jsonpath.parser.Parser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -288,5 +290,9 @@ public class JSONPathEnvironment {
      */
     public RulesBuilder.LexerRule findRule(TokenKind kind) {
         return getLexer().findRule(kind);
+    }
+
+    public List<Expression> validateFunctionExtensionSignature(Token token, List<Expression> funcArgs) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

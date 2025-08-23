@@ -2,17 +2,27 @@ package org.killeroonie.jsonpath.parser;
 
 import org.killeroonie.jsonpath.Token;
 
-public class FilterExpressionLiteral<T> extends FilterExpression {
+public class FilterExpressionLiteral<T> extends Expression {
 
     private final T value;
 
-    public FilterExpressionLiteral(Token token, Expression expression, T value) {
-        super(token, expression);
+    public FilterExpressionLiteral(Token token, T value) {
+        super(token);
         this.value = value;
     }
 
     public T getValue() {
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return value.toString().toLowerCase();
+    }
+
+    @Override
+    public Object evaluate(FilterContext context) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
 
