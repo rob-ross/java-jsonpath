@@ -1,12 +1,13 @@
 package org.killeroonie.jsonpath;
 
-import org.killeroonie.jsonpath.parser.segment.JSONChildSegment;
 import org.killeroonie.jsonpath.parser.segment.JSONPathRecursiveDescentSegment;
 import org.killeroonie.jsonpath.parser.segment.JSONPathSegment;
 import org.killeroonie.jsonpath.parser.selector.IndexSelector;
 import org.killeroonie.jsonpath.parser.selector.NameSelector;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A compiled JSONPath expression ready to be applied to JSON-like data.
@@ -32,6 +33,27 @@ public class JSONPathQuery {
 
     public List<JSONPathSegment> getSegments() {
         return segments;
+    }
+
+    @Override
+    public String toString() {
+        //String str; //str  = "$" + "".join(str(segment) for segment in self.segments)
+        StringBuilder sb = new StringBuilder("$");
+        for (JSONPathSegment segment : segments) {
+            sb.append(segment.toString());
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof JSONPathQuery that)) return false;
+        return Objects.equals(segments, that.segments);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(segments);
     }
 
     /**
@@ -62,6 +84,36 @@ public class JSONPathQuery {
         return segments == null || segments.isEmpty();
     }
 
+    /**
+     * Generate `JSONPathNode` instances for each match of this query in value.
+     *
+     *         Arguments:
+     *             value: JSON-like data to query, as you'd get from `json.load`.
+     *
+     *         Returns:
+     *             An iterator yielding `JSONPathNode` objects for each match.
+     *
+     *         Raises:
+     *             JSONPathSyntaxError: If the query is invalid.
+     *             JSONPathTypeError: If a filter expression attempts to use types in
+     *                 an incompatible way.
+     * @param value
+     * @return
+     */
+    public Iterable<JSONPathNode> findIter(Object value ) {
+        return finditer(value, null);
+    }
+
+    public Iterable<JSONPathNode> finditer(Object value, FilterContextVars filterContext) {
+        List<JSONPathNode> nodes = new ArrayList<>();
+        JSONPathNode node = new JSONPathNode(value, new ArrayList<>(), value);
+        nodes.add(node);
+        for (JSONPathSegment segment : segments) {
+            nodes = segment.resolve(nodes);
+        }
+        return nodes;
+    }
+
     public JSONPathNodeList find(Object root) {
         return null;
     }
@@ -69,13 +121,6 @@ public class JSONPathQuery {
 
 
 /*
-
-
-    def __str__(self) -> str:
-        return "$" + "".join(str(segment) for segment in self.segments)
-
-    def __hash__(self) -> int:
-        return hash(self.segments)
 
     def finditer(
         self,

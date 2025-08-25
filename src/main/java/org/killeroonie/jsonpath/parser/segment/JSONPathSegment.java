@@ -41,7 +41,6 @@ public abstract class JSONPathSegment {
         return selectors;
     }
 
-
 }
 
 /*

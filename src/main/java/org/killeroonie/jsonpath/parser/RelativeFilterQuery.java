@@ -13,7 +13,7 @@ public class RelativeFilterQuery extends FilterQuery{
     }
 
     public String toString(){
-        return "@%s".formatted(getQuery().toString());
+        return "@%s".formatted(getQuery().toString().substring(1));
     }
 
     @Override

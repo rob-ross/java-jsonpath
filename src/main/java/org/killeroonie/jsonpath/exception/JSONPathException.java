@@ -68,6 +68,6 @@ public class JSONPathException extends RuntimeException {
         if (token == null) {
             return msg;
         }
-        return String.format("%s, line %d, column %d", msg, token.getLineNumber(), token.getColumnNumber());
+        return String.format("%s, line %d, column %d\n%s", msg, token.getLineNumber(), token.getColumnNumber(), token.path());
     }
 }

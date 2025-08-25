@@ -26,6 +26,13 @@ public class SliceSelector extends JSONPathSelector {
         step.ifPresent(aLong -> checkRange(aLong, "step"));
     }
 
+    @Override
+    public String toString() {
+        String startStr = start.isPresent() ? String.valueOf(start.get()) : "";
+        String stopStr  = stop.isPresent() ? String.valueOf(stop.get())   : "";
+        String stepStr  = step.isPresent() ? String.valueOf(step.get())   : "";
+        return startStr + ":" + stopStr + ":" + stepStr;
+    }
 }
 
 

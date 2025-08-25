@@ -25,6 +25,11 @@ public record Token(TokenKind kind, String value, int index, String path) {
     }
 
     public static int countOccurrences(String str, String substr, int startIndex, int endIndex) {
+        if (str.isEmpty()) {
+            return 0;
+        }
+
+        endIndex = Math.max(str.length(), endIndex);
         String subString = str.substring(startIndex, endIndex);
         int count = 0;
         int lastIndex = 0;
@@ -70,6 +75,9 @@ public record Token(TokenKind kind, String value, int index, String path) {
      * @return the column number for the start of this token.
      */
     public int getColumnNumber() {
+        if ( index < 0) {
+            return 0;
+        }
         return index - path.substring(0, index).lastIndexOf("\n");
     }
 

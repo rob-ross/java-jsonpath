@@ -17,4 +17,9 @@ public class FilterSelector extends JSONPathSelector {
     public FilterExpression getExpression() {
         return expression;
     }
+
+    @Override
+    public String toString() {
+        return "?"+expression.toString();
+    }
 }

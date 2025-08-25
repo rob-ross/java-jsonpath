@@ -6,7 +6,7 @@ import org.killeroonie.jsonpath.exception.JSONPathException;
 import org.killeroonie.jsonpath.exception.JSONPathSyntaxException;
 import org.killeroonie.jsonpath.exception.JSONPathTypeException;
 import org.killeroonie.jsonpath.lexer.RulesBuilder;
-import org.killeroonie.jsonpath.parser.segment.JSONChildSegment;
+import org.killeroonie.jsonpath.parser.segment.JSONPathChildSegment;
 import org.killeroonie.jsonpath.parser.segment.JSONPathRecursiveDescentSegment;
 import org.killeroonie.jsonpath.parser.segment.JSONPathSegment;
 import org.killeroonie.jsonpath.parser.selector.*;
@@ -14,6 +14,7 @@ import org.killeroonie.jsonpath.parser.selector.*;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PJPParser extends BaseParser {
 
@@ -33,8 +34,9 @@ public class PJPParser extends BaseParser {
         map.put(TokenKind.FALSE, PJPParser::parseBoolean);
 
         // Numbers
-        map.put(TokenKind.INT,   PJPParser::parseIntegerLiteral);
-        map.put(TokenKind.FLOAT, PJPParser::parseDoubleLiteral);
+        map.put(TokenKind.NUMBER, PJPParser::parseNumberLiteral );
+        map.put(TokenKind.INT,   PJPParser::parseIntegerLiteral );
+        map.put(TokenKind.FLOAT, PJPParser::parseDoubleLiteral) ;
 
         // Grouping and prefix
         map.put(TokenKind.LPAREN, PJPParser::parseGroupedExpression);
@@ -44,7 +46,7 @@ public class PJPParser extends BaseParser {
         map.put(TokenKind.NULL, PJPParser::parseNull);
 
         // Query roots
-        map.put(TokenKind.ROOT,    PJPParser::parseRootQuery);
+        map.put(TokenKind.ROOT,    PJPParser::parseAbsoluteQuery);
         map.put(TokenKind.CURRENT, PJPParser::parseRelativeQuery);
 
         // Function extension
@@ -58,6 +60,7 @@ public class PJPParser extends BaseParser {
         LOGICAL_OR(3),
         LOGICAL_AND(4),
         RELATIONAL(5),
+        MEMBERSHIP(6),
         PREFIX(7);
 
         private final int level;
@@ -108,17 +111,14 @@ public class PJPParser extends BaseParser {
         BINARY_OPERATORS = set;
     }
 
-
+    private static final Set<TokenKind> INFIX_LITERAL_OPERATORS = EnumSet.copyOf(COMPARISON_OPERATORS);
 
     private TokenStream stream;
-
 
 
     public PJPParser(JSONPathEnvironment env) {
         super(env);
     }
-
-
 
 
     /**
@@ -129,13 +129,12 @@ public class PJPParser extends BaseParser {
     @Override
     public List<JSONPathSegment> parse(final @NotNull TokenStream stream) {
         this.stream = stream;
-        stream.expect(START_KINDS);
-        stream.next();
-        List<JSONPathSegment> segments = new ArrayList<>(parseQuery(false));
+        stream.consume(TokenKind.ROOT);
+        List<JSONPathSegment> segments = new ArrayList<>(parseQuery());
 
         if ( stream.current() != Token.EOF ) {
             throw new JSONPathSyntaxException(
-                    "unexpected token %s".formatted(stream.current().value()), stream.current());
+                    "unexpected token %s\n%s".formatted(stream.current().value(), stream.getTokens()), stream.current());
         }
         return segments;
     }
@@ -143,50 +142,128 @@ public class PJPParser extends BaseParser {
     private static final EnumSet<TokenKind> parseQuerySet =
             EnumSet.of(TokenKind.LBRACKET, TokenKind.PROPERTY, TokenKind.WILD);
     /**
-     * Parse a top-level JSONPath expression or a filter query.
-     * @param inFilter true if this method should parse the current position as a filter query
+     * Parse a JSONPath query string.
+     * This method assumes the root identifier or current has
+     * already been consumed.
      * @return the List of JSONPathSegment
      */
-    protected List<JSONPathSegment> parseQuery(final boolean inFilter) {
+    protected List<JSONPathSegment> parseQuery() {
         List<JSONPathSegment> segments = new ArrayList<>();
-        while (true) {
+        loop: while (true) {
+            stream.consumeIf(TokenKind.SPACE);
             final TokenKind kind = stream.currentKind();
             switch (kind) {
-                case DOUBLE_DOT -> {
-                    Token tok =  stream.next();
-                    List<JSONPathSelector> selectors = parseSelectors();
-                    segments.add( new JSONPathRecursiveDescentSegment( getEnv(), tok, selectors));
+                case DOT -> {
+                    JSONPathSelector selector = parseShorthandSelector();
+                    segments.add(new JSONPathChildSegment(getEnv(), stream.current(), List.of(selector)));
                 }
-                case LBRACKET, PROPERTY, WILD -> {
-                    Token tok = stream.current();
-                    List<JSONPathSelector> selectors = parseSelectors();
-                    segments.add( new JSONChildSegment( getEnv(), tok, selectors));
+                case DOUBLE_DOT -> {
+                    Token token =  stream.consume(TokenKind.DOUBLE_DOT);
+                    List<JSONPathSelector> selectors;
+                    if ( stream.currentKind() == TokenKind.LBRACKET ) {
+                        selectors = parseBracketedSelection();
+                    } else {
+                        selectors = List.of(parseShorthandSelector());
+                    }
+                    segments.add( new JSONPathRecursiveDescentSegment( getEnv(), token, selectors));
+                }
+                case LBRACKET -> {
+                    Token token = stream.current();
+                    List<JSONPathSelector> selectors = parseBracketedSelection();
+                    segments.add( new JSONPathChildSegment( getEnv(), token, selectors));
+                }
+                case EOF -> {
+                    break loop;
                 }
                 default -> {
-                    if ( inFilter) {
-                        stream.backtrack(); // was stream.push() in Python. 
-                    }
-                    stream.next();
-                    return segments;
+                    // An embedded query.
+                    break loop;
                 }
             }
         }
+        return segments;
     }
 
+    protected JSONPathSelector parseShorthandSelector() {
+        final Token token = stream.consume(TokenKind.DOT);
+        JSONPathSelector selector;
+        switch (token.kind()) {
+            case IDENTIFIER ->  {
+                selector = new NameSelector( getEnv(), token, token.value());
+                stream.consume(TokenKind.IDENTIFIER);
+            }
+            case WILD ->  {
+                selector = new WildcardSelector( getEnv(), token);
+                stream.consume(TokenKind.WILD);
+            }
+            default -> throw new JSONPathSyntaxException("expected a shorthand selector, got " + token.kind(), token);
+        }
+        return selector;
+    }
 
-    protected List<JSONPathSelector> parseSelectors() {
+    /**
+     * Parses a comma-separated list of JSONPath selectors
+     * @return the List of JSONPath selectors
+     */
+    protected List<JSONPathSelector> parseBracketedSelection() {
+        Token token = stream.consume(TokenKind.LBRACKET);
         List<JSONPathSelector> selectors = new ArrayList<>();
-        final TokenKind tok = stream.currentKind();
-        switch (tok) {
-            case PROPERTY -> {
-                selectors.add(new NameSelector( getEnv(), stream.current(), stream.current().value()));
+
+        loop: while ( stream.currentKind() != TokenKind.RBRACKET ) {
+            token = stream.consumeIf(TokenKind.SPACE);
+            final TokenKind kind = stream.currentKind();
+            switch (kind) {
+                case LIST_SLICE -> {
+                    selectors.add(parseSlice());
+                }
+                case NUMBER -> {
+                    selectors.add(parseIndexSelector());
+                }
+                case DOUBLE_QUOTE_STRING, SINGLE_QUOTE_STRING -> {
+                    selectors.add(new NameSelector( getEnv(), stream.current(), stream.current().value()));
+                    stream.next(); // consume the string
+                }
+                case WILD -> {
+                    selectors.add(new WildcardSelector(getEnv(), stream.current()));
+                    stream.consume(TokenKind.WILD);
+                }
+                case FILTER -> {
+                    selectors.add(parseFilterSelector());
+                }
+//                case ROOT, IDENTIFIER -> {
+//                    selectors.add( parseSingularQuerySelector());
+//                }
+                case SPACE -> { stream.consume(TokenKind.SPACE); continue; }
+                case EOF -> {
+                    throw new JSONPathSyntaxException("unexpected end of query",  stream.current());
+                }
+                default -> {
+                    throw new JSONPathSyntaxException(
+                            "unexpected token in bracketed selection " + stream.currentKind(),
+                            stream.current());
+                }
             }
-            case WILD -> {
-                selectors.add(new WildcardSelector(getEnv(), stream.current()));
+
+            stream.consumeIf(TokenKind.SPACE);
+
+            if ( stream.current() == Token.EOF) {
+                System.out.println("stream.getTokens() = " + stream.getTokens());
+                throw new JSONPathSyntaxException("unexpected end of selector list",  stream.current());
             }
-            case LBRACKET -> {
-                selectors.addAll(parseBracketedSelection());
+
+            if ( stream.currentKind() != TokenKind.RBRACKET ) {
+                stream.consume(TokenKind.COMMA);
+                stream.consumeIf(TokenKind.SPACE);
+                stream.throwIf(TokenKind.RBRACKET, "unexpected trailing comma");
             }
+
+
+        }
+
+        stream.consume(TokenKind.RBRACKET);
+
+        if (selectors.isEmpty()) {
+            throw new JSONPathSyntaxException("empty bracketed segment", token);
         }
         return selectors;
     }
@@ -208,7 +285,7 @@ public class PJPParser extends BaseParser {
             String  stepStr = matcher.group(Constants.GN_SLICE_STEP);
             try {
                 start = ( startStr == null || startStr.isEmpty() ) ?
-                        null : Long.parseLong(stepStr);
+                        null : Long.parseLong(startStr);
             } catch (NumberFormatException e) {
                 throw e; // todo do we wrap this in a framework exception?
             }
@@ -229,7 +306,9 @@ public class PJPParser extends BaseParser {
             // throw invalid slice selector exception
             throw new JSONPathSyntaxException("Invalid slice literal: " + stream.current().value(), stream.current());
         }
-        return new SliceSelector( getEnv() , stream.current(), start, stop, step);
+        SliceSelector ss = new SliceSelector( getEnv() , stream.current(), start, stop, step);
+        stream.consume(TokenKind.LIST_SLICE);
+        return ss;
     }
 
     protected IndexSelector parseIndexSelector() {
@@ -241,69 +320,18 @@ public class PJPParser extends BaseParser {
 
         Matcher matcher = Constants.INT2_PATTERN.matcher(stream.current().value());
         if (matcher.matches()) {
-            return new IndexSelector(getEnv(), stream.current(), Long.parseLong(matcher.group()));
+            IndexSelector is = new IndexSelector( getEnv(), stream.current(), Long.parseLong(matcher.group() ));
+            stream.consume(TokenKind.NUMBER);
+            return is;
         } else {
             throw new JSONPathSyntaxException("invalid int literal", stream.current());
         }
     }
 
-    /**
-     * Parses a comma-separated list of JSONPath selectors
-     * @return the List of JSONPath selectors
-     */
-    protected List<JSONPathSelector> parseBracketedSelection() {
-        List<JSONPathSelector> selectors = new ArrayList<>();
-        Token token = stream.next(); // consume LBRACKET
-        while ( stream.current().kind() != TokenKind.RBRACKET ) {
-            final TokenKind kind = stream.current().kind();
-            switch (kind) {
-                case LIST_SLICE -> {
-                    selectors.add(parseSlice());
-                }
-                case NUMBER -> {
-                    selectors.add(parseIndexSelector());
-                }
-                case DOUBLE_QUOTE_STRING, SINGLE_QUOTE_STRING -> {
-                    selectors.add(new NameSelector( getEnv(), stream.current(), stream.current().value()));
-                }
-                case WILD -> {
-                    selectors.add(new WildcardSelector(getEnv(), stream.current()));
-                }
-                case FILTER -> {
-                    selectors.add(parseFilterSelector());
-                }
-                case EOF -> {
-                    throw new JSONPathSyntaxException("unexpected end of query",  stream.current());
-                }
-                default -> {
-                    throw new JSONPathSyntaxException(
-                            "unexpected token in bracketed selection " + stream.currentKind(),
-                            stream.current());
-                }
-            }
 
-            if ( stream.peek() == Token.EOF) {
-                throw new JSONPathSyntaxException("unexpected end of selector list",  stream.current());
-            }
-
-            if ( stream.peek().kind() != TokenKind.RBRACKET ) {
-                stream.expectPeek(TokenKind.COMMA);
-                stream.next();
-                stream.peekNotExpected(TokenKind.RBRACKET, "unexpected trailing comma");
-            }
-
-            stream.next();
-        }
-
-
-        if (selectors.isEmpty()) {
-            throw new JSONPathSyntaxException("empty bracketed segment", token);
-        }
-        return selectors;
-    }
 
     protected FilterSelector  parseFilterSelector() {
-        Token token = stream.next();
+        Token token = stream.consume(TokenKind.FILTER);
         Expression expr = parseFilterExpression();
 
         if ( expr instanceof FunctionExtension fe) {
@@ -320,51 +348,77 @@ public class PJPParser extends BaseParser {
         return new FilterSelector(getEnv(), token, new FilterExpression(expr.getToken(), expr));
     }
 
+
+
     protected Expression parseBoolean() {
-        if (stream.currentKind() == TokenKind.TRUE) {
-            return new BooleanLiteral(stream.current(), true);
-        }
-        return new BooleanLiteral(stream.current(), false);
+        BooleanLiteral result = stream.currentKind() == TokenKind.TRUE ? BooleanLiteral.TRUE : BooleanLiteral.FALSE;
+        stream.next(); // consume 'true' or 'false'
+        return result;
     }
 
     protected Expression parseNull() {
-        return new NullLiteral(stream.current(), null);
+        stream.consume(TokenKind.NULL);
+        return NullLiteral.NULL;
     }
 
     protected Expression parseStringLiteral() {
-        return new StringLiteral(stream.current(), decodeStringLiteral(stream.current()));
+        Token strToken = stream.current();
+        StringLiteral sl = new StringLiteral(strToken, decodeStringLiteral(strToken));
+        stream.next();
+        return sl;
+    }
+
+    protected Expression parseNumberLiteral() {
+        Token token = stream.current();
+        var rule = getEnv().findRule(TokenKind.INT);
+        if (rule instanceof RulesBuilder.RegexRule rer) {
+            Matcher m = rer.getRegionMatcher(token.value(), 0);
+            if (m.matches()) {
+                return parseIntegerLiteral();
+            } else {
+                return parseDoubleLiteral();
+            }
+        }
+        throw new JSONPathException("No regex rule found for INT", stream.current());
     }
 
     protected Expression parseIntegerLiteral() {
-        String value = stream.current().value();
+        Token token = stream.current();
+        stream.consume(TokenKind.NUMBER);
+        String value = token.value();
         try {
             int i = Integer.parseInt(value);
-            return new IntegerLiteral(stream.current(), i);
+            return new IntegerLiteral(token, i);
         } catch (NumberFormatException e) {
-            throw new JSONPathSyntaxException("number value '" + value + "' is not a valid integer", stream.current());
+            throw new JSONPathSyntaxException("number value '" + value + "' is not a valid integer", token);
         }
     }
 
     protected Expression parseDoubleLiteral() {
-        String value = stream.current().value();
+        Token token = stream.current();
+        stream.consume(TokenKind.NUMBER);
+        String value = token.value();
         try {
             double d = Double.parseDouble(value);
-            return new DoubleLiteral(stream.current(), d);
+            return new DoubleLiteral(token, d);
         } catch (NumberFormatException ne) {
-            throw new JSONPathSyntaxException("number value '" + value + "' is not a valid double", stream.current());
+            throw new JSONPathSyntaxException("number value '" + value + "' is not a valid double", token);
         }
     }
 
-
-
     protected Expression parsePrefixExpression() {
         Token token = stream.current();
-        assert token.kind() == TokenKind.NOT;
+        stream.consume(TokenKind.NOT);
         return new PrefixExpression(token, "!", parseFilterExpression(PrecedenceLevel.PREFIX));
     }
 
+    /**
+     * todo make this return InfixExpression, superclass of both Logical and Comparison Expressions
+     * @return
+     */
     protected Expression parseInfixExpression(Expression left) {
-        Token token = stream.next();
+        Token token = stream.current();
+        stream.next();
         PrecedenceLevel precedence = PRECEDENCES.getOrDefault(token.kind(), PrecedenceLevel.LOWEST);
         Expression right = parseFilterExpression(precedence);
         if ( COMPARISON_OPERATORS.contains(token.kind()) ) {
@@ -387,41 +441,77 @@ public class PJPParser extends BaseParser {
         return new LogicalExpression(token, left, token.kind(), right);
     }
 
+
     protected Expression parseGroupedExpression() {
-        stream.next();  // consume (
+        stream.consume(TokenKind.LPAREN);
         Expression expr = parseFilterExpression();
-        stream.next(); // todo what does this consume??
 
         while (stream.currentKind() != TokenKind.RPAREN ) {
-            if (stream.currentKind() == TokenKind.EOF ) {
+            if (stream.currentKind() == TokenKind.EOF || stream.currentKind() == TokenKind.RBRACKET ) {
                 throw new  JSONPathSyntaxException("unbalanced parentheses", stream.current());
             }
-            // todo - only if binary op
+
             expr = parseInfixExpression(expr);
         }
-        stream.expect(TokenKind.RPAREN);
+        stream.consume(TokenKind.RPAREN);
         return expr;
     }
 
-    protected Expression parseRootQuery() {
-        Token root = stream.next();
-        assert  root.kind() == TokenKind.ROOT : "Expecting a ROOT token";
-        return new RootFilterQuery( root, new JSONPathQuery( getEnv(), parseQuery(true)));
+    protected Expression parseAbsoluteQuery() {
+        Token root = stream.current();
+        stream.consume(TokenKind.ROOT);
+        return new RootFilterQuery( root, new JSONPathQuery( getEnv(), parseQuery()));
     }
 
     protected Expression parseRelativeQuery() {
-        Token token = stream.current();
+        Token token = stream.consume(TokenKind.CURRENT);
         return new RelativeFilterQuery(
                 token,
-                new JSONPathQuery(getEnv(), parseQuery(true)
+                new JSONPathQuery(getEnv(), parseQuery()
                 ));
     }
 
+    protected SingularQuerySelector parseSingularQuerySelector() {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+
+    /*
+
+        def parse_singular_query_selector(
+        self, stream: TokenStream
+    ) -> SingularQuerySelector:
+        token = (
+            stream.next() if stream.current().kind == TOKEN_ROOT else stream.current()
+        )
+
+        query = JSONPath(env=self.env, segments=self.parse_query(stream))
+
+        if not query.singular_query():
+            raise JSONPathSyntaxError(
+                "embedded query selectors must be singular queries", token=token
+            )
+
+        return SingularQuerySelector(
+            env=self.env,
+            token=token,
+            query=query,
+        )
+
+     */
+
     protected Expression parseFunctionExtension() {
         List<Expression> funcArgs = new ArrayList<>();
-        Token token = stream.next();
+        Token function_token = stream.current();
+        stream.next(); // consume function name
+        stream.consume(TokenKind.LPAREN);
 
-        while (stream.currentKind() != TokenKind.RPAREN) {
+        while ( true ) {
+            stream.consumeIf(TokenKind.SPACE);
+
+            if (stream.currentKind() == TokenKind.RPAREN ) {
+                break;
+            }
+
             Function<PJPParser, Expression> func;
             func = TOKEN_KIND_TO_FUNCTION.get(stream.currentKind());
             if (func == null ) {
@@ -429,27 +519,27 @@ public class PJPParser extends BaseParser {
             }
 
             Expression expr = func.apply(this);
+            stream.consume(TokenKind.SPACE);
+
             // The argument could be a comparison or logical expression
-            TokenKind peekKind = stream.peek().kind();
-            while ( BINARY_OPERATORS.contains(peekKind) ) {
-                stream.next();
+            while ( BINARY_OPERATORS.contains( stream.currentKind() )) {
                 expr = parseInfixExpression(expr);
-                peekKind = stream.peek().kind();
             }
 
             funcArgs.add(expr);
+            stream.consumeIf(TokenKind.SPACE);
 
-            if ( stream.peek().kind() != TokenKind.RPAREN) {
-                stream.expectPeek(TokenKind.COMMA);
-                stream.next();
+            if ( stream.currentKind() != TokenKind.RPAREN) {
+                stream.consume(TokenKind.COMMA);
             }
-            stream.next();
         }
 
+        stream.consume(TokenKind.RPAREN);
+
         return new FunctionExtension(
-                token,
-                token.value(),
-                getEnv().validateFunctionExtensionSignature(token, funcArgs));
+                function_token,
+                function_token.value(),
+                getEnv().validateFunctionExtensionSignature(function_token, funcArgs));
     }
 
     protected Expression parseFilterExpression() {
@@ -458,6 +548,8 @@ public class PJPParser extends BaseParser {
 
     protected Expression parseFilterExpression(final PrecedenceLevel level) {
         Expression left;
+        System.out.println("start parseFilterExpression: stream.currentKind() = " + stream.currentKind());
+        stream.consumeIf(TokenKind.SPACE);
 
         Function<PJPParser, Expression> fn = TOKEN_KIND_TO_FUNCTION.get(stream.currentKind());
         if (fn == null) {
@@ -467,29 +559,27 @@ public class PJPParser extends BaseParser {
         try {
             left = fn.apply(this); // calls this.parseXxx()
         } catch (JSONPathException e) {
+            System.out.println("e = " + e);
             String msg;
             if ( stream.currentKind() == TokenKind.EOF || stream.currentKind() == TokenKind.RBRACKET ) {
                 msg = "end of expression";
             } else {
-                msg = stream.current().value();
+                msg = stream.current().toString();
             }
+            System.out.println("stream.currentKind() = " + stream.currentKind());
             throw new JSONPathSyntaxException("unexpected " + msg, stream.current());
         }
 
         while ( true ) {
-            TokenKind peekKind = stream.peek().kind();
-            if ( peekKind == TokenKind.EOF ||
-                 peekKind == TokenKind.RBRACKET ||
-                 PRECEDENCES.getOrDefault(peekKind, PrecedenceLevel.LOWEST).getLevel() < level.getLevel()
-             ) {
+            stream.consumeIf(TokenKind.SPACE);
+            TokenKind kind = stream.currentKind();
+
+            if ( ! BINARY_OPERATORS.contains(kind) ||
+                    PRECEDENCES.getOrDefault(kind, PrecedenceLevel.LOWEST).getLevel() < level.getLevel())
+            {
                 break;
             }
-            if (! BINARY_OPERATORS.contains(peekKind) ) {
-                return left;
-            }
-            stream.next();
             left = parseInfixExpression(left);
-
         }
         return left;
     }
@@ -499,14 +589,20 @@ public class PJPParser extends BaseParser {
     ////////////////////////////////////////////////////////////////////
 
     private String decodeStringLiteral(Token token) {
-        String value;
+        String value = token.value();
+        if ( value.isEmpty() || value.equals( "''")) {
+            return "''";
+        }
+        value = value.substring(1, value.length() - 1); // remove enclosing quotes
         if (token.kind() == TokenKind.SINGLE_QUOTE_STRING)
         {
-            value = token.value().replace("\"", "\\").replace("\\'", "'");
+            value = value.replace("\"", "\\").replace("'","\\'");
         } else {
-            value = token.value();    
+            value = value.replace("\\\"", "\"");
         }
-        return unescapeString(value, token);
+        System.out.println("value after replace  = " + value);
+
+        return Constants.SINGLE_QUOTE + unescapeString(value, token) + Constants.SINGLE_QUOTE;
         
     }
     

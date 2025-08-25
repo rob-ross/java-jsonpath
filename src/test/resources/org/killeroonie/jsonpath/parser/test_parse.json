@@ -1,0 +1,180 @@
+{
+    "description": "Test cases for test_lex unit tests.",
+    "tests": [
+        {
+            "description": "just root",
+            "query": "$",
+            "want": "$"
+        },
+        {
+            "description": "root dot property",
+            "query": "$.thing",
+            "want": "$['thing']"
+        },
+        {
+            "description": "root bracket property",
+            "query": "$['thing']",
+            "want": "$['thing']"
+        },
+        {
+            "description": "root double quoted property",
+            "query": "$[\"thing\"]",
+            "want": "$['thing']"
+        },
+        {
+            "description": "root single quoted property",
+            "query": "$['thing']",
+            "want": "$['thing']"
+        },
+        {
+            "description": "root quoted property with non-ident chars",
+            "query": "$['anything{!%']",
+            "want": "$['anything{!%']"
+        },
+        {
+            "description": "root bracket index",
+            "query": "$[1]",
+            "want": "$[1]"
+        },
+        {
+            "description": "root slice",
+            "query": "$[1:-1]",
+            "want": "$[1:-1:1]"
+        },
+        {
+            "description": "root slice with step",
+            "query": "$[1:-1:2]",
+            "want": "$[1:-1:2]"
+        },
+        {
+            "description": "root slice with empty start",
+            "query": "$[:-1]",
+            "want": "$[:-1:1]"
+        },
+        {
+            "description": "root slice with empty stop",
+            "query": "$[1:]",
+            "want": "$[1::1]"
+        },
+        {
+            "description": "root dot wild",
+            "query": "$.*",
+            "want": "$[*]"
+        },
+        {
+            "description": "root bracket wild",
+            "query": "$[*]",
+            "want": "$[*]"
+        },
+        {
+            "description": "root selector list",
+            "query": "$[1,2]",
+            "want": "$[1, 2]"
+        },
+        {
+            "description": "root selector list with slice",
+            "query": "$[1,5:-1:1]",
+            "want": "$[1, 5:-1:1]"
+        },
+        {
+            "description": "root selector list with quoted properties",
+            "query": "$[\"some\",'thing']",
+            "want": "$['some', 'thing']"
+        },
+        {
+            "description": "implicit root selector list with mixed selectors",
+            "query": "$[\"some\",\"thing\", 1, 2:-2:2]",
+            "want": "$['some', 'thing', 1, 2:-2:2]"
+        },
+        {
+            "description": "filter self dot property",
+            "query": "$[?(@.thing)]",
+            "want": "$[?@['thing']]"
+        },
+        {
+            "description": "filter root dot property",
+            "query": "$.some[?($.thing)]",
+            "want": "$['some'][?$['thing']]"
+        },
+        {
+            "description": "filter with equality test",
+            "query": "$.some[?(@.thing == 7)]",
+            "want": "$['some'][?@['thing'] == 7]"
+        },
+        {
+            "description": "filter with >=",
+            "query": "$.some[?(@.thing >= 7)]",
+            "want": "$['some'][?@['thing'] >= 7]"
+        },
+        {
+            "description": "filter with !=",
+            "query": "$.some[?(@.thing != 7)]",
+            "want": "$['some'][?@['thing'] != 7]"
+        },
+        {
+            "description": "filter with boolean literals",
+            "query": "$.some[?(true == false)]",
+            "want": "$['some'][?true == false]"
+        },
+        {
+            "description": "filter with null literal",
+            "query": "$.some[?(@.thing == null)]",
+            "want": "$['some'][?@['thing'] == null]"
+        },
+        {
+            "description": "filter with string literal",
+            "query": "$.some[?(@.thing == 'foo')]",
+            "want": "$['some'][?@['thing'] == 'foo']"
+        },
+        {
+            "description": "filter with integer literal",
+            "query": "$.some[?(@.thing == 1)]",
+            "want": "$['some'][?@['thing'] == 1]"
+        },
+        {
+            "description": "filter with float literal",
+            "query": "$.some[?(@.thing == 1.1)]",
+            "want": "$['some'][?@['thing'] == 1.1]"
+        },
+        {
+            "description": "filter with logical not",
+            "query": "$.some[?(@.thing > 1 && !$.other)]",
+            "want": "$['some'][?@['thing'] > 1 && !$['other']]"
+        },
+        {
+            "description": "filter with grouped expression",
+            "query": "$.some[?(@.thing > 1 && ($.foo || $.bar))]",
+            "want": "$['some'][?@['thing'] > 1 && ($['foo'] || $['bar'])]"
+        },
+        {
+            "description": "comparison to single quoted string literal with escape",
+            "query": "$[?@.foo == 'ba\\'r']",
+            "want": "$[?@['foo'] == 'ba\\'r']"
+        },
+        {
+            "description": "comparison to double quoted string literal with escape",
+            "query": "$[?@.foo == \"ba\\\"r\"]",
+            "want": "$[?@['foo'] == 'ba\"r']"
+        },
+        {
+            "description": "not binds more tightly than or",
+            "query": "$[?!@.a || !@.b]",
+            "want": "$[?!@['a'] || !@['b']]"
+        },
+        {
+            "description": "not binds more tightly than and",
+            "query": "$[?!@.a && !@.b]",
+            "want": "$[?!@['a'] && !@['b']]"
+        },
+        {
+            "description": "control precedence with parens",
+            "query": "$[?!(@.a && !@.b)]",
+            "want": "$[?!(@['a'] && !@['b'])]"
+        },
+        {
+            "description": "filter query, multiple bracketed segments",
+            "query": "$[?@[0][1]]",
+            "want": "$[?@[0][1]]"
+        }
+    ]
+}

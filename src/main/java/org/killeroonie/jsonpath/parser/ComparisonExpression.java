@@ -5,6 +5,9 @@ import org.killeroonie.jsonpath.JSONPathNodeList;
 import org.killeroonie.jsonpath.Token;
 import org.killeroonie.jsonpath.TokenKind;
 
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -18,7 +21,19 @@ public class ComparisonExpression extends Expression {
     private final TokenKind operator;
     private final Expression right;
 
+    private final static Map<TokenKind, String> OPERATOR_DISPLAY_MAP;
+    static {
+        Map<TokenKind, String> map = new EnumMap<>(TokenKind.class);
+        map.put(TokenKind.EQ, "==");
+        map.put(TokenKind.GE, ">=");
+        map.put(TokenKind.GT, ">");
+        map.put(TokenKind.LE, "<=");
+        map.put(TokenKind.LT, "<");
+        map.put(TokenKind.NE, "!=");
+        OPERATOR_DISPLAY_MAP = Collections.unmodifiableMap(map);
+    }
 
+// todo insert InfixExpression as superclass of this class.
 
     public ComparisonExpression(Token token, Expression left, TokenKind operator, Expression right) {
         super(token);
@@ -41,7 +56,7 @@ public class ComparisonExpression extends Expression {
 
     @Override
     public String toString() {
-        return "%s %s %s".formatted(left, operator, right);
+        return "%s %s %s".formatted(left, OPERATOR_DISPLAY_MAP.get(operator), right);
     }
 
     @Override

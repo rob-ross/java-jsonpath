@@ -8,6 +8,14 @@ public class StringLiteral extends FilterExpressionLiteral<String> {
         super(token, value);
     }
 
+    public static String canonicalString(String string) {
+        String singlqQuoted = string.substring(0, string.length()).
+                replaceAll("\\\"", "\"").
+                replaceAll("'", "\\'");
+        return "'" + singlqQuoted + "'";
+    }
+
+
     /*
 
         def __str__(self) -> str:

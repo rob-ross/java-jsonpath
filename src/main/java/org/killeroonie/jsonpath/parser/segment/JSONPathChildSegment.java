@@ -8,8 +8,8 @@ import org.killeroonie.jsonpath.parser.selector.JSONPathSelector;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JSONChildSegment extends JSONPathSegment {
-    public JSONChildSegment(JSONPathEnvironment env, Token token, List<JSONPathSelector> selectors) {
+public class JSONPathChildSegment extends JSONPathSegment {
+    public JSONPathChildSegment(JSONPathEnvironment env, Token token, List<JSONPathSelector> selectors) {
         super(env, token, selectors);
     }
 
@@ -21,5 +21,22 @@ public class JSONChildSegment extends JSONPathSegment {
             }
         }
         return result;
+    }
+
+    // f"[{', '.join(str(itm) for itm in self.selectors)}]"
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("[");
+        int index = 0;
+        for (JSONPathSelector selector : getSelectors()) {
+            sb.append(selector.toString());
+            index++;
+            if ( getSelectors().size() > index ) {
+                sb.append(", ");
+            }
+        }
+        sb.append("]");
+        return sb.toString();
     }
 }

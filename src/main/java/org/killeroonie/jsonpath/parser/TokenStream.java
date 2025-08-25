@@ -3,6 +3,7 @@ package org.killeroonie.jsonpath.parser;
 import org.killeroonie.jsonpath.Token;
 import org.killeroonie.jsonpath.TokenKind;
 import org.killeroonie.jsonpath.exception.JSONPathSyntaxException;
+import org.killeroonie.jsonpath.exception.JSONPathTypeException;
 
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +29,9 @@ public final class TokenStream  implements Iterator<Token> {
         next();
     }
 
+    public List<Token> getTokens() {
+        return tokens;
+    }
 
     public String toString() {
         return "current: %s\nnext: %s".formatted(currentToken, peek());
@@ -64,7 +68,7 @@ public final class TokenStream  implements Iterator<Token> {
     @Override
     public Token next() {
         Token nextToken;
-        if (queueIndex >= queueSize) {
+        if (queueIndex >= queueSize - 1 ) {
             nextToken = tokens.getLast();  // EOF Token
         } else {
             nextToken = tokens.get(++queueIndex);
@@ -125,6 +129,12 @@ public final class TokenStream  implements Iterator<Token> {
         expectImpl(kind, currentToken);
     }
 
+    public void throwIf(TokenKind kind, String msg) throws JSONPathSyntaxException {
+        if ( currentToken.kind() == kind ) {
+            throw new JSONPathSyntaxException(msg, currentToken);
+        }
+    }
+
     /**
      * Throws an exception if the current token type is not in the argument Set.
      */
@@ -165,7 +175,7 @@ public final class TokenStream  implements Iterator<Token> {
 
 
     public void peekNotExpected(TokenKind kind, String message) {
-        if (kind != peek().kind()) {
+        if (kind == peek().kind()) {
             throw new JSONPathSyntaxException(message, peek());
         }
     }
@@ -176,5 +186,35 @@ public final class TokenStream  implements Iterator<Token> {
         if (kinds.contains(peek().kind())) {
             throw new JSONPathSyntaxException(message, peek());
         }
+    }
+
+    /**
+     * Attempts to consume a Token of TokenKind given by the argument. If the current Token's TokenKind == {@code kind},
+     * the stream is advanced by one Token. If the current Token is not of the argument kind, a JSONPathTypeException
+     * is thrown. If this method successfully consumes the current Token, it returns the next Token in the stream.
+     * @param expectedKind the expected TokenKind of the current Token.
+     * @return the next Token in the stream.
+     * @throws JSONPathTypeException if the current Token is not of the argument TokenKind.
+     */
+    public Token consume(TokenKind expectedKind) throws JSONPathSyntaxException {
+        if (expectedKind != currentKind()) {
+            System.out.println("getTokens() = " + getTokens());
+            throw new JSONPathTypeException("expected to consume "+expectedKind+" but got " + currentKind() );
+        }
+        return next();
+    }
+
+    /**
+     * Consumes the current Token in the stream and advances to the next Token IFF the current Token's TokenKind
+     * equals the argument TokenKind. Otherwise, just return the current Token.
+     * @param kind the TokenKind to consume
+     * @return the current Token if the current Token's kind is not the argument TokenKind. Otherwise, advances the stream
+     * and returns the next Token.
+     */
+    public Token consumeIf(TokenKind kind) {
+        if (kind != currentKind()) {
+            return current();
+        }
+        return next();
     }
 }

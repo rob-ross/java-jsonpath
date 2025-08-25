@@ -5,6 +5,7 @@ import org.killeroonie.jsonpath.lexer.Lexer;
 import org.killeroonie.jsonpath.lexer.RulesBuilder;
 import org.killeroonie.jsonpath.parser.Expression;
 import org.killeroonie.jsonpath.parser.Parser;
+import org.killeroonie.jsonpath.parser.TokenStream;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -182,6 +183,17 @@ public class JSONPathEnvironment {
         return new LinkedHashMap<>(); // empty list
     }
 
+
+    /**
+     * Scans the JSONPath query string argument and return a list of tokens.
+     * @param jsonpath
+     * @return
+     */
+    List<Token> tokenize(String jsonpath) {
+        Lexer lexer = getLexer();
+        return lexer.tokenize(jsonpath);
+    }
+
     /**
      * Prepare a path string ready for repeated matching against different data.
      * <p>
@@ -198,14 +210,15 @@ public class JSONPathEnvironment {
      * JSONPathTypeError: If filter functions are given arguments of an
      * unacceptable type.
      *
-     * @param path
+     * @param jsonpath
      * @return
      */
-    public JSONPath compile(String path) {
-        return null;
+    public JSONPathQuery compile(String jsonpath) {
+        TokenStream stream = new TokenStream(tokenize(jsonpath));
+        return new JSONPathQuery(this, getParser().parse(stream));
     }
 
-    public Iterable<JSONPathMatch> findIter(String path, Object data) {
+    public Iterable<JSONPathNode> findIter(String path, Object data) {
         return findIter(path, data, null);
     }
 
@@ -235,7 +248,7 @@ public class JSONPathEnvironment {
      * @param filterContext
      * @return
      */
-    public Iterable<JSONPathMatch> findIter(String path, Object data, FilterContextVars filterContext) {
+    public Iterable<JSONPathNode> findIter(String path, Object data, FilterContextVars filterContext) {
         return compile(path).finditer(data, filterContext);
     }
 

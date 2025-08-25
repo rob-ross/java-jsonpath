@@ -5,6 +5,8 @@ import org.killeroonie.jsonpath.TokenKind;
 
 import java.util.EnumMap;
 
+import static org.killeroonie.jsonpath.Constants.DOT_PROPERTY_RE;
+
 /**
  * Builds rules in strict compliance with RFC9535.
  * <p>Full fidelity with that spec also requires the proper Environment and Lexer to be used,
@@ -32,6 +34,7 @@ public class RFCRulesBuilder implements RulesBuilder {
         builders.put(TokenKind.RPAREN, new LexerRuleBuilder(false, Constants.RIGHT_PAREN));
         builders.put(TokenKind.COMMA, new LexerRuleBuilder(false, Constants.COMMA));
         builders.put(TokenKind.DOT, new LexerRuleBuilder(false, Constants.DOT));
+        //builders.put(TokenKind.DOT_PROPERTY, new RulesBuilder.LexerRuleBuilder(true, DOT_PROPERTY_RE, TokenKind.PROPERTY));
         builders.put(TokenKind.ROOT, new LexerRuleBuilder(false, Constants.DOLLAR));
         builders.put(TokenKind.FILTER, new LexerRuleBuilder(false, Constants.QUESTION));
         builders.put(TokenKind.WILD, new LexerRuleBuilder(false, Constants.STAR));

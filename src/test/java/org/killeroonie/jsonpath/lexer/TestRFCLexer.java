@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Named;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.killeroonie.jsonpath.Helper;
 import org.killeroonie.jsonpath.JSONPathEnvironment;
 import org.killeroonie.jsonpath.RFCEnv;
 import org.killeroonie.jsonpath.Token;
@@ -35,10 +36,10 @@ public class TestRFCLexer {
 
 
     static Stream<Arguments> allTestCases() {
-        Stream<Arguments> ctsTests = Helper.load("cts.rfc.json").tests().stream()
+        Stream<Arguments> ctsTests = Helper.load("lexer/cts.rfc.json").tests().stream()
                 .map(c -> Arguments.of(Named.of("CTS: " + c.description(), c)));
 
-        Stream<Arguments> pjpTests = Helper.load("pjp.lexer.rfc.json").tests().stream()
+        Stream<Arguments> pjpTests = Helper.load("lexer/pjp.lexer.rfc.json").tests().stream()
                 .map(c -> Arguments.of(Named.of("PJP: " + c.description(), c)));
 
         return Stream.concat(ctsTests, pjpTests);

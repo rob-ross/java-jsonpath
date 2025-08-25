@@ -16,6 +16,11 @@ public class IndexSelector extends JSONPathSelector {
     public int getIndex() {
         return (int)index;
     }
+
+    @Override
+    public String toString() {
+        return ""+index;
+    }
 }
 
 /*

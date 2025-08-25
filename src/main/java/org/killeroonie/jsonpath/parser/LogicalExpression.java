@@ -8,6 +8,7 @@ import java.util.Objects;
 
 /**
  * A pair of expressions and a logical operator.
+ * todo insert InfixExpression as superclass of this class.
  */
 public class LogicalExpression extends Expression {
 

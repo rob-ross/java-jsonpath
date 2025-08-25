@@ -163,6 +163,16 @@ public class JJPLexer extends BaseLexer{
             // Identifiers and keywords also handled here
             // (member-name-shorthand, true, false, null, function names, extension keywords)
             //-----------------------------------------------------------------------------------------
+//            regexRule = (RulesBuilder.RegexRule) lexerRules.get(TokenKind.DOT_PROPERTY);
+//            if ( inFirstSet(regexRule) ) {
+//                matcher = regexRule.getRegionMatcher(jsonPathText, position());
+//                if (matcher.lookingAt()) {
+//                    scanner.advance(1); // consume the dot
+//                    advanceToken(emitKind(TokenKind.DOT_PROPERTY), matcher.group("GPROP"));
+//                    continue;
+//                }
+//            }
+
             regexRule = (RulesBuilder.RegexRule) lexerRules.get(TokenKind.IDENTIFIER);
             matcher = regexRule.getRegionMatcher(jsonPathText, position());
             if (matcher.lookingAt()) {
@@ -201,7 +211,7 @@ public class JJPLexer extends BaseLexer{
             if ( Constants.SLASH_CHAR == currentChar() ) {
                 matcher = regexRule.getRegionMatcher(jsonPathText, position());
                 if (matcher.lookingAt()) {
-                    scanner.advanceToken( emitKind(TokenKind.RE_PATTERN), matcher.group());
+                    advanceToken( emitKind(TokenKind.RE_PATTERN), matcher.group());
                     continue;
                 }
             }
@@ -230,8 +240,40 @@ public class JJPLexer extends BaseLexer{
         }
         // remove spaces if whitespace policy is lenient.
         List<Token> tokens = enactWhitespacePolicy(scanner.getTokenList());
+        System.out.println("before MNS convert tokens = " + tokens);
+        tokens = convertMNS(tokens);
         tokens.add(Token.EOF);
+        System.out.println("after conversion tokens = " + tokens);
         return tokens;
+    }
+
+    /**
+     * Scans the List of Tokens, and if it finds a DOT followed by IDENTIFIER,
+     * replaces those with LBRACKET, SINGLE_QUOTED_STRING, RBRACKET
+     * @param tokens
+     * @return
+     */
+    private List<Token> convertMNS(List<Token> tokens) {
+        final List<Token> result = new ArrayList<>(tokens.size());
+        for (int index = 0; index < tokens.size(); index++) {
+            final Token token = tokens.get(index);
+            if ( ! (token.kind() == TokenKind.DOT) ) {
+                result.add(token);
+                continue;
+            }
+            if ( index < tokens.size() - 1 && tokens.get(index + 1).kind() == TokenKind.IDENTIFIER) {
+                Token identifier = tokens.get(index + 1);
+                result.add( new Token(TokenKind.LBRACKET, Constants.LEFT_BRACKET, token.index(), token.path())); // convert DOT to LBRACKET
+                result.add(new Token(TokenKind.SINGLE_QUOTE_STRING, "'"+ identifier.value() + "'", identifier.index() -1, identifier.path()));
+                int rbracketIndex = Math.min( (identifier.index() + identifier.value().length() + 1), token.path().length() - 1 );
+                result.add(new Token(TokenKind.RBRACKET, Constants.RIGHT_BRACKET, rbracketIndex, token.path()));
+                index++; // consume the IDENTIFIER
+            }
+            else {
+                result.add(token); // add the dot
+            }
+        }
+        return result;
     }
 
     /**

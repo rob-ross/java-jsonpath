@@ -7,4 +7,9 @@ public class WildcardSelector extends JSONPathSelector {
     public WildcardSelector(JSONPathEnvironment env, Token token) {
         super(env, token);
     }
+
+    @Override
+    public String toString() {
+        return "*";
+    }
 }
